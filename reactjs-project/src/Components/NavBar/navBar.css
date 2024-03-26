@@ -1,0 +1,31 @@
+.nav-wrapper {
+    
+}
+
+nav {
+    display: flex;
+    justify-content: end;
+}
+
+nav ol {
+    list-style: none;
+    padding-inline-start: 0;
+    display: flex;
+}
+
+nav li {
+    margin-inline-end: 1rem;
+}
+
+nav li a,a:link,a:visited {
+    text-decoration: none;
+    color: var(--gray10);
+    font-weight: 300;
+}
+
+nav a:hover {
+    border-block-end: solid 2px;
+    padding-block-end: 2px;
+    border-color: var(--gray20);
+    font-weight: 500 ;
+}
