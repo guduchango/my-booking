@@ -1,16 +1,24 @@
 .nav-wrapper {
-    
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2px 0;
+    z-index: 1000;
+    box-shadow: inset 0 0 0 1px red;
+    background: gainsboro;  
 }
 
 nav {
     display: flex;
-    justify-content: end;
+    justify-content: center;
 }
 
 nav ol {
     list-style: none;
     padding-inline-start: 0;
     display: flex;
+    margin: 2px;
 }
 
 nav li {
@@ -23,9 +31,33 @@ nav li a,a:link,a:visited {
     font-weight: 300;
 }
 
+nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+nav a i {
+    font-size: 20px;
+    padding-block-end: 5px;
+    color: rgb(92, 88, 88);
+}
+
 nav a:hover {
     border-block-end: solid 2px;
     padding-block-end: 2px;
     border-color: var(--gray20);
     font-weight: 500 ;
 }
+
+nav .nav-isActive {
+    border-block-end: solid 2px;
+    padding-block-end: 2px;
+    border-color: var(--gray20);
+    font-weight: 500 ;
+}
+
+nav .nav-isActive i {
+    color: black;
+}
+

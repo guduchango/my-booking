@@ -1,11 +1,10 @@
 .layout{
     inline-size: 100%;
-    box-shadow: inset 0 0 0 1px gray;
-    block-size: 100vh;
+    box-shadow: inset 0 0 0 1px blue;
+    padding-block-end: 25px;
 }
 
 .layout-wrapper {
-    inline-size: 900px;
     max-inline-size: 100%;
     block-size: 100%;
     margin: auto;

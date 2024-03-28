@@ -9,26 +9,34 @@ const NavBar = () => {
                 <ol>
                     <li>
                         <NavLink
+                            className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/'>
-                            Home
+                            <i className="icon-home"></i>
+                            <span>Home</span>
                         </NavLink>
                     </li>
-                    <li className="ml-2 font-light">
+                    <li>
                         <NavLink
+                            className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/lodging'>
-                            Lodging
+                            <i className="icon-office"></i>
+                            <span>Lodging</span>
                         </NavLink>
                     </li>
-                    <li className="ml-2 font-light">
+                    <li>
                         <NavLink
+                            className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/booking'>
-                            Booking
+                             <i className="icon-address-book"></i>
+                            <span>Booking</span>
                         </NavLink>
                     </li>
-                    <li className="ml-2 font-light">
+                    <li>
                         <NavLink
+                            className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/expense'>
-                            Expense
+                             <i className="icon-coin-dollar"></i>
+                            <span>Expense</span>
                         </NavLink>
                     </li>
                 </ol>
