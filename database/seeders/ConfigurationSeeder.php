@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Configuration;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,6 @@ class ConfigurationSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Configuration::factory(1)->create();
     }
 }

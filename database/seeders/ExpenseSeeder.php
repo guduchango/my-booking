@@ -21,7 +21,7 @@ class ExpenseSeeder extends Seeder
             for($i=0 ; $i<=5 ; $i++){
                 $expense = new Expense();
                 $expense->exp_uniId = $item['uni_id'];
-                $expense->exp_cost = fake()->numberBetween(0, 20);
+                $expense->exp_price = fake()->numberBetween(0, 20);
                 $expense->exp_type = fake()->randomElement(['cleaning', 'taxes', 'repairs']);
                 $expense->exp_date = fake()->dateTimeBetween('-8 week', '-1 week');
                 $expense->exp_comments = fake()->text(100);

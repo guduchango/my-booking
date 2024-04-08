@@ -12,12 +12,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('configurations')->truncate();
+        DB::table('currencies')->truncate();
+        DB::table('promotions')->truncate();
         DB::table('guests')->truncate();
         DB::table('units')->truncate();
         DB::table('prices')->truncate();
         DB::table('expenses')->truncate();
 
         $this->call([
+            ConfigurationSeeder::class,
+            PromotionSeeder::class,
+            CurrencySeeder::class,
             GuestSeeder::class,
             UnitSeeder::class,
             PriceSeeder::class,
