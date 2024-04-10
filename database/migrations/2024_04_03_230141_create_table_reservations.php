@@ -18,7 +18,6 @@ return new class extends Migration
             $table->tinyInteger('res_adults');
             $table->tinyInteger('res_children');
             $table->tinyInteger('res_beds')->default(0);
-            $table->string('res_phone')->nullable();
             $table->tinyInteger('res_days');
             $table->tinyInteger('res_discountValue')->default(0);
             $table->json('res_discountDetail');

@@ -21,6 +21,7 @@ class UnitFactory extends Factory
             'uni_availableQuantity' => fake()->numberBetween(0, 20),
             'uni_singleBed' => fake()->numberBetween(0, 3),
             'uni_dobuleBed' => fake()->numberBetween(0, 3),
+            'uni_maxPeople' => fake()->numberBetween(1, 10),
             'uni_rooms' => fake()->numberBetween(0, 3),
         ];
     }

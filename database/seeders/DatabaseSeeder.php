@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         DB::table('units')->truncate();
         DB::table('prices')->truncate();
         DB::table('expenses')->truncate();
+        DB::table('reservations')->truncate();
 
         $this->call([
             ConfigurationSeeder::class,
@@ -27,7 +28,8 @@ class DatabaseSeeder extends Seeder
             GuestSeeder::class,
             UnitSeeder::class,
             PriceSeeder::class,
-            ExpenseSeeder::class
+            ExpenseSeeder::class,
+            ReservationSeeder::class
         ]);
 
     }
