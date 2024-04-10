@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Expense extends Model
 {
     use HasFactory;
-    const CREATED_AT = 'exp_createdAt';
-    const UPDATED_AT = 'exp_updatedAt';
+    const CREATED_AT = 'exp_created_at';
+    const UPDATED_AT = 'exp_updated_at';
     protected $primaryKey = 'exp_id';
 }

@@ -18,10 +18,10 @@ class GuestFactory extends Factory
     {
         return [
             'gue_name' => fake()->firstNameMale(),
-            'gue_lastName' => fake()->lastName(),
-            'gue_identityDocument' => fake()->numberBetween(0, 20),
+            'gue_last_name' => fake()->lastName(),
+            'gue_identity_document' => fake()->numberBetween(0, 20),
             'gue_email' => fake()->name(),
-            'gue_phoneNumber' => fake()->name(),
+            'gue_phone_number' => fake()->name(),
             'gue_birthday' => fake()->dateTimeInInterval('-60 year', '-20 year')
         ];
     }

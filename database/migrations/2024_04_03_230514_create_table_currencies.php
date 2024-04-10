@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id('cur_id');
             $table->string('cur_country')->nullable();
             $table->float('cur_price');
-            $table->timestamp('cur_createdAt')->nullable();
-            $table->timestamp('cur_updatedAt')->nullable();
+            $table->timestamp('cur_created_at')->nullable();
+            $table->timestamp('cur_updated_at')->nullable();
         });
     }
 

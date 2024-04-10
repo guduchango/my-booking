@@ -9,7 +9,8 @@ class Unit extends Model
 {
     use HasFactory;
 
-    const CREATED_AT = 'uni_createdAt';
-    const UPDATED_AT = 'uni_updatedAt';
+    const CREATED_AT = 'uni_created_at';
+    const UPDATED_AT = 'uni_updated_at';
     protected $primaryKey = 'uni_id';
+    protected $table = 'units';
 }

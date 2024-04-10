@@ -17,13 +17,13 @@ class GuestResource extends JsonResource
         return [
             'gue_id' => $this->gue_id,
             'gue_name' => $this->gue_name,
-            'gue_lastName' => $this->gue_lastName,
-            'gue_identityDocument' => $this->gue_identityDocument,
+            'gue_last_name' => $this->gue_lastName,
+            'gue_identity_document' => $this->gue_identity_document,
             'gue_email' => $this->gue_email,
-            'gue_phoneNumber' => $this->gue_phoneNumber,
+            'gue_phone_number' => $this->gue_phone_number,
             'gue_birthday' => $this->gue_birthday,
-            'gue_createdAt' => $this->gue_createdAt,
-            'gue_updatedAt' => $this->gue_updatedAt,
+            'gue_created_at' => $this->gue_created_at,
+            'gue_updated_at' => $this->gue_updated_at,
         ];
     }
 }

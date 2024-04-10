@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->id('uni_id');
             $table->string('uni_name');
-            $table->tinyInteger('uni_availableQuantity');
-            $table->tinyInteger('uni_maxPeople');
-            $table->tinyInteger('uni_singleBed');
-            $table->tinyInteger('uni_dobuleBed');
+            $table->tinyInteger('uni_available_quantity');
+            $table->tinyInteger('uni_max_people');
+            $table->tinyInteger('uni_single_bed');
+            $table->tinyInteger('uni_dobule_bed');
             $table->tinyInteger('uni_rooms');
-            $table->timestamp('uni_createdAt')->nullable();
-            $table->timestamp('uni_updatedAt')->nullable();
+            $table->timestamp('uni_created_at')->nullable();
+            $table->timestamp('uni_updated_at')->nullable();
         });
     }
 

@@ -9,8 +9,8 @@ class Configuration extends Model
 {
     use HasFactory;
 
-    const CREATED_AT = 'con_createdAt';
-    const UPDATED_AT = 'con_updatedAt';
+    const CREATED_AT = 'con_created_at';
+    const UPDATED_AT = 'con_updated_at';
 
     protected $primaryKey = 'con_id';
     protected $table = 'configurations';

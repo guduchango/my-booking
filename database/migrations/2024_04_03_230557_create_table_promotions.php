@@ -17,8 +17,8 @@ return new class extends Migration
             $table->smallInteger('pro_units');
             $table->enum('pro_type',['days','people','promotion']);
             $table->float('pro_value');
-            $table->timestamp('pro_createdAt')->nullable();
-            $table->timestamp('pro_updatedAt')->nullable();
+            $table->timestamp('pro_created_at')->nullable();
+            $table->timestamp('pro_updated_at')->nullable();
         });
     }
 

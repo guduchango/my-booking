@@ -17,13 +17,13 @@ class UnitResource extends JsonResource
         return [
             'uni_id' => $this->uni_id,
             'uni_name' => $this->uni_name,
-            'uni_availableQuantity' => $this->uni_availableQuantity,
-            'uni_maxPeople' => $this->uni_maxPeople,
-            'uni_singleBed' => $this->uni_singleBed,
-            'uni_dobuleBed' => $this->uni_dobuleBed,
+            'uni_available_quantity' => $this->uni_available_quantity,
+            'uni_max_people' => $this->uni_max_people,
+            'uni_single_bed' => $this->uni_single_bed,
+            'uni_dobule_bed' => $this->uni_dobule_bed,
             'uni_rooms' => $this->uni_rooms,
-            'uni_createdAt' => $this->uni_createdAt,
-            'uni_updatedAt' => $this->uni_updatedAt,
+            'uni_created_at' => $this->uni_created_at,
+            'uni_updated_at' => $this->uni_updated_at,
         ];
     }
 }

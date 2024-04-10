@@ -13,25 +13,25 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id('res_id');
-            $table->date('res_startDate');
-            $table->date('res_endDate');
+            $table->date('res_start_date');
+            $table->date('res_end_date');
             $table->tinyInteger('res_adults');
             $table->tinyInteger('res_children');
             $table->tinyInteger('res_beds')->default(0);
             $table->tinyInteger('res_days');
-            $table->tinyInteger('res_discountValue')->default(0);
-            $table->json('res_discountDetail');
+            $table->tinyInteger('res_discount_value')->default(0);
+            $table->json('res_discount_detail');
             $table->float('res_price')->nullable();
-            $table->float('res_priceDolar')->default(0);
-            $table->float('res_priceFinal')->nullable();
-            $table->float('res_advancePayment')->nullable();
+            $table->float('res_price_dolar')->default(0);
+            $table->float('res_price_final')->nullable();
+            $table->float('res_advance_payment')->nullable();
             $table->enum('res_status',['pending','approved','finished','canceled'])->default('pending');
             $table->enum('res_channel',['direct','booking','block'])->default('direct');
             $table->tinyText('res_comments')->nullable();
-            $table->integer('res_guestId');
-            $table->integer('res_unitId');
-            $table->timestamp('res_createdAt')->nullable();
-            $table->timestamp('res_updatedAt')->nullable();
+            $table->integer('res_gue_id');
+            $table->integer('res_uni_id');
+            $table->timestamp('res_created_at')->nullable();
+            $table->timestamp('res_updated_at')->nullable();
         });
     }
 

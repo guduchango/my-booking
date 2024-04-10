@@ -9,7 +9,7 @@ class Price extends Model
 {
     use HasFactory;
 
-    const CREATED_AT = 'pri_createdAt';
-    const UPDATED_AT = 'pri_updatedAt';
+    const CREATED_AT = 'pri_created_at';
+    const UPDATED_AT = 'pri_updated_at';
     protected $primaryKey = 'pri_id';
 }

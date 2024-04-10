@@ -25,7 +25,7 @@ class PriceSeeder extends Seeder
                 $price = new Price();
                 $price->pri_date = $date->format('Y-m-d');
                 $price->pri_price = fake()->numberBetween(40, 60);
-                $price->pri_unitId = $item['uni_id'];
+                $price->pri_uni_id = $item['uni_id'];
                 $price->save();
             }
         }
