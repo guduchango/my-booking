@@ -17,11 +17,12 @@ class ReservationResource extends JsonResource
         return [
             'res_id' => $this->res_id,
             'res_start_date' => $this->res_start_date,
+            'res_beauty_dates' => $this->getBeautyDates(),
             'res_end_date' => $this->res_end_date,
             'res_adults' => $this->res_adults,
             'res_children' => $this->res_children,
             'res_beds' => $this->res_beds,
-            'res_days' => $this->res_days,
+            'res_nights' => $this->res_nights,
             'res_discount_value' => $this->res_discount_value,
             'res_discount_detail' => $this->res_discount_detail,
             'res_price' => $this->res_price,

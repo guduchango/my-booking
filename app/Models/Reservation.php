@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -23,5 +24,11 @@ class Reservation extends Model
     public function unit(): HasOne
     {
         return $this->hasOne(Unit::class,'uni_id', 'res_uni_id');
+    }
+
+    public function getBeautyDates(){
+        $startDate = Carbon::createFromFormat('Y-m-d',$this->res_start_date);
+        $endDate = Carbon::createFromFormat('Y-m-d',$this->res_end_date);
+        return $startDate->isoFormat('D MMM')." - ".$endDate->isoFormat('D MMM YYYY');
     }
 }

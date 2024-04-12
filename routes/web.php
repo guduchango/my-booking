@@ -7,4 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::apiResource('reservation', ReservationController::class);
+Route::apiResource('api/reservation', ReservationController::class);

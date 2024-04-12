@@ -1,7 +1,7 @@
 import { useRoutes } from "react-router-dom"
 import Home from "../Pages/Home/Home"
 import Login from "../Pages/Login/Login"
-import Booking from "../Pages/Booking/Booking"
+import Booking from "../Pages/Reservation/Reservation"
 import Lodging from "../Pages/Lodging/Lodging"
 import Expense from "../Pages/Expense/Expense"
 

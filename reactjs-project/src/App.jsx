@@ -2,16 +2,20 @@ import { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom';
 import './App.css'
 import RouteCustom from './RouteCustom/RouteCustom';
+import { GlobalContextProvider } from './Context/Context';
 
 
 function App() {
   return (
     <>
-     <BrowserRouter>
+    <GlobalContextProvider>
+      <BrowserRouter>
         <RouteCustom />
       </BrowserRouter>
+    </GlobalContextProvider>
     </>
   )
 }
+
 
 export default App
