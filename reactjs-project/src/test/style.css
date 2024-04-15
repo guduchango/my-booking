@@ -1,9 +1,0 @@
-.box {
-    width: 800px;
-    display: flex;
-  }
-  
-  .box > * {
-    box-shadow: inset 0 0 0 1px red;
-    flex: 1 1 auto;
-  }
