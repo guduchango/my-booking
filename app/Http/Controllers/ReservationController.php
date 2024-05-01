@@ -13,7 +13,7 @@ class ReservationController extends Controller
 
         return ReservationResource::collection(
             Reservation::orderBy('res_created_at', 'desc')
-                ->paginate(10)
+                ->get()
         );
     }
 }

@@ -1,4 +1,4 @@
-interface GuestInterface {
+export interface GuestInterface {
     gue_id: number;
     gue_name: string;
     gue_last_name: string;
@@ -9,5 +9,3 @@ interface GuestInterface {
     gue_created_at: Date;
     gue_updated_at: Date;
 }
-
-export default GuestInterface

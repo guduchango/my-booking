@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom';
-import './App.css'
 import RouteCustom from './RouteCustom/RouteCustom';
 import { GlobalContextProvider } from './Context/Context';
 

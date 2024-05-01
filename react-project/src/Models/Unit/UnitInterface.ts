@@ -1,4 +1,4 @@
-interface UnitInterface {
+export interface UnitInterface {
     uni_id: number;
     uni_name: string;
     uni_available_quantity: number;
@@ -9,5 +9,3 @@ interface UnitInterface {
     uni_created_at: Date;
     uni_updated_at: Date;
 }
-
-export default UnitInterface

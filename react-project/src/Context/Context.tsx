@@ -1,40 +1,57 @@
 
 import { createContext, useEffect, useState } from 'react';
-import axiosClient from '../Api/axiosClient';
-import ReservationInterface from '../Interfaces/ReservationInterface.ts';
-
+import { ReservationInterface } from '../Models/Reservation/ReservationInterface.ts';
+import { ReservationHttpService } from '../Services/Reservation/ReservationHttpService.ts';
+import { ReservationStorageService } from '../Services/Reservation/ReservationStorageService.ts';
 
 interface GlobalContextProps {
-  reservations: ReservationInterface[];
+  guests: ReservationInterface[];
 }
 
 type Props = {
   children?: React.ReactNode
 };
 
-export const GlobalContext = createContext<GlobalContextProps>({ reservations: [] });
+export const GlobalContext = createContext<GlobalContextProps>({ guests: [] });
 
 
 export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
-  const [reservations, setReservations] = useState<ReservationInterface[]>([]);
+  const [guests, setReservations] = useState<ReservationInterface[]>([]);
 
-  const getReservation = (url?: string) => {
-      url = url || "/reservation";
-      axiosClient.get(url).then(({ data }) => {
-        console.log('aaa',data)
-          setReservations(data.data)
-      });
-  };
+  const getData = async () => {
+    const httpService = new ReservationHttpService();
+    const storageService  = new ReservationStorageService();
+    const data = await httpService.getReservations('/reservation')
 
+    for(const item of data ){
+      item.guest = "";
+      item.unit = "";
+      console.log(item)
+      storageService.create(item)
+    }
+    // console.log(array);
+    // //console.log(array.map(x => (x));
+  
+
+
+
+    
+        
+  
+    
+
+  }
+    
+
+ 
   useEffect(() => {
-      getReservation()
-  }, []);
+    
+    getData();
+  },[]);
 
   return (
-      <GlobalContext.Provider value={{
-          reservations
-      }}>
-          {children}
-      </GlobalContext.Provider>
+    <GlobalContext.Provider value={{guests}}>
+      {children}
+    </GlobalContext.Provider>
   )
 }

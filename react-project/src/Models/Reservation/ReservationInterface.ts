@@ -1,7 +1,8 @@
-import GuestInterface from "./GuestInterface";
-import UnitInterface from "./UnitInterface";
+import { GuestInterface } from "../Guest/GuestInterface";
+import { UnitInterface } from "../Unit/UnitInterface";
 
-interface ReservationInterface {
+
+export interface ReservationInterface {
     res_id: number;
     res_start_date: Date;
     res_end_date: Date;
@@ -20,9 +21,5 @@ interface ReservationInterface {
     res_comments: number;
     res_created_at: number;   
     res_updated_at: number;
-    guest: GuestInterface;
     res_beauty_dates: string;
-    unit: UnitInterface;
 }
-
-export default ReservationInterface
