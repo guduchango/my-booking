@@ -18,7 +18,7 @@ export class GuestStorageService extends StorageService {
                 const id = await this.guests.add(
                     guest
                 );
-                console.log(`Added persons with id ${id}`);
+                console.log(`Added guests with id ${id}`);
             }
         }).catch(e => {
             console.log(e.stack || e);
@@ -32,7 +32,7 @@ export class GuestStorageService extends StorageService {
                     gue_id,
                     guest
                 );
-                console.log(`Updated persons with id ${id}`);
+                console.log(`Updated guests with id ${id}`);
             }
         }).catch(e => {
             console.log(e.stack || e);

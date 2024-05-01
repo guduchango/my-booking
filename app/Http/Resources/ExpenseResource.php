@@ -21,8 +21,10 @@ class ExpenseResource extends JsonResource
             'exp_price_dolar' => $this->exp_price_dolar,
             'exp_date' => $this->exp_date,
             'unit' => new UnitResource($this->unit),
+            'exp_uni_id' => $this->exp_uni_id,
             'exp_created_at' => $this->exp_created_at,
             'exp_updated_at' => $this->exp_updated_at,
+
         ];
     }
 }

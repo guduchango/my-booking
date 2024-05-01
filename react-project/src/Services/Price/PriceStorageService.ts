@@ -1,8 +1,8 @@
 import Dexie from "dexie"
 import { StorageService } from "../StorageService"
-import { GuestInterface } from '../../Models/Guest/GuestInterface';
+import { PriceInterface } from '../../Models/Price/PriceInterface';
 
-export class GuestStorageService extends StorageService {
+export class PriceStorageService extends StorageService {
 
     db: Dexie
 
@@ -11,40 +11,40 @@ export class GuestStorageService extends StorageService {
         this.db = this
     }
 
-    async create(guest: GuestInterface) {
-        this.transaction('rw', this.guests, async () => {
+    async create(price: PriceInterface) {
+        this.transaction('rw', this.prices, async () => {
 
-            if ((await this.guests.where({ gue_id: guest.gue_id }).count()) === 0) {
-                const id = await this.guests.add(
-                    guest
+            if ((await this.prices.where({ pri_id: price.pri_id }).count()) === 0) {
+                const id = await this.prices.add(
+                    price
                 );
-                console.log(`Added persons with id ${id}`);
+                console.log(`Added price with id ${id}`);
             }
         }).catch(e => {
             console.log(e.stack || e);
         });
     }
 
-    async update(gue_id: number, guest:GuestInterface){
-        this.transaction('rw', this.guests, async () => {
-            if ((await this.guests.where({ gue_id: guest.gue_id }).count()) !== 0) {
-                const id = await this.guests.update(
-                    gue_id,
-                    guest
+    async update(pri_id: number, price:PriceInterface){
+        this.transaction('rw', this.prices, async () => {
+            if ((await this.prices.where({ pri_id: price.pri_id }).count()) !== 0) {
+                const id = await this.prices.update(
+                    pri_id,
+                    price
                 );
-                console.log(`Updated persons with id ${id}`);
+                console.log(`Updated price with id ${id}`);
             }
         }).catch(e => {
             console.log(e.stack || e);
         });
     }
 
-    async getById(gue_id: number) {
-        return await this.guests.where({ gue_id: gue_id }).first()
+    async getById(pri_id: number) {
+        return await this.prices.where({ pri_id: pri_id }).first()
     }
 
     async getAll(){
-        return await this.guests.toArray()
+        return await this.prices.toArray()
     }
 
 }

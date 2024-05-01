@@ -4,8 +4,11 @@ import {GuestInterface } from "../../Models/Guest/GuestInterface";
 
 export class GuestHttpService {
 
-    public async getGuests (url: string): Promise<GuestInterface[]> { 
-        const response: AxiosResponse<GuestInterface[]> = await axiosClient.get<GuestInterface[]>(url);
+    readonly url: string = 'guest';
+
+    public async getGuests (): Promise<GuestInterface[]> { 
+        const response: AxiosResponse<GuestInterface[]> = 
+        await axiosClient.get<GuestInterface[]>(this.url);
         return response.data;
     }
 }

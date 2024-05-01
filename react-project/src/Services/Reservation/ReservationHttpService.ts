@@ -4,8 +4,11 @@ import {ReservationInterface } from "../../Models/Reservation/ReservationInterfa
 
 export class ReservationHttpService {
 
-    public async getReservations (url: string): Promise<ReservationInterface[]> { 
-        const response: AxiosResponse<ReservationInterface[]> = await axiosClient.get<ReservationInterface[]>(url);
+    readonly url: string = 'reservation';
+
+    public async getReservations (): Promise<ReservationInterface[]> { 
+        const response: AxiosResponse<ReservationInterface[]> = 
+        await axiosClient.get<ReservationInterface[]>(this.url);
         return response.data;
     }
 }

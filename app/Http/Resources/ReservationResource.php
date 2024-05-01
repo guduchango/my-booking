@@ -32,6 +32,8 @@ class ReservationResource extends JsonResource
             'res_status' => $this->res_status,
             'res_channel' => $this->res_channel,
             'res_comments' => $this->res_comments,
+            'res_gue_id' => $this->res_gue_id,
+            'res_uni_id' => $this->res_uni_id,
             'guest' => new GuestResource($this->guest),
             'unit' => new UnitResource($this->unit),
             'res_created_at' => $this->res_created_at,

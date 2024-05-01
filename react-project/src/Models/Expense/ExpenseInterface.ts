@@ -13,7 +13,7 @@ export interface ExpenseInterface {
     exp_price:       number;
     exp_price_dolar: null;
     exp_date:        Date;
-    unit:            UnitInterface;
+    exp_uni_id:      number;
     exp_created_at:  Date;
     exp_updated_at:  Date;
 }

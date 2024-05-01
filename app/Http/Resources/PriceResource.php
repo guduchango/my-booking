@@ -20,6 +20,7 @@ class PriceResource extends JsonResource
             'pri_price' => $this->pri_price,
             'pri_price_dolar' => $this->pri_price_dolar,
             'unit' => new UnitResource($this->unit),
+            'pri_uni_id' => $this->pri_uni_id,
             'pri_created_at' => $this->pri_created_at,
             'pri_updated_at' => $this->pri_updated_at,
 

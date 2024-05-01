@@ -1,11 +1,14 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "../../Api/axiosClient";
-import {GuestInterface } from "../../Models/Guest/GuestInterface";
+import {PriceInterface } from "../../Models/Price/PriceInterface";
 
-export class GuestHttpService {
+export class PriceHttpService {
 
-    public async getGuests (url: string): Promise<GuestInterface[]> { 
-        const response: AxiosResponse<GuestInterface[]> = await axiosClient.get<GuestInterface[]>(url);
+    readonly url: string = 'price';
+
+    public async getPrices (): Promise<PriceInterface[]> { 
+        const response: AxiosResponse<PriceInterface[]> = 
+        await axiosClient.get<PriceInterface[]>(this.url);
         return response.data;
     }
 }

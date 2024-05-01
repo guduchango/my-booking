@@ -19,7 +19,9 @@ export interface ReservationInterface {
     res_status: number;
     res_channel: number;
     res_comments: number;
-    res_created_at: number;   
+    res_created_at: number;
     res_updated_at: number;
     res_beauty_dates: string;
+    res_uni_id: number;
+    res_gue_id: number;
 }

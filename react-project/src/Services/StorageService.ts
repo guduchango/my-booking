@@ -2,16 +2,26 @@
 import Dexie, { Table } from 'dexie';
 import { GuestInterface } from '../Models/Guest/GuestInterface';
 import { ReservationInterface } from '../Models/Reservation/ReservationInterface';
+import {ExpenseInterface} from "../Models/Expense/ExpenseInterface";
+import { PriceInterface } from '../Models/Price/PriceInterface';
+import { PromotionInterface } from '../Models/Promotion/PromotionInterface';
+import { UnitInterface } from '../Models/Unit/UnitInterface';
+import {CurrencyInterface} from "../Models/Currency/CurrencyInterface";
 
 
 export class StorageService extends Dexie {
-    public guests!: Table<GuestInterface>; 
-    public reservations!: Table<ReservationInterface>; 
+    public guests!: Table<GuestInterface>;
+    public reservations!: Table<ReservationInterface>;
+    public expenses!: Table<ExpenseInterface>;
+    public prices!: Table<PriceInterface>;
+    public promotions!: Table<PromotionInterface>;
+    public units!: Table<UnitInterface>;
+    public currencies!: Table<CurrencyInterface>;
 
     public constructor() {
         super("MyBookintV1");
         this.version(1).stores({
-            guests: 
+            guests:
                 "gue_id,"+
                 "gue_name,"+
                 "gue_last_name,"+
@@ -20,7 +30,7 @@ export class StorageService extends Dexie {
                 "gue_phone_number,"+
                 "gue_created_at,"+
                 "gue_updated_at",
-            reservations: 
+            reservations:
                 "res_id,"+
                 "res_start_date,"+
                 "res_end_date,"+
@@ -39,9 +49,50 @@ export class StorageService extends Dexie {
                 "res_comments,"+
                 "res_created_at,"+
                 "res_updated_at,"+
-                "res_beauty_dates"
-                
+                "res_beauty_dates",
+            prices:
+                "pri_id,"+
+                "pri_date,"+
+                "pri_price,"+
+                "pri_price_dolar,"+
+                "pri_uni_id,"+
+                "pri_created_at,"+
+                "pri_updated_at",
+            promotions:
+                "pro_id,"+
+                "pro_date,"+
+                "pro_units,"+
+                "pro_type,"+
+                "pro_value,"+
+                "pro_created_at,"+
+                "pro_updated_at",
+            units:
+                "uni_id,"+
+                "uni_name,"+
+                "uni_available_quantity,"+
+                "uni_max_people,"+
+                "uni_single_bed,"+
+                "uni_dobule_bed,"+
+                "uni_rooms,"+
+                "uni_created_at,"+
+                "uni_updated_at",
+            currencies:
+                "cur_id,"+
+                "cur_country,"+
+                "cur_price,"+
+                "cur_created_at,"+
+                "cur_updated_at",
+            expenses:
+                "exp_id,"+
+                "exp_type,"+
+                "exp_price,"+
+                "exp_price_dolar,"+
+                "exp_date,"+
+                "exp_uni_id,"+
+                "exp_created_at,"+
+                "exp_updated_at"
+
         });
     }
-    
+
 }
