@@ -1,12 +1,22 @@
-import { useContext, useState } from "react";
+import {useState } from "react";
 import Layout from "../../Components/Layout/Layout"
 import './reservation.css'
-import { GlobalContext } from "../../Context/Context";
+import {useGlobalContext } from "../../Context/Context";
+
+
+
 
 const Booking: React.FC = () => {
 
-    const context = useContext(GlobalContext);
-    const reservations = context.reservations
+    const {reservations,guests,expenses,prices,promotions,units,currencies} = useGlobalContext();
+
+    console.log('reservations',reservations)
+    console.log('guests',guests)
+    console.log('expenses',expenses)
+    console.log('prices',prices)
+    console.log('promotions',promotions)
+    console.log('units',units)
+    console.log('currencies',currencies)
 
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const openFilter = () => {

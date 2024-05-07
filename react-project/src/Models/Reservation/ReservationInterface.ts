@@ -22,6 +22,8 @@ export interface ReservationInterface {
     res_created_at: number;
     res_updated_at: number;
     res_beauty_dates: string;
+    unit: UnitInterface;
+    guest: GuestInterface;
     res_uni_id: number;
     res_gue_id: number;
 }
