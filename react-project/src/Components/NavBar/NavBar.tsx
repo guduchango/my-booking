@@ -26,7 +26,7 @@ const NavBar = () => {
                     <li>
                         <NavLink
                             className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
-                            to='/booking'>
+                            to='/reservation'>
                              <i className="icon-address-book"></i>
                             <span>Booking</span>
                         </NavLink>

@@ -1,24 +1,16 @@
+import './reservation.css'
 import {useState } from "react";
 import Layout from "../../Components/Layout/Layout"
-import './reservation.css'
 import {useGlobalContext } from "../../Context/Context";
+import { NavLink } from "react-router-dom";
 
 
+export const Reservation: React.FC = () => {
 
-
-const Booking: React.FC = () => {
-
-    const {reservations,guests,expenses,prices,promotions,units,currencies} = useGlobalContext();
-
-    console.log('reservations',reservations)
-    console.log('guests',guests)
-    console.log('expenses',expenses)
-    console.log('prices',prices)
-    console.log('promotions',promotions)
-    console.log('units',units)
-    console.log('currencies',currencies)
+    const {reservations} = useGlobalContext();
 
     const [showFilter, setShowFilter] = useState<boolean>(false);
+    
     const openFilter = () => {
         setShowFilter(true);
     };
@@ -26,6 +18,10 @@ const Booking: React.FC = () => {
     const closeFilter = () => {
         setShowFilter(false);
     };
+
+    // const clickReservation = (reservation: ReservationInterface) => {
+    //     console.log(reservation.res_beds)
+    // };
 
     return (
         <Layout>
@@ -60,25 +56,18 @@ const Booking: React.FC = () => {
                             <p>{reservation.res_adults} adults, {reservation.res_children} children</p>
                             <p>{reservation.unit.uni_name}</p>
                         </div>
+                        <div  className="tableRow-button-detail">
+                        <NavLink
+                            to='/reservation/details'
+                            state={{ reservation: reservation }}
+                            >
+                             <i className="icon-equalizer"></i> 
+                        </NavLink>
+                        
+                        </div>
                     </div>
                 ))}
-                <div className="pagination">
-                    <a
-                        href="#"
-                        className="pagination-previous"
-                    >
-                        <i className="icon-arrow-left"></i>
-                    </a>
-                    <a
-                        href="#"
-                        className="pagination-next"
-                    >
-                        <i className="icon-arrow-right"></i>
-                    </a>
-                </div>
             </div>
         </Layout>
     )
 }
-
-export default Booking

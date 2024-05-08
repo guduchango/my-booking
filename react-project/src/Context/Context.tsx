@@ -34,8 +34,6 @@ export const GlobalContext = createContext<GlobalContextProps | undefined>(
   undefined
 );
 
-//export const GlobalContextProvider: React.FC<Props> = ({ children }) => {
-
 export const GlobalContextProvider = ({ children }: Props) => {
 
   const [reservations,setReservations] = useState<ReservationInterface[]>([])

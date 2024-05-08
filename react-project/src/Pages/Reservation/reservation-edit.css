@@ -1,0 +1,20 @@
+.reservation-edit{
+    margin-inline: 5px;
+}
+
+.field-group{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.field-group label {
+    font-size: 16px;
+}
+
+.field-group input,select {
+    font-size: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-block: 5px;
+}

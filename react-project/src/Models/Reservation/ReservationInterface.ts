@@ -1,11 +1,17 @@
 import { GuestInterface } from "../Guest/GuestInterface";
 import { UnitInterface } from "../Unit/UnitInterface";
 
+export enum Status {
+    pending,
+    approved,
+    finished,
+    canceled,
+}
 
 export interface ReservationInterface {
     res_id: number;
-    res_start_date: Date;
-    res_end_date: Date;
+    res_start_date: string;
+    res_end_date: string;
     res_adults: number;
     res_children: number;
     res_beds: number;
@@ -16,7 +22,7 @@ export interface ReservationInterface {
     res_price_dolar: number;
     res_price_final: number;
     res_advance_payment: number;
-    res_status: number;
+    res_status: Status | string;
     res_channel: number;
     res_comments: number;
     res_created_at: number;
