@@ -8,7 +8,6 @@ import { NavLink } from "react-router-dom";
 export const Reservation: React.FC = () => {
 
     const {reservations} = useGlobalContext();
-
     const [showFilter, setShowFilter] = useState<boolean>(false);
     
     const openFilter = () => {

@@ -18,3 +18,29 @@
     border: 1px solid #ccc;
     margin-block: 5px;
 }
+
+.fieldGroup-title-button{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid rgb(195, 186, 186);
+    border-radius: 20px;
+    margin-inline: 5px;
+    margin-block: 5px;
+}
+
+.fieldGroup-title-button i{
+    padding-block:5px;
+    margin-block: 5px;
+    font-size: 20px;
+    padding-inline: 10px;
+    margin-inline: 10px;
+    background-color: green;
+    border-radius: 12px;
+}
+
+.fieldGroup-title-button label{
+    font-size: 20px;
+    padding-block:10px;
+    padding-inline: 20px;
+
+}

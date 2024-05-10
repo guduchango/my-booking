@@ -5,7 +5,13 @@ export enum Status {
     pending,
     approved,
     finished,
-    canceled,
+    canceled
+}
+
+export enum Channel {
+    direct,
+    booking,
+    block
 }
 
 export interface ReservationInterface {
@@ -23,10 +29,10 @@ export interface ReservationInterface {
     res_price_final: number;
     res_advance_payment: number;
     res_status: Status | string;
-    res_channel: number;
-    res_comments: number;
-    res_created_at: number;
-    res_updated_at: number;
+    res_channel: Channel | string;
+    res_comments: string;
+    res_created_at: string;
+    res_updated_at: string;
     res_beauty_dates: string;
     unit: UnitInterface;
     guest: GuestInterface;

@@ -2,6 +2,7 @@ export interface GuestInterface {
     gue_id: number;
     gue_name: string;
     gue_last_name: string;
+    gue_full_name: string;
     gue_identity_document: string;
     gue_email: string;
     gue_phone_number: string;

@@ -25,6 +25,7 @@ export class StorageService extends Dexie {
                 "gue_id,"+
                 "gue_name,"+
                 "gue_last_name,"+
+                "gue_full_name,"+
                 "gue_identity_document,"+
                 "gue_email,"+
                 "gue_phone_number,"+
