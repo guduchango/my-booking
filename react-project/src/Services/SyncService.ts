@@ -123,43 +123,43 @@ export class SyncService {
         for(const item of this.httpUnitItems ){
             await unitStorageService.create(item)
         }
-        this.storageUnitItems = await unitStorageService.getAll();
+        //this.storageUnitItems = await unitStorageService.getAll();
 
         this.httpExpenseItems = await expenseHttpService.getExpenses();
         for(const item of this.httpExpenseItems ){
             await expenseStorageService.create(item)
         }
-        this.storageExpenseItems = await expenseStorageService.getAll();
+        //this.storageExpenseItems = await expenseStorageService.getAll();
 
         this.httpCurrencyItems = await currencyHttpService.getCurrencys();
         for(const item of this.httpCurrencyItems ){
             await currencyStorageService.create(item)
         }
-        this.storageCurrencyItems = await currencyStorageService.getAll();
+        //this.storageCurrencyItems = await currencyStorageService.getAll();
 
         this.httpReservationItems = await reservationHttpService.getReservations();
         for(const item of this.httpReservationItems ){
             await reservationStorageService.create(item)
         }
-        this.storageReservationItems = await reservationStorageService.getAll();
+        //this.storageReservationItems = await reservationStorageService.getAll();
 
         this.httpGuestItems = await guestHttpService.getGuests();
         for(const item of this.httpGuestItems ){
             await guestStorageService.create(item);
         }
-        this.storageGuestItems = await guestStorageService.getAll();
+        //this.storageGuestItems = await guestStorageService.getAll();
 
         this.httpPromotionItems = await promotionHttpService.getPromotions();
         for(const item of this.httpPromotionItems ){
             await promotionStorageService.create(item);
         }
-        this.storagePromotionItems = await promotionStorageService.getAll();
+        //this.storagePromotionItems = await promotionStorageService.getAll();
 
         this.httpPriceItems = await priceHttpService.getPrices();
         for(const item of this.httpPriceItems ){
             await priceStorageService.create(item)
         }
-        this.storagePriceItems = await priceStorageService.getAll();
+        //this.storagePriceItems = await priceStorageService.getAll();
     }
 
   

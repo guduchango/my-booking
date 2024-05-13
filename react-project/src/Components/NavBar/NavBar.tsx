@@ -18,9 +18,9 @@ const NavBar = () => {
                     <li>
                         <NavLink
                             className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
-                            to='/lodging'>
+                            to='/unit'>
                             <i className="icon-office"></i>
-                            <span>Lodging</span>
+                            <span>Units</span>
                         </NavLink>
                     </li>
                     <li>
@@ -28,7 +28,7 @@ const NavBar = () => {
                             className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/reservation'>
                              <i className="icon-address-book"></i>
-                            <span>Booking</span>
+                            <span>Reservatios</span>
                         </NavLink>
                     </li>
                     <li>

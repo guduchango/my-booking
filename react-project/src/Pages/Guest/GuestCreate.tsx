@@ -1,11 +1,10 @@
 import Layout from "../../Components/Layout/Layout"
 
-export const Expense = () => {
+export const GuestCreate = () => {
 
     return (
         <Layout>
-            <h1>Expense</h1>
+            <h1>Guest Create</h1>
         </Layout>
-        
     )
 }

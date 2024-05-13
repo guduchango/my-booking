@@ -1,13 +1,11 @@
 import Layout from "../../Components/Layout/Layout"
 
-const Lodging = () => {
+export const UnitList = () => {
 
     return (
         <Layout>
-            <h1>Lodging</h1>
+            <h1>Units Lists</h1>
         </Layout>
         
     )
 }
-
-export default Lodging

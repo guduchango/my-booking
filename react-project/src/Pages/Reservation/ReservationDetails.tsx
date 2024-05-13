@@ -1,13 +1,28 @@
 import { NavLink, useLocation } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import './reservation-details.css'
+import { useGlobalContext } from "../../Context/Context";
+import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
+import { useEffect } from "react";
 
 export const ReservationDetails = () => {
 
+    const {reservation,setReservation,guest,setGuest,unit,setUnit} = useGlobalContext()
     const location = useLocation();
-    const reservation = location.state.reservation;
-    const guest = reservation.guest;
-    const unit = reservation.unit;
+    const resId = location.state.res_id;
+
+    const getReservation = async () => {
+        const storageReservationService = new ReservationStorageService()
+        const storageReservation = await storageReservationService.getById(resId);
+        setReservation(storageReservation);
+        setGuest(storageReservation.guest)
+        setUnit(storageReservation.unit)
+    }
+
+    useEffect(() => {
+        console.log('useEfect context provider getData()')
+        getReservation();
+    },[]);
 
     return (
         <Layout>
@@ -58,7 +73,7 @@ export const ReservationDetails = () => {
             <div className="page-edit">
                 <NavLink 
                 to='/reservation/edit'
-                state={{ reservation: reservation }}
+                state={{ res_id: reservation.res_id }}
                 >
                     <i className="icon-pencil"></i>
                 </NavLink>

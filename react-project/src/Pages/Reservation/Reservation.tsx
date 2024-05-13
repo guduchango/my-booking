@@ -1,14 +1,22 @@
 import './reservation.css'
-import {useState } from "react";
+import {useEffect, useState } from "react";
 import Layout from "../../Components/Layout/Layout"
 import {useGlobalContext } from "../../Context/Context";
 import { NavLink } from "react-router-dom";
+import { ReservationStorageService } from '../../Services/Reservation/ReservationStorageService';
+import { ReservationInterface } from '../../Models/Reservation/ReservationInterface';
 
 
 export const Reservation: React.FC = () => {
 
-    const {reservations} = useGlobalContext();
+    const [reservations, setReservations] = useState<ReservationInterface[]>([]);
     const [showFilter, setShowFilter] = useState<boolean>(false);
+
+    const getReservations = async () => {
+        const storageReservationService = new ReservationStorageService()
+        const storageReservations = await storageReservationService.getAll();
+        setReservations(storageReservations);
+    }
     
     const openFilter = () => {
         setShowFilter(true);
@@ -21,6 +29,11 @@ export const Reservation: React.FC = () => {
     // const clickReservation = (reservation: ReservationInterface) => {
     //     console.log(reservation.res_beds)
     // };
+
+    useEffect(() => {
+        console.log('getReservation')
+        getReservations();
+      },[]);
 
     return (
         <Layout>
@@ -58,7 +71,7 @@ export const Reservation: React.FC = () => {
                         <div  className="tableRow-button-detail">
                         <NavLink
                             to='/reservation/details'
-                            state={{ reservation: reservation }}
+                            state={{ res_id: reservation.res_id }}
                             >
                              <i className="icon-equalizer"></i> 
                         </NavLink>

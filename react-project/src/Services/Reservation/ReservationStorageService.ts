@@ -40,7 +40,7 @@ export class ReservationStorageService extends StorageService {
     }
 
     async getById(res_id: number) {
-        return await this.reservations.where({ res_id: res_id }).first()
+        return await this.reservations.where({ res_id: res_id }).first() as ReservationInterface
     }
 
     async getAll(){

@@ -7,22 +7,39 @@ import { upperCaseFirst } from "../../Utils/GeneralFunctions";
 import { adults, beds, channels, children, status } from "../../Utils/StaticData";
 import { useGlobalContext } from "../../Context/Context";
 import Select from "react-select";
+import { UnitStorageService } from "../../Services/Unit/UnitStorageService";
+import { UnitInterface } from "../../Models/Unit/UnitInterface";
+import { GuestInterface } from "../../Models/Guest/GuestInterface";
+import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
 
 export const ReservationEdit = () => {
-  const location = useLocation();
-  const [reservation, setReservation] = useState<ReservationInterface>(location.state.reservation);
 
-  const {units} = useGlobalContext();
-  const {guests} = useGlobalContext();
+  const { reservation, setReservation } = useGlobalContext()
 
-  const guestItems= guests.map(item => ({
-      value: item.gue_id,
-      label: item.gue_full_name
+  const [units, setUnits] = useState<UnitInterface[]>([]);
+  const [guests, setGuests] = useState<GuestInterface[]>([]);
+
+
+  const getUnits = async () => {
+    const unitStorageService = new UnitStorageService()
+    const unitsStorage = await unitStorageService.getAll();
+    setUnits(unitsStorage)
+  }
+
+  const getGuests = async () => {
+    const guestStorageService = new GuestStorageService()
+    const guestStorage = await guestStorageService.getAll();
+    setGuests(guestStorage)
+}
+
+  const guestItems = guests.map(item => ({
+    value: item.gue_id,
+    label: item.gue_full_name
   }));
 
   console.log(guestItems)
 
-  const unitsItems= units.map(item => ({
+  const unitsItems = units.map(item => ({
     value: item.uni_id,
     label: item.uni_name
   }));
@@ -30,18 +47,46 @@ export const ReservationEdit = () => {
   console.log(reservation)
 
 
-  // useEffect(() => {
-  //     console.log("chango gues id=> => ",reservation.res_gue_id);
-  //   },[reservation]);
+  useEffect(() => {
+    setReservation(reservation)
+    getGuests()
+    getUnits();
+  }, []);
 
   return (
     <Layout>
-       <div className="page-back">
-                <NavLink to='/reservation'>
-                    <i className="icon-arrow-left"></i>
-                </NavLink>
-            </div>
+      <div className="page-back">
+        <NavLink 
+        to='/reservation/details'
+        state={{ res_id: reservation.res_id }}
+        >
+          <i className="icon-arrow-left"></i>
+        </NavLink>
+      </div>
       <div className="reservation-edit">
+        <div className="field-group">
+          <div className="fieldGroup-title-button">
+            <label>Guest</label>
+            <NavLink to='/guest/create'>
+              <i className="icon-plus"></i>
+            </NavLink>
+          </div>
+
+          <Select
+            className="guest-select"
+            options={guestItems}
+            onChange={(event) => setReservation({ ...reservation, res_gue_id: event?.value })}
+            value={guestItems.filter((option) => (option.value === reservation.res_gue_id))}
+          />
+        </div>
+        <div className="field-group">
+            <label>Unit</label>
+          <Select
+            options={unitsItems}
+            onChange={(event) => setReservation({ ...reservation, res_uni_id: event?.value })}
+            value={unitsItems.filter((option) => (option.value === reservation.res_uni_id))}
+          />
+        </div>
         <div className="field-group">
           <label>Check-In</label>
           <input
@@ -67,9 +112,9 @@ export const ReservationEdit = () => {
             value={reservation.res_adults}
             onChange={(event) => setReservation({ ...reservation, res_adults: Number(event.target.value) })}
           >
-           {adults.map((type,index) => (
+            {adults.map((type, index) => (
               <option value={type} key={index} >
-                {type} 
+                {type}
               </option>
             ))}
           </select>
@@ -81,9 +126,9 @@ export const ReservationEdit = () => {
             value={reservation.res_children}
             onChange={(event) => setReservation({ ...reservation, res_children: Number(event.target.value) })}
           >
-           {children.map((type,index) => (
+            {children.map((type, index) => (
               <option value={type} key={index} >
-                {type} 
+                {type}
               </option>
             ))}
           </select>
@@ -95,9 +140,9 @@ export const ReservationEdit = () => {
             value={reservation.res_beds}
             onChange={(event) => setReservation({ ...reservation, res_beds: Number(event.target.value) })}
           >
-            {beds.map((type,index) => (
+            {beds.map((type, index) => (
               <option value={type} key={index} >
-                {type} 
+                {type}
               </option>
             ))}
           </select>
@@ -109,57 +154,34 @@ export const ReservationEdit = () => {
             value={reservation.res_status}
             onChange={(event) => setReservation({ ...reservation, res_status: event.target.value })}
           >
-            {status.map((type,index) => (
+            {status.map((type, index) => (
               <option value={type} key={index} >
-                {upperCaseFirst(type)} 
+                {upperCaseFirst(type)}
               </option>
             ))}
           </select>
-          </div>
-          <div className="field-group">
+        </div>
+        <div className="field-group">
           <label>Channel</label>
           <select
             name="res_channel"
             value={reservation.res_channel}
             onChange={(event) => setReservation({ ...reservation, res_channel: event.target.value })}
           >
-            {channels.map((type,index) => (
+            {channels.map((type, index) => (
               <option value={type} key={index} >
-                {upperCaseFirst(type)} 
+                {upperCaseFirst(type)}
               </option>
             ))}
           </select>
         </div>
-       
-        <div className="field-group">
-          <div className="fieldGroup-title-button">
-            <label>Guest</label>
-            <i className="icon-plus"></i>
-          </div>
-          
-          <Select
-            className="guest-select"
-            options={guestItems}
-            onChange={(event) => setReservation({ ...reservation, res_gue_id: event?.value })}
-            value={guestItems.filter((option)=> (option.value === reservation.res_gue_id ))}
-        />
-        </div>
-        <div className="field-group">
-          <label>Unit</label>
-          <Select
-            options={unitsItems}
-            onChange={(event) => setReservation({ ...reservation, res_uni_id: event?.value })}
-            value={unitsItems.filter((option)=> (option.value === reservation.res_uni_id ))}
-        />
-        </div>
-       
         <div className="field-group">
           <label>Comments</label>
-          <textarea 
-          rows={6}
-          name="res_comments"
-          onChange={(event) => setReservation({ ...reservation, res_comments: event.target.value })}
-          value={reservation.res_comments}
+          <textarea
+            rows={6}
+            name="res_comments"
+            onChange={(event) => setReservation({ ...reservation, res_comments: event.target.value })}
+            value={reservation.res_comments}
           >
           </textarea>
         </div>
