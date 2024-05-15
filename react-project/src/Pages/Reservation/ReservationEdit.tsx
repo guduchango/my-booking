@@ -1,7 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import './reservation-edit.css'
-import { ReservationInterface } from '../../Models/Reservation/ReservationInterface';
 import { useEffect, useState } from "react";
 import { upperCaseFirst } from "../../Utils/GeneralFunctions";
 import { adults, beds, channels, children, status } from "../../Utils/StaticData";
@@ -30,7 +29,7 @@ export const ReservationEdit = () => {
     const guestStorageService = new GuestStorageService()
     const guestStorage = await guestStorageService.getAll();
     setGuests(guestStorage)
-}
+  }
 
   const guestItems = guests.map(item => ({
     value: item.gue_id,
@@ -56,12 +55,15 @@ export const ReservationEdit = () => {
   return (
     <Layout>
       <div className="page-back">
-        <NavLink 
-        to='/reservation/details'
-        state={{ res_id: reservation.res_id }}
-        >
-          <i className="icon-arrow-left"></i>
-        </NavLink>
+        <div className="pageback-wrapper">
+          <h1>Reservation edit</h1>
+          <NavLink
+            to='/reservation/details'
+            state={{ res_id: reservation.res_id }}
+          >
+            <i className="icon-arrow-left"></i>
+          </NavLink>
+        </div>
       </div>
       <div className="reservation-edit">
         <div className="field-group">
@@ -80,7 +82,7 @@ export const ReservationEdit = () => {
           />
         </div>
         <div className="field-group">
-            <label>Unit</label>
+          <label>Unit</label>
           <Select
             options={unitsItems}
             onChange={(event) => setReservation({ ...reservation, res_uni_id: event?.value })}

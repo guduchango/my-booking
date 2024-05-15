@@ -22,6 +22,8 @@ class GuestResource extends JsonResource
             'gue_email' => $this->gue_email,
             'gue_phone_number' => $this->gue_phone_number,
             'gue_birthday' => $this->gue_birthday,
+            'gue_age' => $this->getAge(),
+            'gue_full_name' => $this->gue_name." ".$this->gue_last_name,
             'gue_created_at' => $this->gue_created_at,
             'gue_updated_at' => $this->gue_updated_at,
         ];

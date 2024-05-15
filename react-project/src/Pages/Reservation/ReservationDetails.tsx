@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export const ReservationDetails = () => {
 
-    const {reservation,setReservation,guest,setGuest,unit,setUnit} = useGlobalContext()
+    const { reservation, setReservation, guest, setGuest, unit, setUnit } = useGlobalContext()
     const location = useLocation();
     const resId = location.state.res_id;
 
@@ -22,14 +22,17 @@ export const ReservationDetails = () => {
     useEffect(() => {
         console.log('useEfect context provider getData()')
         getReservation();
-    },[]);
+    }, []);
 
     return (
         <Layout>
             <div className="page-back">
-                <NavLink to='/reservation'>
-                    <i className="icon-arrow-left"></i>
-                </NavLink>
+                <div className="pageback-wrapper">
+                    <h1>Reservation details</h1>
+                    <NavLink to='/reservation'>
+                        <i className="icon-arrow-left"></i>
+                    </NavLink>
+                </div>
             </div>
             <div className="table-reservationDetails">
                 <div className="table-reservationDetails-right">
@@ -69,11 +72,11 @@ export const ReservationDetails = () => {
                     <p>{reservation.res_price_dolar}</p>
                 </div>
             </div>
-            
+
             <div className="page-edit">
-                <NavLink 
-                to='/reservation/edit'
-                state={{ res_id: reservation.res_id }}
+                <NavLink
+                    to='/reservation/edit'
+                    state={{ res_id: reservation.res_id }}
                 >
                     <i className="icon-pencil"></i>
                 </NavLink>

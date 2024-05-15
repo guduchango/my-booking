@@ -1,9 +1,10 @@
 @import './assets/font-style.css';
 
 :root {
-  --gray10: '#717171';
-  --gray20: '#B0B0B0';
-  --pink10: '#A081B0';
+  --gray10: #717171;
+  --gray20: #B0B0B0;
+  --pink10: #A081B0;
+  --red10: #EA3547;
 
   .roboto-thin {
     font-family: "Roboto", sans-serif;

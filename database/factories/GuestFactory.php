@@ -19,10 +19,10 @@ class GuestFactory extends Factory
         return [
             'gue_name' => fake()->firstNameMale(),
             'gue_last_name' => fake()->lastName(),
-            'gue_identity_document' => fake()->numberBetween(0, 20),
-            'gue_email' => fake()->name(),
-            'gue_phone_number' => fake()->name(),
-            'gue_birthday' => fake()->dateTimeInInterval('-60 year', '-20 year')
+            'gue_identity_document' => fake()->bothify('########'),
+            'gue_email' => fake()->email(),
+            'gue_phone_number' => fake()->phoneNumber(),
+            'gue_birthday' => fake()->dateTimeInInterval('-30 year', '-20 year')
         ];
     }
 }

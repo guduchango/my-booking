@@ -19,7 +19,7 @@ export class StorageService extends Dexie {
     public currencies!: Table<CurrencyInterface>;
 
     public constructor() {
-        super("MyBookintV1");
+        super("MyBooking");
         this.version(1).stores({
             guests:
                 "gue_id,"+

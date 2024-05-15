@@ -1,0 +1,23 @@
+.page-back{
+    box-shadow: inset 0 0 0 1px red;
+    padding-block: 5px;
+    padding-inline-end: 5px;
+    
+}
+
+.pageback-wrapper{
+    margin-inline: 20px;
+    margin-block: 5px;
+    justify-content: space-between;
+    display: flex;
+}
+
+.pageback-wrapper i{
+    border: 1px red solid;
+    border-radius: 5px;
+    padding-inline: 10px;
+    padding-block: 5px;
+    font-size: 20px;
+    background-color: var(--gray20);
+    color: black;
+}

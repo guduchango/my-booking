@@ -1,0 +1,53 @@
+.guest-create{
+    margin-inline: 5px;
+}
+
+.field-group{
+    display: flex;
+    flex-direction: column;
+    margin-block: 10px;
+}
+
+.field-group label {
+    font-size: 16px;
+}
+
+.error {
+    color: var(--red10)
+}
+
+.field-group input,select {
+    font-size: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-block: 5px;
+}
+
+.fieldGroup-title-button{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid rgb(195, 186, 186);
+    border-radius: 12px;
+    margin-block: 5px;
+}
+
+.fieldGroup-title-button i{
+    padding-block:5px;
+    margin-block: 5px;
+    font-size: 20px;
+    padding-inline: 10px;
+    margin-inline: -50px;
+    background-color: rgb(170, 222, 170);
+    border-radius: 12px;
+    position: absolute;
+}
+
+.fieldGroup-title-button label{
+    font-size: 20px;
+    padding-block:10px;
+    padding-inline: 20px;
+}
+
+.fieldGroup-save{
+    background-color: var(--gray20)
+}
