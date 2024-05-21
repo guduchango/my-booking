@@ -6,7 +6,7 @@ export interface GuestInterface {
     gue_identity_document: string;
     gue_email: string;
     gue_phone_number: string;
-    gue_birthday: Date;
+    gue_birthday: string;
     gue_age: number;
     gue_created_at: Date;
     gue_updated_at: Date;

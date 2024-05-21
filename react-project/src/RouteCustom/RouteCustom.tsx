@@ -3,11 +3,12 @@ import Home from "../Pages/Home/Home"
 import Login from "../Pages/Login/Login"
 import { Reservation } from "../Pages/Reservation/Reservation"
 import { ReservationDetails } from "../Pages/Reservation/ReservationDetails"
-import { ReservationEdit } from "../Pages/Reservation/ReservationEdit"
+import { ReservationSave } from "../Pages/Reservation/ReservationSave"
 import { UnitList } from "../Pages/Unit/UnitList"
 import { UnitCreate } from "../Pages/Unit/UnitCreate"
-import { GuestCreate } from "../Pages/Guest/GuestCreate"
+import { GuestSave } from "../Pages/Guest/GuestSave"
 import { Expense } from "../Pages/Expense/Expense"
+import { GuestList } from "../Pages/Guest/GuestList"
 
 const RouteCustom = () => {
 
@@ -16,11 +17,12 @@ const RouteCustom = () => {
       { path: '/login', element: <Login /> },
       { path: '/reservation', element: <Reservation /> },
       { path: '/reservation/details', element: <ReservationDetails /> },
-      { path: '/reservation/edit', element: <ReservationEdit /> },
+      { path: '/reservation/save', element: <ReservationSave /> },
       { path: '/unit', element: <UnitList /> },
       { path: '/unit/create', element: <UnitCreate /> },
       { path: '/expense', element: <Expense /> },
-      { path: '/guest/create', element: <GuestCreate /> },
+      { path: '/guest/save', element: <GuestSave /> },
+      { path: '/guest', element: <GuestList /> },
     ])
   
 }

@@ -27,13 +27,4 @@ class Guest extends Model
     public function getAge(){
         return date_diff(date_create($this->gue_birthday), date_create('now'))->y;
     }
-
-    protected function gueBirthday(): Attribute
-    {
-        return Attribute::make(
-            set: fn (string $value) =>
-                Carbon::createFromFormat('m/d/Y', $value)
-                    ->format('Y/m/d')
-        );
-    }
 }

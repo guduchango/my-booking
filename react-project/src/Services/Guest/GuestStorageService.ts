@@ -40,7 +40,7 @@ export class GuestStorageService extends StorageService {
     }
 
     async getById(gue_id: number) {
-        return await this.guests.where({ gue_id: gue_id }).first()
+        return await this.guests.where({ gue_id: gue_id }).first() as GuestInterface
     }
 
     async getAll(){

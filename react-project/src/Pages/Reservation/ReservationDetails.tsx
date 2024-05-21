@@ -75,7 +75,7 @@ export const ReservationDetails = () => {
 
             <div className="page-edit">
                 <NavLink
-                    to='/reservation/edit'
+                    to='/reservation/save'
                     state={{ res_id: reservation.res_id }}
                 >
                     <i className="icon-pencil"></i>

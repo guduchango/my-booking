@@ -1,21 +1,18 @@
-import './reservation.css'
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../../Components/Layout/Layout"
-import {useGlobalContext } from "../../Context/Context";
+import { GuestInterface } from "../../Models/Guest/GuestInterface";
+import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
 import { NavLink } from "react-router-dom";
-import { ReservationStorageService } from '../../Services/Reservation/ReservationStorageService';
-import { ReservationInterface } from '../../Models/Reservation/ReservationInterface';
 
+export const GuestList = () => {
 
-export const Reservation: React.FC = () => {
-
-    const [reservations, setReservations] = useState<ReservationInterface[]>([]);
+    const [reservations, setReservations] = useState<GuestInterface[]>([]);
     const [showFilter, setShowFilter] = useState<boolean>(false);
 
-    const getReservation = async () => {
-        const storageReservationService = new ReservationStorageService()
-        const storageReservations = await storageReservationService.getAll();
-        setReservations(storageReservations);
+    const getGuests = async () => {
+        const storageGuestService = new GuestStorageService()
+        const storageGuests = await storageGuestService.getAll();
+        setReservations(storageGuests);
     }
     
     const openFilter = () => {
@@ -26,17 +23,24 @@ export const Reservation: React.FC = () => {
         setShowFilter(false);
     };
 
-    // const clickReservation = (reservation: ReservationInterface) => {
-    //     console.log(reservation.res_beds)
-    // };
-
     useEffect(() => {
-        console.log('getReservation')
-        getReservation();
+        console.log('getGuests')
+        getGuests();
       },[]);
 
     return (
         <Layout>
+            <div className="page-back">
+                <div className="pageback-wrapper">
+                    <h1>Guests</h1>
+                    <NavLink 
+                    to='/guest/save'
+                    state={{ gue_id: 0 }}
+                    >
+                        <i className="icon-plus"></i>
+                    </NavLink>
+                </div>
+            </div>
             <div className="filter-wrapper">
                 <div className="filter-icons">
                     {showFilter && (
@@ -59,23 +63,21 @@ export const Reservation: React.FC = () => {
                 </div>
             </div>
             <div className="table">
-                {reservations.map((reservation) => (
-                    <div key={reservation.res_id} className="table-row" >
+                {reservations.map((guest) => (
+                    <div key={guest.gue_id} className="table-row" >
                         <div className="tableRow-wrapper">
-                            <p className="tableRow-title">{reservation.guest.gue_name + " " + reservation.guest.gue_last_name}</p>
-                            <p>{reservation.res_beauty_dates}</p>
-                            <p>{reservation.res_nights} nights</p>
-                            <p>{reservation.res_adults} adults, {reservation.res_children} children</p>
-                            <p>{reservation.unit.uni_name}</p>
+                            <p className="tableRow-title">{guest.gue_full_name}</p>
+                            <p>phone: {guest.gue_phone_number}</p>
+                            <p>email: {guest.gue_email}</p>
+                            <p>age: {guest.gue_age}</p>
                         </div>
                         <div  className="tableRow-button-detail">
                         <NavLink
-                            to='/reservation/details'
-                            state={{ res_id: reservation.res_id }}
+                            to='/guest/save'
+                            state={{ gue_id: guest.gue_id }}
                             >
                              <i className="icon-equalizer"></i> 
                         </NavLink>
-                        
                         </div>
                     </div>
                 ))}

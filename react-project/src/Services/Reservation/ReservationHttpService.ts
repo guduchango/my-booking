@@ -11,4 +11,10 @@ export class ReservationHttpService {
         await axiosClient.get<ReservationInterface[]>(this.url);
         return response.data;
     }
+
+    public async storeReservation (reservation: ReservationInterface): Promise<ReservationInterface> { 
+        const response: AxiosResponse<ReservationInterface> = 
+        await axiosClient.post<ReservationInterface>(this.url,reservation);
+        return response.data;
+    }
 }

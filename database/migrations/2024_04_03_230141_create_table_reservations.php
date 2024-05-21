@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Query\Expression;
 
 return new class extends Migration
 {
@@ -18,9 +19,9 @@ return new class extends Migration
             $table->tinyInteger('res_adults');
             $table->tinyInteger('res_children');
             $table->tinyInteger('res_beds')->default(0);
-            $table->tinyInteger('res_nights');
+            $table->tinyInteger('res_nights')->default(0);
             $table->tinyInteger('res_discount_value')->default(0);
-            $table->json('res_discount_detail');
+            $table->json('res_discount_detail')->default(new Expression('(JSON_ARRAY())'));;
             $table->float('res_price')->nullable();
             $table->float('res_price_dolar')->default(0);
             $table->float('res_price_final')->nullable();

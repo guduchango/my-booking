@@ -44,3 +44,11 @@
     padding-inline: 20px;
 
 }
+
+.fieldGroup-button-save {
+    margin-block: 5px;
+    padding-block: 7px;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 16px;
+}

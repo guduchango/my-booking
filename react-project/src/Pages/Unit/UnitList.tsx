@@ -6,6 +6,5 @@ export const UnitList = () => {
         <Layout>
             <h1>Units Lists</h1>
         </Layout>
-        
     )
 }

@@ -2,16 +2,16 @@ import { GuestInterface } from "../Guest/GuestInterface";
 import { UnitInterface } from "../Unit/UnitInterface";
 
 export enum Status {
-    pending,
-    approved,
-    finished,
-    canceled
+    pending = "pending",
+    approved = "approved",
+    finished = "finished",
+    canceled = "canceled"
 }
 
 export enum Channel {
-    direct,
-    booking,
-    block
+    direct = "direct",
+    booking = "booking",
+    block = "block"
 }
 
 export interface ReservationInterface {

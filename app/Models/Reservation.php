@@ -14,6 +14,18 @@ class Reservation extends Model
     const CREATED_AT = 'res_created_at';
     const UPDATED_AT = 'res_updated_at';
     protected $primaryKey = 'res_id';
+    protected $fillable = [
+        'res_start_date',
+        'res_end_date',
+        'res_adults',
+        'res_children',
+        'res_beds',
+        'res_status',
+        'res_channel',
+        'res_comments',
+        'res_gue_id',
+        'res_uni_id',
+    ];
 
 
     public function guest(): HasOne
