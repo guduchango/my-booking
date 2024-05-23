@@ -64,7 +64,7 @@ export const GuestSave = () => {
                 </div>
             </div>
 
-            <div className="guest-create">
+            <div className="save-form">
                 <div className="field-group">
                     <label>Name</label>
                     <input

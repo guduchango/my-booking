@@ -12,7 +12,7 @@ import { ExpenseHttpService } from "./Expense/ExpensetHttpService";
 import { GuestHttpService } from "./Guest/GuestHttpService";
 import { GuestStorageService } from "./Guest/GuestStorageService";
 import { PriceStorageService } from "./Price/PriceStorageService";
-import { PriceHttpService } from "./Price/PricetHttpService";
+import { PriceHttpService } from "./Price/PriceHttpService";
 import { PromotionStorageService } from "./Promotion/PromotionStorageService";
 import { PromotionHttpService } from "./Promotion/PromotiontHttpService";
 import { ReservationHttpService } from "./Reservation/ReservationHttpService";

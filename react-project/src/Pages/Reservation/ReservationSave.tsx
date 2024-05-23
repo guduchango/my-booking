@@ -1,9 +1,9 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import './reservation-edit.css'
-import { FormEvent, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { getCurrentDate, newObj, upperCaseFirst } from "../../Utils/GeneralFunctions";
-import { adults, beds, channels, children, status } from "../../Utils/StaticData";
+import { adults, beds, channels, children, res_adults, res_beds, res_channels, res_children, res_status, status, uni_adults } from "../../Utils/StaticData";
 import Select from "react-select";
 import { UnitStorageService } from "../../Services/Unit/UnitStorageService";
 import { UnitInterface } from "../../Models/Unit/UnitInterface";
@@ -13,19 +13,17 @@ import { Channel, ReservationInterface, Status } from "../../Models/Reservation/
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { ReservationHttpService } from "../../Services/Reservation/ReservationHttpService";
 
-
-
 export const ReservationSave = () => {
   const location = useLocation()
   const { state } = location
   const resId = state.res_id;
+  const navigate = useNavigate();
   const [reservation, setReservation] = useState<ReservationInterface>(newObj<ReservationInterface>);
   const [units, setUnits] = useState<UnitInterface[]>([]);
   const [guests, setGuests] = useState<GuestInterface[]>([]);
 
-
   const setReservationFromCreate = async () => {
-    console.log("resId chango",resId)
+    
     if (resId===0) {
       const reservationDefault: ReservationInterface = {} as ReservationInterface;
       reservationDefault.res_start_date = getCurrentDate();
@@ -73,9 +71,17 @@ export const ReservationSave = () => {
 
   const onClickSave = async () => {
     const reservationHttpService =  new ReservationHttpService()
-    const reservationResponse = await reservationHttpService.storeReservation(reservation)
     const reservationStorageService = new ReservationStorageService();
-    await reservationStorageService.create(reservationResponse)
+    let reservationResponse: ReservationInterface = {} as ReservationInterface;
+    if(resId === 0){
+      reservationResponse = await reservationHttpService.storeReservation(reservation)
+      await reservationStorageService.create(reservationResponse)
+    } else {
+      reservationResponse = await reservationHttpService.updateReservation(reservation,resId)
+      await reservationStorageService.update(resId,reservationResponse)
+    }
+    
+    navigate("/reservation");
   };
 
   useEffect(() => {
@@ -99,7 +105,7 @@ export const ReservationSave = () => {
           </NavLink>
         </div>
       </div>
-      <div className="reservation-edit">
+      <div className="save-form">
           <div className="field-group">
             <div className="fieldGroup-title-button">
               <label>Guest</label>
@@ -147,7 +153,7 @@ export const ReservationSave = () => {
               value={reservation.res_adults}
               onChange={(event) => setReservation({ ...reservation, res_adults: Number(event.target.value) })}
             >
-              {adults.map((type, index) => (
+              {res_adults.map((type, index) => (
                 <option value={type} key={index} >
                   {type}
                 </option>
@@ -161,7 +167,7 @@ export const ReservationSave = () => {
               value={reservation.res_children}
               onChange={(event) => setReservation({ ...reservation, res_children: Number(event.target.value) })}
             >
-              {children.map((type, index) => (
+              {res_children.map((type, index) => (
                 <option value={type} key={index} >
                   {type}
                 </option>
@@ -175,7 +181,7 @@ export const ReservationSave = () => {
               value={reservation.res_beds}
               onChange={(event) => setReservation({ ...reservation, res_beds: Number(event.target.value) })}
             >
-              {beds.map((type, index) => (
+              {res_beds.map((type, index) => (
                 <option value={type} key={index} >
                   {type}
                 </option>
@@ -190,7 +196,7 @@ export const ReservationSave = () => {
               value={reservation.res_status}
               onChange={(event) => setReservation({ ...reservation, res_status: event.target.value })}
             >
-              {status.map((type, index) => (
+              {res_status.map((type, index) => (
                 <option value={type} key={index} >
                   {upperCaseFirst(type)}
                 </option>
@@ -205,13 +211,12 @@ export const ReservationSave = () => {
               value={reservation.res_channel}
               onChange={(event) => setReservation({ ...reservation, res_channel: event.target.value })}
             >
-              {channels.map((type, index) => (
+              {res_channels.map((type, index) => (
                 <option value={type} key={index} >
                   {upperCaseFirst(type)}
                 </option>
               ))}
             </select>
-            
           </div>
           <div className="field-group">
             <label>Comments</label>

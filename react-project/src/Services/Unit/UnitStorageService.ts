@@ -40,7 +40,7 @@ export class UnitStorageService extends StorageService {
     }
 
     async getById(uni_id: number) {
-        return await this.units.where({ uni_id: uni_id }).first()
+        return await this.units.where({ uni_id: uni_id }).first() as UnitInterface
     }
 
     async getAll(){

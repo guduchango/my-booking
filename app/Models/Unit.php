@@ -13,4 +13,12 @@ class Unit extends Model
     const UPDATED_AT = 'uni_updated_at';
     protected $primaryKey = 'uni_id';
     protected $table = 'units';
+    protected $fillable = [
+        'uni_name',
+        'uni_available_quantity',
+        'uni_max_people',
+        'uni_single_bed',
+        'uni_dobule_bed',
+        'uni_rooms'
+    ];
 }

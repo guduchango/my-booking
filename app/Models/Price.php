@@ -13,6 +13,13 @@ class Price extends Model
     const CREATED_AT = 'pri_created_at';
     const UPDATED_AT = 'pri_updated_at';
     protected $primaryKey = 'pri_id';
+    protected $fillable = [
+        'pri_date',
+        'pri_price',
+        'pri_price_dolar',
+        'pri_uni_id',
+        'pri_res_id'
+    ];
 
     public function unit(): HasOne
     {

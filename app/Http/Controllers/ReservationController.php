@@ -22,4 +22,11 @@ class ReservationController extends Controller
         $reservation = Reservation::create($request->all());
         return new ReservationResource(Reservation::findOrFail($reservation->res_id));
     }
+
+    public function update(ReservationRequest $request, int $id){
+        $reservation = Reservation::findOrFail($id);
+        $reservation->fill($request->all());
+        $reservation->save();
+        return new ReservationResource(Reservation::findOrFail($reservation->res_id));
+    }
 }

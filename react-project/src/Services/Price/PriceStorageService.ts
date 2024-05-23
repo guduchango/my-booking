@@ -47,4 +47,20 @@ export class PriceStorageService extends StorageService {
         return await this.prices.toArray()
     }
 
+    async createOrUpdate(price: PriceInterface){
+        console.log(price);
+        const priId = price.pri_id;
+
+        const findPrice = await this.getById(priId);
+        console.log('findPrice',findPrice)
+
+        if(findPrice === undefined){
+            await this.create(price)
+        }else{
+            await this.update(priId,price);
+        }
+
+        return price;
+    }
+
 }

@@ -5,10 +5,11 @@ import { Reservation } from "../Pages/Reservation/Reservation"
 import { ReservationDetails } from "../Pages/Reservation/ReservationDetails"
 import { ReservationSave } from "../Pages/Reservation/ReservationSave"
 import { UnitList } from "../Pages/Unit/UnitList"
-import { UnitCreate } from "../Pages/Unit/UnitCreate"
+import { UnitSave } from "../Pages/Unit/UnitSave"
 import { GuestSave } from "../Pages/Guest/GuestSave"
 import { Expense } from "../Pages/Expense/Expense"
 import { GuestList } from "../Pages/Guest/GuestList"
+import { PriceCalendar } from "../Pages/Price/PriceCalendar"
 
 const RouteCustom = () => {
 
@@ -19,10 +20,11 @@ const RouteCustom = () => {
       { path: '/reservation/details', element: <ReservationDetails /> },
       { path: '/reservation/save', element: <ReservationSave /> },
       { path: '/unit', element: <UnitList /> },
-      { path: '/unit/create', element: <UnitCreate /> },
+      { path: '/unit/save', element: <UnitSave /> },
       { path: '/expense', element: <Expense /> },
       { path: '/guest/save', element: <GuestSave /> },
       { path: '/guest', element: <GuestList /> },
+      { path: '/price/calendar', element: <PriceCalendar /> },
     ])
   
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->float('pri_price');
             $table->float('pri_price_dolar')->nullable();
             $table->integer('pri_uni_id');
+            $table->integer('pri_res_id')->nullable();
             $table->timestamp('pri_created_at')->nullable();
             $table->timestamp('pri_updated_at')->nullable();
         });

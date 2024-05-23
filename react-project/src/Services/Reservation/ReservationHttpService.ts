@@ -17,4 +17,11 @@ export class ReservationHttpService {
         await axiosClient.post<ReservationInterface>(this.url,reservation);
         return response.data;
     }
+
+    public async updateReservation (reservation: ReservationInterface, res_id: number): Promise<ReservationInterface> { 
+        const updateUrl = this.url + "/" + res_id
+        const response: AxiosResponse<ReservationInterface> = 
+        await axiosClient.put<ReservationInterface>(updateUrl,reservation);
+        return response.data;
+    }
 }

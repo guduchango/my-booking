@@ -57,6 +57,7 @@ export class StorageService extends Dexie {
                 "pri_price,"+
                 "pri_price_dolar,"+
                 "pri_uni_id,"+
+                "pri_res_id,"+
                 "pri_created_at,"+
                 "pri_updated_at",
             promotions:
