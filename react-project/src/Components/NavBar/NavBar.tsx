@@ -39,14 +39,6 @@ const NavBar = () => {
                             <span>Reservatios</span>
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink
-                            className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
-                            to='/expense'>
-                             <i className="icon-coin-dollar"></i>
-                            <span>Expense</span>
-                        </NavLink>
-                    </li>
                 </ol>
             </nav>
         </div>

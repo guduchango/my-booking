@@ -1,8 +1,13 @@
+a:link, a:visited {
+    text-decoration: none;
+    color: black;
+  }
+
 /* Page Back component */
 .page-back{
-    box-shadow: inset 0 0 0 1px red;
     padding-block: 5px;
     padding-inline-end: 5px;
+    border-bottom: 1px solid var(--blue950);
     
 }
 
@@ -11,16 +16,17 @@
     margin-block: 5px;
     justify-content: space-between;
     display: flex;
+    
 }
 
 .pageback-wrapper i{
-    border: 1px red solid;
     border-radius: 5px;
     padding-inline: 10px;
     padding-block: 5px;
     font-size: 20px;
-    background-color: var(--gray20);
-    color: black;
+    background-color: var(--blue100);
+    border: solid 1px var(--blue950) ;
+    color: var(--blue400);
 }
 
 /* General save form */
@@ -49,40 +55,125 @@
     margin-block: 5px;
 }
 
-.save-form .fieldGroup-title-button{
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid rgb(195, 186, 186);
-    border-radius: 12px;
-    margin-block: 5px;
-}
-
-.save-form .fieldGroup-title-button i{
-    padding-block:5px;
-    margin-block: 5px;
-    font-size: 20px;
-    padding-inline: 10px;
-    margin-inline: -50px;
-    background-color: rgb(170, 222, 170);
-    border-radius: 12px;
-    position: absolute;
-}
-
-.save-form .fieldGroup-title-button label{
-    font-size: 20px;
-    padding-block:10px;
-    padding-inline: 20px;
-}
-
-.save-form .fieldGroup-save{
-    background-color: var(--gray20)
-}
 
 
 .fieldGroup-button-save {
     margin-block: 5px;
     padding-block: 7px;
     border-radius: 5px;
-    border: 1px solid black;
+    font-size: 16px;
+    background-color: var(--blue400)
+}
+
+
+.form-error{
+    margin-block: 2px;
+    
+}
+
+.formError-wrapper{
+    border-radius: 5px;
+    background-color: #FFF5F5;
+    font-size: 16px;
+    padding-block: 5px;
+    padding-inline: 5px;
+    text-align: center;
+}
+
+
+.table {
+    margin-inline-start: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-block-end: 35px;
+    margin-block-start: 5px;
+}
+
+.table-row {
+    border-radius: 0.5rem;
+    border: solid 1px var(--blue950);
+    /* flex-direction: row;
+    justify-content: space-between; */
+    display: grid;
+    grid-template-columns: 250px 1fr;
+}
+.table-row:nth-child(odd){
+    background-color: white
+}
+
+.table-row:nth-child(even){
+    background-color: var(--blue50);
+}
+
+
+.tableRow-footer p{
+    font-weight: 700;
+}
+
+.tableRow-wrapper {
+    margin-inline-start: 15px;
+}
+
+.tableRow-wrapper p {
+    margin: 0;
+}
+
+.tableRow-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.tableRow-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.tableRow-header i {
     font-size: 16px;
 }
+
+.tableRow-body{
+    font-size: 14px;
+}
+.tableRow-body p {
+    padding: 2px;
+}
+
+.tableRow-footer p {
+    padding: 5px;
+    font-size: 16px;
+    display: flex;
+    justify-content: end;
+}
+
+.filter-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-block-start: 5px;
+}
+
+.filter-icons {
+    display: flex;
+    justify-content: end;
+}
+
+.filter-icons i {
+    font-size: 18px;
+}
+
+.filter-input {
+    display: inline-block;
+    max-width: 100%;
+    padding-inline: 5px;
+}
+
+.filter-input input {
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 20px;
+    margin-block-end: 5px;
+}
+

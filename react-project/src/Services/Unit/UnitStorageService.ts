@@ -47,4 +47,8 @@ export class UnitStorageService extends StorageService {
         return await this.units.toArray()
     }
 
+    async getFirst() {
+        return await this.units.toCollection().first();
+    }
+
 }

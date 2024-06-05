@@ -50,7 +50,9 @@ export class StorageService extends Dexie {
                 "res_comments,"+
                 "res_created_at,"+
                 "res_updated_at,"+
-                "res_beauty_dates",
+                "res_beauty_dates,"+
+                "res_uni_id," +
+                "res_gue_id",
             prices:
                 "pri_id,"+
                 "pri_date,"+
@@ -71,7 +73,6 @@ export class StorageService extends Dexie {
             units:
                 "uni_id,"+
                 "uni_name,"+
-                "uni_available_quantity,"+
                 "uni_max_people,"+
                 "uni_single_bed,"+
                 "uni_dobule_bed,"+

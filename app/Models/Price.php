@@ -25,4 +25,15 @@ class Price extends Model
     {
         return $this->hasOne(Unit::class,'uni_id', 'pri_uni_id');
     }
+
+    function canReservate(string $start, string $end, int $uni_id): bool{
+
+        $count = $this->where('pri_date','>=',$start)
+            ->where('pri_date','<=',$end)
+            ->where('pri_uni_id' ,'=',$uni_id)
+            ->where('pri_res_id','<>','0')
+            ->count();
+
+        return ($count > 0) ? false : true;
+    }
 }

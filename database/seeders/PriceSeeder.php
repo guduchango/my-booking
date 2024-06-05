@@ -14,7 +14,7 @@ class PriceSeeder extends Seeder
      */
     public function run(): void
     {
-        $units = Unit::select('uni_id')->get('id')->toArray();
+       /* $units = Unit::select('uni_id')->get('id')->toArray();
         $startDate = date('Y-m-d');
         $period = new \DatePeriod(new \DateTime($startDate),
             new \DateInterval('P1D'),
@@ -28,7 +28,7 @@ class PriceSeeder extends Seeder
                 $price->pri_uni_id = $item['uni_id'];
                 $price->save();
             }
-        }
+        }*/
     }
 
 }

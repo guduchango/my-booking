@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "../../Api/axiosClient";
-import {ReservationInterface } from "../../Models/Reservation/ReservationInterface";
+import {ReservationCheckInterface, ReservationInterface } from "../../Models/Reservation/ReservationInterface";
 
 export class ReservationHttpService {
 

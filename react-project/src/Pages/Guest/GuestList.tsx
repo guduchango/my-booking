@@ -6,13 +6,16 @@ import { NavLink } from "react-router-dom";
 
 export const GuestList = () => {
 
-    const [reservations, setReservations] = useState<GuestInterface[]>([]);
+    const [guests, setGuests] = useState<GuestInterface[]>([]);
     const [showFilter, setShowFilter] = useState<boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [filteredResults, setFilteredResults] = useState<GuestInterface[]>(guests);
 
     const getGuests = async () => {
         const storageGuestService = new GuestStorageService()
         const storageGuests = await storageGuestService.getAll();
-        setReservations(storageGuests);
+        setGuests(storageGuests);
+        setFilteredResults(storageGuests);
     }
     
     const openFilter = () => {
@@ -21,7 +24,25 @@ export const GuestList = () => {
 
     const closeFilter = () => {
         setShowFilter(false);
+        setFilteredResults(guests);
     };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value.toLowerCase();
+        setSearchTerm(value);
+
+        if (value === '') {
+            setFilteredResults(guests);
+        } else {
+            const filtered = guests.filter(guest =>
+                guest.gue_name.toLowerCase().includes(value) || 
+                guest.gue_last_name.toLowerCase().includes(value) || 
+                guest.gue_phone_number.toLowerCase().includes(value)
+            );
+            setFilteredResults(filtered);
+        }
+    };
+
 
     useEffect(() => {
         console.log('getGuests')
@@ -35,7 +56,7 @@ export const GuestList = () => {
                     <h1>Guests</h1>
                     <NavLink 
                     to='/guest/save'
-                    state={{ gue_id: 0 }}
+                    state={{ gue_id: 0, res_id: 0 }}
                     >
                         <i className="icon-plus"></i>
                     </NavLink>
@@ -57,28 +78,30 @@ export const GuestList = () => {
                 <div className="filter-input">
                     {showFilter && (
                         <div className="showBox">
-                            <input placeholder="Buscar...."></input>
+                            <input 
+                            type="text"
+                            placeholder="Search...."
+                            onChange={handleInputChange}
+                            value={searchTerm}
+                            />
                         </div>
                     )}
                 </div>
             </div>
             <div className="table">
-                {reservations.map((guest) => (
+                {filteredResults.map((guest) => (
                     <div key={guest.gue_id} className="table-row" >
-                        <div className="tableRow-wrapper">
+                        <NavLink
+                            to='/guest/save'
+                            state={{ gue_id: guest.gue_id, res_id:0 }}
+                            >
+                             <div className="tableRow-wrapper">
                             <p className="tableRow-title">{guest.gue_full_name}</p>
                             <p>phone: {guest.gue_phone_number}</p>
                             <p>email: {guest.gue_email}</p>
                             <p>age: {guest.gue_age}</p>
                         </div>
-                        <div  className="tableRow-button-detail">
-                        <NavLink
-                            to='/guest/save'
-                            state={{ gue_id: guest.gue_id }}
-                            >
-                             <i className="icon-equalizer"></i> 
                         </NavLink>
-                        </div>
                     </div>
                 ))}
             </div>

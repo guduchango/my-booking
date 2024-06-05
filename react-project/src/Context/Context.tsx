@@ -5,7 +5,7 @@ import { ReservationInterface } from '../Models/Reservation/ReservationInterface
 //import { ExpenseInterface } from '../Models/Expense/ExpenseInterface.ts';
 //import { PriceInterface } from '../Models/Price/PriceInterface.ts';
 //import { PromotionInterface } from '../Models/Promotion/PromotionInterface.ts';
-import { UnitInterface } from '../Models/Unit/UnitInterface.ts';
+import { UnitAvailableRequestInterface, UnitInterface, UnitPriceInterface } from '../Models/Unit/UnitInterface.ts';
 //import { CurrencyInterface } from '../Models/Currency/CurrencyInterface.ts';
 import { SyncService } from '../Services/SyncService.ts';
 import { newObj } from '../Utils/GeneralFunctions.ts';
@@ -18,21 +18,12 @@ interface GlobalContextProps {
   setGuest: (item: GuestInterface) => void; 
   unit: UnitInterface,
   setUnit: (item: UnitInterface) => void; 
-  //lists
-  //guests: GuestInterface[];
-  //setGuests: (item: GuestInterface[]) => void;
-  //reservations: ReservationInterface[];
-  // setReservations: (item: ReservationInterface[]) => void
-  // expenses: ExpenseInterface[];
-  // setExpenses: (item: ExpenseInterface[]) => void
-  // prices: PriceInterface[];
-  // setPrices: (item: PriceInterface[]) => void
-  // promotions: PromotionInterface[];
-  // setPromotions: (item: PromotionInterface[]) => void
-  // units: UnitInterface[];
-  // setUnits: (item: UnitInterface[]) => void
-  // currencies: CurrencyInterface[];
-  // setCurrencies: (item: CurrencyInterface[]) => void
+  availableUnits: UnitInterface[],
+  setAvailableUnits: (item: UnitInterface[]) => void; 
+  unitAvailableRequest: UnitAvailableRequestInterface,
+  setUnitAvailableRequest: (item: UnitAvailableRequestInterface) => void; 
+  unitPrice: UnitPriceInterface,
+  setUnitPrice: (item: UnitPriceInterface) => void; 
   
 }
 
@@ -45,35 +36,23 @@ export const GlobalContext = createContext<GlobalContextProps | undefined>(
 );
 
 export const GlobalContextProvider = ({ children }: Props) => {
-  //objectLists
-  // const [reservations,setReservations] = useState<ReservationInterface[]>([])
-  // const [guests,setGuests] = useState<GuestInterface[]>([])
-  // const [expenses,setExpenses] = useState<ExpenseInterface[]>([]);
-  // const [prices,setPrices] = useState<PriceInterface[]>([]);  
-  // const [promotions,setPromotions] = useState<PromotionInterface[]>([]);
-  // const [units,setUnits] = useState<UnitInterface[]>([]);
-  // const [currencies,setCurrencies] = useState<CurrencyInterface[]>([]);
   //Objects
   const [reservation,setReservation] = useState<ReservationInterface>(newObj<ReservationInterface>());
   const [unit,setUnit] = useState<UnitInterface>(newObj<UnitInterface>());
   const [guest,setGuest] = useState<GuestInterface>(newObj<GuestInterface>());
+  const [availableUnits,setAvailableUnits] = useState<UnitInterface[]>(newObj<UnitInterface[]>());
+  const [unitAvailableRequest, setUnitAvailableRequest] = useState<UnitAvailableRequestInterface>(newObj<UnitAvailableRequestInterface>);
+  const [unitPrice, setUnitPrice] = useState<UnitPriceInterface>(newObj<UnitPriceInterface>);
 
   const getData = async () => {
     const syncService = new SyncService();
     await syncService.setTables();
-    //setReservations(syncService.getStorageReservationItems);
-    //setGuests(syncService.getStorageGuestItems);
-    //setExpenses(syncService.getStorageExpenseItems)
-    //setPrices(syncService.getStoragePriceItems);
-    //setPromotions(syncService.getStoragePromotionItems);
-    //setUnits(syncService.getStorageUnitItems);
-    //setCurrencies(syncService.getStorageCurrencyItems);
   }
  
   useEffect(() => {
     console.log('useEfect context provider getData()')
     getData();
-  },[]);
+  },[unitPrice]);
 
   const contextValue: GlobalContextProps = {
     reservation,
@@ -82,22 +61,12 @@ export const GlobalContextProvider = ({ children }: Props) => {
     setGuest,
     unit,
     setUnit,
-    //Set lists
-    // reservations,
-    // setReservations,
-    // guests,
-    // setGuests,
-    // expenses,
-    // setExpenses,
-    // prices,
-    // setPrices,
-    // promotions,
-    // setPromotions,
-    // units,
-    // setUnits,
-    // currencies,
-    // setCurrencies
-    
+    availableUnits,
+    setAvailableUnits,
+    unitAvailableRequest,
+    setUnitAvailableRequest,
+    unitPrice,
+    setUnitPrice
   };
 
   return (

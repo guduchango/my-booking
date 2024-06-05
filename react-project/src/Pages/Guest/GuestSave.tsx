@@ -12,6 +12,8 @@ export const GuestSave = () => {
     const location = useLocation()
     const { state } = location
     const gueId = state.gue_id;
+    const resId = state.res_id;
+    const backUrl = (resId !== 0)?'/reservation/save' : '/guest'
     const navigate = useNavigate();
 
     const onClickSave = async () => {
@@ -26,7 +28,7 @@ export const GuestSave = () => {
             await guestStorageService.update(gueId,guestResponse)
         }
         
-        navigate("/guest");
+        navigate(backUrl);
     };
 
     const setGuestFromCreate = async () => {
@@ -57,7 +59,8 @@ export const GuestSave = () => {
                 <div className="pageback-wrapper">
                     <h1>Guest save</h1>
                     <NavLink
-                        to='/guest'
+                        to={backUrl}
+                        state={{gue_id: 0, res_id: resId}}
                     >
                         <i className="icon-arrow-left"></i>
                     </NavLink>

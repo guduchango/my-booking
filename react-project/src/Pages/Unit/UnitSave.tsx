@@ -35,7 +35,6 @@ export const UnitSave = () => {
             const unitDefault: UnitInterface = {} as UnitInterface;
             unitDefault.uni_id = 0
             unitDefault.uni_name = ""
-            unitDefault.uni_available_quantity = 0
             unitDefault.uni_max_people = 0
             unitDefault.uni_single_bed = 0
             unitDefault.uni_dobule_bed = 0
@@ -68,14 +67,12 @@ export const UnitSave = () => {
                         to='/price/calendar'
                         state={{ uni_id: unitId}}
                         >
-                        <i className="icon-calendar"></i>
+                        <i className="icon-coin-dollar"></i>
                         </NavLink>
                     )}
                   
                 </div>
             </div>
-            
-
             <div className="save-form">
                 <div className="field-group">
                     <label>Name</label>
@@ -83,20 +80,6 @@ export const UnitSave = () => {
                         value={unit.uni_name}
                         onChange={(event) => setUnit({ ...unit, uni_name: event.target.value })}
                     />
-                </div>
-                <div className="field-group">
-                    <label>Available</label>
-                    <select
-                        name="uni_available_quantity"
-                        value={unit.uni_available_quantity}
-                        onChange={(event) => setUnit({ ...unit, uni_available_quantity: Number(event.target.value) })}
-                    >
-                        {uni_availableQuantity.map((type, index) => (
-                            <option value={type} key={index} >
-                                {type}
-                            </option>
-                        ))}
-                    </select>
                 </div>
                 <div className="field-group">
                     <label>Rooms</label>

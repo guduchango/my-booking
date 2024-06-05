@@ -15,4 +15,16 @@ Route::apiResource('api/expense', \App\Http\Controllers\ExpenseController::class
 Route::apiResource('api/promotion', \App\Http\Controllers\PromotionController::class);
 
 Route::post('api/price/range-price', [\App\Http\Controllers\PriceController::class,'savePriceByRange']);
+Route::post('api/unit/units-available', [\App\Http\Controllers\UnitController::class,'getAvailable']);
+
+
+Route::get('/artisan/migarte-refresh',function(){
+    Artisan::call('migrate:refresh');
+    return 'exito';
+});
+
+Route::get('/artisan/db-seed',function(){
+    Artisan::call('db:seed');
+    return 'exito';
+});
 

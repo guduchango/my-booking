@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "../../Api/axiosClient";
-import {UnitInterface } from "../../Models/Unit/UnitInterface";
+import {UnitAvailableRequestInterface, UnitInterface } from "../../Models/Unit/UnitInterface";
 
 export class UnitHttpService {
 
@@ -23,5 +23,11 @@ export class UnitHttpService {
         const response: AxiosResponse<UnitInterface> = 
         await axiosClient.put<UnitInterface>(updateUrl,guest);
         return response.data;
+    }
+
+    public async availableUnits(availableUnitRequest: UnitAvailableRequestInterface): Promise<AxiosResponse>{
+        const response: AxiosResponse<UnitInterface[]> = 
+        await axiosClient.post<UnitInterface[]>(this.url+'/units-available',availableUnitRequest)
+        return response;
     }
 }

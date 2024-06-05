@@ -1,16 +1,42 @@
 import { NavLink, useLocation } from "react-router-dom"
 import Layout from "../../Components/Layout/Layout"
-import { useState } from "react";
-import { PriceInterface, PriceRageInterface } from "../../Models/Price/PriceInterface";
+import { useEffect, useState } from "react";
+import { CalendarEvent, PriceInterface, PriceRageInterface } from "../../Models/Price/PriceInterface";
 import { newObj } from "../../Utils/GeneralFunctions";
 import { PriceHttpService } from "../../Services/Price/PriceHttpService";
 import { PriceStorageService } from "../../Services/Price/PriceStorageService";
+import { Calendar, momentLocalizer, Event, Views } from 'react-big-calendar';
+import moment from 'moment';
+import './price-calendar.css'
+// Import the default CSS for the calendar
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+// Set up the localizer by providing the moment Object to the correct localizer.
+const localizer = momentLocalizer(moment);
+
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 export const PriceCalendar = () => {
+
     const [priRange, setPriRange] = useState<PriceRageInterface>(newObj<PriceRageInterface>);
+    const [dayPrices, setDayPrices] = useState<CalendarEvent[]>([]);
+    
     const location = useLocation()
     const { state } = location
     const uniId = state.uni_id;
+
+    const startEvents = async() => {
+        const priceStorageService = new PriceStorageService();
+        const priceEvents = await priceStorageService.getPriceUnitEvent(uniId)
+        setDayPrices(priceEvents)
+    }
+
+
+    useEffect(() => {
+        startEvents();
+    }, []);
+
 
     const onClickSave = async () => {
         const priceHttpService = new PriceHttpService()
@@ -18,42 +44,40 @@ export const PriceCalendar = () => {
         const priceStorageService = new PriceStorageService();
         const priceResponse: PriceInterface[] = await priceHttpService.storeRangePrice(priRange)
         for (const price of priceResponse) {
-            console.log('price',price)
             await priceStorageService.createOrUpdate(price)
         }
+        startEvents()
     };
-
-    // const setPriceFromCreate = async () => {
-    //     if (uniId === 0) {
-    //         const priRangeDefault: PriceRageInterface = {} as PriceRageInterface;
-    //         priRangeDefault.pri_from = ""
-    //         priRangeDefault.pri_to = ""
-    //         priRangeDefault.pri_value = 0
-    //         priRangeDefault.pri_uni_id = 0
-    //         setPriRange(priRangeDefault);
-    //     } else {
-            
-    //         setPrice(storagePrice);
-    //     }
-    // }
 
     return (
         <Layout>
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Price Price</h1>
-                    <NavLink 
-                    to='/price/save'
-                    state={{ gue_id: 0 }}
+                    <h1>Unit Prices</h1>
+                    <NavLink
+                        to='/unit/save'
+                        state={{ uni_id: uniId }}
                     >
                         <i className="icon-arrow-left"></i>
                     </NavLink>
                 </div>
-                <div className="save-form">
+            </div>
+            <div className="price-calendar">
+            <Calendar
+                    localizer={localizer}
+                    events={dayPrices}
+                    startAccessor="start"
+                    endAccessor="end"
+                    defaultView={Views.MONTH}
+                    style={{ height: 500 }}
+                />
+            </div>
+        
+            <div className="save-form">
                 <div className="field-group">
                     <label>Price</label>
                     <input
-                        type="number"
+                        type="string"
                         value={priRange.pri_value}
                         onChange={(event) => setPriRange({ ...priRange, pri_value: Number(event.target.value) })}
                     />
@@ -73,14 +97,13 @@ export const PriceCalendar = () => {
                         value={priRange.pri_to}
                         onChange={(event) => setPriRange({ ...priRange, pri_to: event.target.value })}
                     />
-                    
                 </div>
-               
+
                 <div className="field-group">
                     <button className="fieldGroup-button-save" onClick={onClickSave}>Save</button>
                 </div>
             </div>
-            </div>
+
         </Layout>
     )
 }

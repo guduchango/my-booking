@@ -1,101 +1,61 @@
-import { useCallback, useState } from 'react'
-import { Calendar, dateFnsLocalizer, Event } from 'react-big-calendar'
-import withDragAndDrop, { withDragAndDropProps } from 'react-big-calendar/lib/addons/dragAndDrop'
-import { format } from 'date-fns/format'
-import { parse } from 'date-fns/parse'
-import { startOfWeek } from 'date-fns/startOfWeek'
-import { getDay } from 'date-fns/getDay'
-import { enUS } from 'date-fns/locale/en-US'
-import { addHours } from 'date-fns/addHours'
-import { startOfHour } from 'date-fns/startOfHour'
+import { Calendar, momentLocalizer, Event, Views } from 'react-big-calendar';
+import moment from 'moment';
+
+// Import the default CSS for the calendar
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+// Set up the localizer by providing the moment Object to the correct localizer.
+const localizer = momentLocalizer(moment);
+
+// Define the type for the event
+interface CalendarEvent extends Event {
+    title: string;
+    start: Date;
+    end: Date;
+}
+
 
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import Layout from '../../Components/Layout/Layout'
-import Modal from '../../Modal/Modal'
 
-const locales = {
-    'en-US': enUS,
-}
-const endOfHour = (date: Date): Date => addHours(startOfHour(date), 1)
-const now = new Date()
-const start = endOfHour(now)
-const end = addHours(start, 2)
-// The types here are `object`. Strongly consider making them better as removing `locales` caused a fatal error
-const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales,
-
-})
-
-
-
-const DnDCalendar = withDragAndDrop(Calendar)
 
 
 export const PriceCalendarPepe = () => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleOpenModal = () => {
-        setIsOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsOpen(false);
-    };
-
-    const handleSubmitModal = (value: string) => {
-        console.log('Submitted value:', value);
-    };
-
-
-
-    const [events, setEvents] = useState<Event[]>([
+    // Define some sample events
+    const events: CalendarEvent[] = [
         {
-            title: 'Learn cool stuff',
-            start,
-            end,
+            title: 'Meeting',
+            start: new Date(2024, 0, 1), // May 1, 2024, 10:00 AM
+            end: new Date(2024, 0, 1),   // May 1, 2024, 12:00 PM
         },
-    ])
-
-    const handleSelectSlot = useCallback(
-        ({ start, end }) => {
-            const title = window.prompt('New Event name')
-            if (title) {
-                setEvents((prev) => [...prev, { start, end, title }])
-                console.log("title:", title)
-            }
-            //handleOpenModal()
-
+        {
+            title: 'Lunch',
+            start: new Date(2024, 0, 2), // May 2, 2024, 12:00 PM
+            end: new Date(2024, 0, 2),   // May 2, 2024, 1:00 PM
         },
-        [setEvents]
-    )
+        {
+            title: 'Conference',
+            start: new Date(2024, 6, 3),        // May 3, 2024, All day
+            end: new Date(2024, 6, 5),          // May 5, 2024, All day
+        },
+    ];
+
 
 
 
     return (
         <Layout>
-            <div>
-                {/* <button onClick={handleOpenModal}>Open Modal</button> */}
-                <Modal
-                    isOpen={isOpen}
-                    onClose={handleCloseModal}
-                    onSubmit={handleSubmitModal}
+            <div style={{ height: '500px' }}>
+                <Calendar
+                    localizer={localizer}
+                    events={events}
+                    startAccessor="start"
+                    endAccessor="end"
+                    defaultView={Views.MONTH}
+                    style={{ height: 500 }}
                 />
             </div>
-            <DnDCalendar
-                defaultView='month'
-                events={events}
-                localizer={localizer}
-                resizable
-                style={{ height: '400px' }}
-                onSelectSlot={handleSelectSlot}
-                selectable={true}
-
-            />
         </Layout>
 
 

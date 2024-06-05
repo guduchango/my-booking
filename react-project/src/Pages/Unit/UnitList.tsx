@@ -6,36 +6,53 @@ import { NavLink } from "react-router-dom";
 
 export const UnitList = () => {
 
-    const [reservations, setReservations] = useState<UnitInterface[]>([]);
+    const [units, setUnits] = useState<UnitInterface[]>([]);
     const [showFilter, setShowFilter] = useState<boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [filteredResults, setFilteredResults] = useState<UnitInterface[]>(units);
 
     const getUnits = async () => {
-        const storageUnitService = new UnitStorageService()
+        const storageUnitService = new UnitStorageService();
         const storageUnits = await storageUnitService.getAll();
-        setReservations(storageUnits);
+        setUnits(storageUnits);
+        setFilteredResults(storageUnits);
     }
-    
+
     const openFilter = () => {
         setShowFilter(true);
     };
 
     const closeFilter = () => {
         setShowFilter(false);
+        setFilteredResults(units);
+    };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value.toLowerCase();
+        setSearchTerm(value);
+
+        if (value === '') {
+            setFilteredResults(units);
+        } else {
+            const filtered = units.filter(unit =>
+                unit.uni_name.toLowerCase().includes(value)
+            );
+            setFilteredResults(filtered);
+        }
     };
 
     useEffect(() => {
-        console.log('getUnits')
         getUnits();
-      },[]);
+    }, []);
 
     return (
         <Layout>
             <div className="page-back">
                 <div className="pageback-wrapper">
                     <h1>Units</h1>
-                    <NavLink 
-                    to='/unit/save'
-                    state={{ uni_id: 0 }}
+                    <NavLink
+                        to='/unit/save'
+                        state={{ uni_id: 0 }}
                     >
                         <i className="icon-plus"></i>
                     </NavLink>
@@ -57,30 +74,33 @@ export const UnitList = () => {
                 <div className="filter-input">
                     {showFilter && (
                         <div className="showBox">
-                            <input placeholder="Buscar...."></input>
+                            <input
+                                type="text"
+                                placeholder="Search...."
+                                onChange={handleInputChange}
+                                value={searchTerm}
+                            >
+
+                            </input>
                         </div>
                     )}
                 </div>
             </div>
             <div className="table">
-                {reservations.map((unit) => (
+                {filteredResults.map((unit) => (
                     <div key={unit.uni_id} className="table-row" >
-                        <div className="tableRow-wrapper">
-                            <p className="tableRow-title">{unit.uni_name}</p>
-                            <p>Available: {unit.uni_available_quantity}</p>
-                            <p>Max People: {unit.uni_max_people}</p>
-                            <p>Rooms: {unit.uni_rooms}</p>
-                            <p>Single Bed: {unit.uni_rooms}</p>
-                            <p>Double Bed: {unit.uni_rooms}</p>
-                        </div>
-                        <div  className="tableRow-button-detail">
                         <NavLink
                             to='/unit/save'
                             state={{ uni_id: unit.uni_id }}
-                            >
-                             <i className="icon-equalizer"></i> 
+                        >
+                            <div className="tableRow-wrapper">
+                                <p className="tableRow-title">{unit.uni_name}</p>
+                                <p>Max People: {unit.uni_max_people}</p>
+                                <p>Rooms: {unit.uni_rooms}</p>
+                                <p>Single Bed: {unit.uni_rooms}</p>
+                                <p>Double Bed: {unit.uni_rooms}</p>
+                            </div>
                         </NavLink>
-                        </div>
                     </div>
                 ))}
             </div>
