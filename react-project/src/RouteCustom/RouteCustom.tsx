@@ -12,7 +12,6 @@ import { GuestList } from "../Pages/Guest/GuestList"
 import { PriceCalendar } from "../Pages/Price/PriceCalendar"
 import { UnitAvailableForm } from "../Pages/Unit/UnitAvailableForm"
 import { UnitAvailableList } from "../Pages/Unit/UnitAvailableList"
-import { PriceCalendarPepe } from "../Pages/Price/PriceCalendarPepe"
 import { ReservationCalendar } from "../Pages/Reservation/ReservationCalendar"
 
 const RouteCustom = () => {
@@ -32,7 +31,6 @@ const RouteCustom = () => {
       { path: '/guest/save', element: <GuestSave /> },
       { path: '/guest', element: <GuestList /> },
       { path: '/price/calendar', element: <PriceCalendar /> },
-      { path: '/price/calendarpepe', element: <PriceCalendarPepe /> },
     ])
   
 }

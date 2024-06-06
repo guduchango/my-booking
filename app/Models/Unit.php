@@ -15,10 +15,20 @@ class Unit extends Model
     protected $table = 'units';
     protected $fillable = [
         'uni_name',
-        'uni_available_quantity',
         'uni_max_people',
         'uni_single_bed',
         'uni_dobule_bed',
         'uni_rooms'
     ];
+
+    protected function casts(): array {
+
+        return [
+            'uni_name' => 'string',
+            'uni_max_people' => 'integer',
+            'uni_single_bed' => 'integer',
+            'uni_dobule_bed' => 'integer',
+            'uni_rooms' => 'integer',
+        ];
+    }
 }

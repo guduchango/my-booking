@@ -24,6 +24,18 @@ class Guest extends Model
         'gue_birthday'
     ];
 
+    protected function casts(): array {
+
+        return [
+            'gue_name' => 'string',
+            'gue_last_name' => 'string',
+            'gue_identity_document' => 'string',
+            'gue_email' => 'string',
+            'gue_phone_number' => 'string',
+            'gue_birthday' => 'string',
+        ];
+    }
+
     public function getAge(){
         return date_diff(date_create($this->gue_birthday), date_create('now'))->y;
     }

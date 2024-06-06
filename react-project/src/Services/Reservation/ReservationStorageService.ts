@@ -1,4 +1,4 @@
-import Dexie, { PromiseExtended } from "dexie"
+import Dexie from "dexie"
 import { StorageService } from "../StorageService"
 import { ReservationInterface } from '../../Models/Reservation/ReservationInterface';
 import { CalendarEvent } from "../../Models/Price/PriceInterface";

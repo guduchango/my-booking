@@ -1,9 +1,13 @@
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import NavBar from "../NavBar/NavBar"
 import './layout.css'
 import 'react-toastify/dist/ReactToastify.css';
 
-const Layout = ({ children }) => {
+interface LayoutProps{
+    children: React.ReactNode
+}
+
+const Layout = ({children}:LayoutProps) => {
 
     return (
         <div className="layout">

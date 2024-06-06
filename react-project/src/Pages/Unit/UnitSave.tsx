@@ -5,7 +5,7 @@ import { UnitHttpService } from "../../Services/Unit/UnitHttpService";
 import { UnitStorageService } from "../../Services/Unit/UnitStorageService";
 import { useEffect, useState } from "react";
 import { newObj } from "../../Utils/GeneralFunctions";
-import { uni_availableQuantity, uni_doubleBed, uni_maxPeople, uni_rooms, uni_sigleBed } from "../../Utils/StaticData";
+import {uni_doubleBed, uni_maxPeople, uni_rooms, uni_sigleBed } from "../../Utils/StaticData";
 
 export const UnitSave = () => {
 

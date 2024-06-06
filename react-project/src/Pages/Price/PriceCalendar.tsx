@@ -5,7 +5,7 @@ import { CalendarEvent, PriceInterface, PriceRageInterface } from "../../Models/
 import { newObj } from "../../Utils/GeneralFunctions";
 import { PriceHttpService } from "../../Services/Price/PriceHttpService";
 import { PriceStorageService } from "../../Services/Price/PriceStorageService";
-import { Calendar, momentLocalizer, Event, Views } from 'react-big-calendar';
+import { Calendar, momentLocalizer,Views } from 'react-big-calendar';
 import moment from 'moment';
 import './price-calendar.css'
 // Import the default CSS for the calendar
@@ -20,7 +20,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 export const PriceCalendar = () => {
 
     const [priRange, setPriRange] = useState<PriceRageInterface>(newObj<PriceRageInterface>);
-    const [dayPrices, setDayPrices] = useState<CalendarEvent[]>([]);
+    const [dayPrices, setDayPrices] = useState<CalendarEvent[]>();
     
     const location = useLocation()
     const { state } = location
@@ -28,7 +28,9 @@ export const PriceCalendar = () => {
 
     const startEvents = async() => {
         const priceStorageService = new PriceStorageService();
+        console.log(uniId)
         const priceEvents = await priceStorageService.getPriceUnitEvent(uniId)
+        console.log(priceEvents)
         setDayPrices(priceEvents)
     }
 

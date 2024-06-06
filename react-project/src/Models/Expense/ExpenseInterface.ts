@@ -1,6 +1,3 @@
-import { UnitInterface } from "../Unit/UnitInterface";
-
-
 export enum ExpType {
     Cleaning = "cleaning",
     Repairs = "repairs",

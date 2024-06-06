@@ -13,7 +13,8 @@ class PriceController extends Controller
     public function index(Request $request)
     {
         return PriceResource::collection(
-            Price::orderBy('pri_created_at', 'desc')
+            Price::where('pri_date', '>=', date('Y-m-d'))
+                ->orderBy('pri_created_at', 'desc')
                 ->get()
         );
     }

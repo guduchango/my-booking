@@ -21,6 +21,17 @@ class Price extends Model
         'pri_res_id'
     ];
 
+    protected function casts(): array {
+
+        return [
+            'pri_date' => 'string',
+            'pri_price' => 'float',
+            'pri_price_dolar' => 'float',
+            'pri_uni_id' => 'integer',
+            'pri_res_id' => 'integer',
+        ];
+    }
+
     public function unit(): HasOne
     {
         return $this->hasOne(Unit::class,'uni_id', 'pri_uni_id');

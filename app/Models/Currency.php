@@ -15,4 +15,18 @@ class Currency extends Model
     protected $primaryKey = 'cur_id';
     protected $table = 'currencies';
 
+    protected $fillable = [
+        'cur_country',
+        'cur_price',
+    ];
+
+    protected function casts(): array {
+
+        return [
+            'cur_country' => 'string',
+            'cur_price' => 'float',
+        ];
+    }
+
+
 }

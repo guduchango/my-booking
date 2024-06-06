@@ -117,7 +117,7 @@ export const ReservationSave = () => {
           <label>Unit</label>
           <Select
             options={unitsItems}
-            onChange={(event) => setReservation({ ...reservation, res_uni_id: event?.value })}
+            onChange={(event) => setReservation({ ...reservation, res_uni_id: Number(event?.value) })}
             value={unitsItems.filter((option) => (option.value === reservation.res_uni_id))}
             isDisabled={(resId == 0) ? true : false}
           />
@@ -149,7 +149,7 @@ export const ReservationSave = () => {
               <Select
                 className="guest-select"
                 options={guestItems}
-                onChange={(event) => setReservation({ ...reservation, res_gue_id: event?.value })}
+                onChange={(event) => setReservation({ ...reservation, res_gue_id: Number(event?.value) })}
                 value={guestItems.filter((option) => (option.value === reservation.res_gue_id))}
                 isDisabled={!!resId.id}
               />

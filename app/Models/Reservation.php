@@ -27,6 +27,22 @@ class Reservation extends Model
         'res_uni_id',
     ];
 
+    protected function casts(): array {
+
+        return [
+            'res_start_date' => 'string',
+            'res_end_date' => 'string',
+            'res_adults' => 'integer',
+            'res_children' => 'integer',
+            'res_beds' => 'integer',
+            'res_status' => 'string',
+            'res_channel' => 'string',
+            'res_comments' => 'string',
+            'res_gue_id' => 'integer',
+            'res_uni_id' => 'integer',
+        ];
+    }
+
 
     public function guest(): HasOne
     {

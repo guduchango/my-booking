@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->id('uni_id');
             $table->string('uni_name');
-            $table->tinyInteger('uni_available_quantity');
             $table->tinyInteger('uni_max_people');
             $table->tinyInteger('uni_single_bed');
             $table->tinyInteger('uni_dobule_bed');
