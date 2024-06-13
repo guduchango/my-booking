@@ -14,18 +14,16 @@ class PromotionSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['1','people','45'],
-            ['2','people','45'],
-            ['3','people','11'],
-            ['4','people','11'],
-            ['5','days','5'],
-            ['10','days','18'],
+            ['0','nothing'],
+            ['10','new guest'],
+            ['20','old guest'],
+            ['30','5 days or more'],
+            ['40','10 days or more']
         ];
         foreach($data as $item){
             $promotion = new Promotion();
-            $promotion->pro_units = $item[0];
-            $promotion->pro_type = $item[1];
-            $promotion->pro_value = $item[2];
+            $promotion->pro_value = $item[0];
+            $promotion->pro_name = $item[1];
             $promotion->save();
         }
 

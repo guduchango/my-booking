@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('promotions', function (Blueprint $table) {
             $table->id('pro_id');
-            $table->date('pro_date')->nullable(true);
-            $table->smallInteger('pro_units');
-            $table->enum('pro_type',['days','people','promotion']);
+            $table->string('pro_name');
             $table->float('pro_value');
             $table->timestamp('pro_created_at')->nullable();
             $table->timestamp('pro_updated_at')->nullable();

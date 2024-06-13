@@ -6,30 +6,48 @@ import { GuestInterface } from "../../Models/Guest/GuestInterface";
 import { GuestHttpService } from "../../Services/Guest/GuestHttpService";
 import { useEffect, useState } from "react";
 import { newObj } from "../../Utils/GeneralFunctions";
+import { useGlobalContext } from "../../Context/Context";
 
 export const GuestSave = () => {
-    const [guest, setGuest] = useState<GuestInterface>(newObj<GuestInterface>);
+    const { setGuest, guest } = useGlobalContext()
+    const [backUrl, setBackUrl] = useState<string>("");
     const location = useLocation()
     const { state } = location
     const gueId = state.gue_id;
-    const resId = state.res_id;
-    const backUrl = (resId !== 0)?'/reservation/save' : '/guest'
+    const fromPlace = state.fromPlace;
     const navigate = useNavigate();
 
     const onClickSave = async () => {
         const guestHttpService = new GuestHttpService()
         let guestResponse: GuestInterface = {} as GuestInterface;
         const guestStorageService = new GuestStorageService();
+        let returnGuest = newObj<GuestInterface>();
         if(gueId === 0){
             guestResponse = await guestHttpService.storeGuest(guest)
-            await guestStorageService.create(guestResponse)
+            returnGuest = await guestStorageService.create(guestResponse)
         }else{
             guestResponse = await guestHttpService.updateGuest(guest,gueId)
-            await guestStorageService.update(gueId,guestResponse)
+            returnGuest = await guestStorageService.update(gueId,guestResponse)
         }
-        
+        setGuest(returnGuest)
         navigate(backUrl);
     };
+
+    const getBackUrl = () => {
+        let backUrlValue= "";
+        switch (fromPlace) {
+            case "reservationCreate":
+                backUrlValue = "/reservation/create";
+                break;
+            case "reservationEdit":
+                backUrlValue = "/reservation/edit";
+                break;
+            case "guest":
+                backUrlValue = "/guest";
+                break;
+        }
+        setBackUrl(backUrlValue)
+    }
 
     const setGuestFromCreate = async () => {
         if (gueId === 0) {
@@ -50,6 +68,7 @@ export const GuestSave = () => {
 
     useEffect(() => {
         setGuestFromCreate();
+        getBackUrl();
     }, []);
 
     return (
@@ -60,7 +79,7 @@ export const GuestSave = () => {
                     <h1>Guest save</h1>
                     <NavLink
                         to={backUrl}
-                        state={{gue_id: 0, res_id: resId}}
+                        state={{gue_id: gueId}}
                     >
                         <i className="icon-arrow-left"></i>
                     </NavLink>

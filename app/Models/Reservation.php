@@ -20,11 +20,18 @@ class Reservation extends Model
         'res_adults',
         'res_children',
         'res_beds',
+        'res_nights',
+        'res_price',
+        'res_price_dolar',
+        'res_price_final',
+        'res_advance_payment',
         'res_status',
         'res_channel',
         'res_comments',
+        'res_pro_id',
         'res_gue_id',
         'res_uni_id',
+
     ];
 
     protected function casts(): array {
@@ -35,9 +42,15 @@ class Reservation extends Model
             'res_adults' => 'integer',
             'res_children' => 'integer',
             'res_beds' => 'integer',
+            'res_nights' => 'float',
+            'res_price' => 'float',
+            'res_price_dolar' => 'integer',
+            'res_price_final' => 'integer',
+            'res_advance_payment' => 'integer',
             'res_status' => 'string',
             'res_channel' => 'string',
             'res_comments' => 'string',
+            'res_pro_id' => 'string',
             'res_gue_id' => 'integer',
             'res_uni_id' => 'integer',
         ];
@@ -52,6 +65,11 @@ class Reservation extends Model
     public function unit(): HasOne
     {
         return $this->hasOne(Unit::class,'uni_id', 'res_uni_id');
+    }
+
+    public function promotion(): HasOne
+    {
+        return $this->hasOne(Promotion::class,'pro_id', 'res_pro_id');
     }
 
     public function getBeautyDates(){

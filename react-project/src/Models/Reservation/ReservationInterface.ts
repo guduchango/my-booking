@@ -1,4 +1,5 @@
 import { GuestInterface } from "../Guest/GuestInterface";
+import { PromotionInterface } from "../Promotion/PromotionInterface";
 import { UnitInterface } from "../Unit/UnitInterface";
 
 export enum Status {
@@ -22,8 +23,6 @@ export interface ReservationInterface {
     res_children: number;
     res_beds: number;
     res_nights: number;
-    res_discount_value: number;
-    res_discount_detail: number;
     res_price: number;
     res_price_dolar: number;
     res_price_final: number;
@@ -36,6 +35,8 @@ export interface ReservationInterface {
     res_beauty_dates: string;
     unit: UnitInterface;
     guest: GuestInterface;
+    promotion: PromotionInterface;
     res_uni_id: number;
     res_gue_id: number;
+    res_pro_id: number;
 }

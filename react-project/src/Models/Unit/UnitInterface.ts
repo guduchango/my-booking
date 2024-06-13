@@ -28,6 +28,7 @@ export interface UnitPriceInterface {
     upri_check_out: string,
     upri_people: number;
     upri_price: number;
+    upri_night: number;
 }
 
 

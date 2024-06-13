@@ -23,7 +23,6 @@ class UnitRequest extends FormRequest
     {
         return [
             'uni_name' => 'required',
-            'uni_available_quantity' => 'required',
             'uni_max_people' => 'required',
             'uni_single_bed' => 'required',
             'uni_dobule_bed' => 'required',

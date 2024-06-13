@@ -56,7 +56,7 @@ export const GuestList = () => {
                     <h1>Guests</h1>
                     <NavLink 
                     to='/guest/save'
-                    state={{ gue_id: 0, res_id: 0 }}
+                    state={{ gue_id: 0, fromPlace: "guest" }}
                     >
                         <i className="icon-plus"></i>
                     </NavLink>
@@ -93,7 +93,7 @@ export const GuestList = () => {
                     <div key={guest.gue_id} className="table-row" >
                         <NavLink
                             to='/guest/save'
-                            state={{ gue_id: guest.gue_id, res_id:0 }}
+                            state={{ gue_id: guest.gue_id, fromPlace: "guest" }}
                             >
                              <div className="tableRow-wrapper">
                             <p className="tableRow-title">{guest.gue_full_name}</p>

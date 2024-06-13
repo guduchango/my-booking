@@ -18,7 +18,6 @@ class UnitFactory extends Factory
     {
         return [
             'uni_name' => fake()->words(3,true),
-            'uni_available_quantity' => fake()->numberBetween(0, 20),
             'uni_single_bed' => fake()->numberBetween(0, 3),
             'uni_dobule_bed' => fake()->numberBetween(0, 3),
             'uni_max_people' => fake()->numberBetween(1, 10),

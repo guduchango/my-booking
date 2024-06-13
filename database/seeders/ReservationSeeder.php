@@ -131,8 +131,6 @@ class ReservationSeeder extends Seeder {
             $reservation->res_children = fake()->numberBetween(0, 5);
             $reservation->res_beds = fake()->numberBetween(1, 5);
             $reservation->res_nights = fake()->numberBetween(1, 5);
-            $reservation->res_discount_value = fake()->numberBetween(0, 60);
-            $reservation->res_discount_detail = json_encode(['json', 'example', 'data']);
             $reservation->res_price = fake()->numberBetween(50000, 200000);
             $reservation->res_price_dolar = fake()->numberBetween(20, 200);
             $reservation->res_price_final = fake()->numberBetween(50000, 200000);
@@ -140,6 +138,7 @@ class ReservationSeeder extends Seeder {
             $reservation->res_status = 'approved'; //fake()->randomElement(['pending', 'approved', 'canceled']);
             $reservation->res_channel = fake()->randomElement(['direct', 'booking']);
             $reservation->res_comments = fake()->text(100);
+            $reservation->res_pro_id = fake()->numberBetween(1, 5);
             $reservation->res_gue_id = $gueId;
             $reservation->res_uni_id = $unit;
             $reservation->save();

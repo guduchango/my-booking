@@ -25,4 +25,6 @@ export interface CalendarEvent extends Event {
     title: string;
     start: Date;
     end: Date;
+    color: string;
+
 }

@@ -3,16 +3,15 @@ import { NavLink, useNavigate } from "react-router-dom"
 import Layout from "../../Components/Layout/Layout"
 import { HTTP_CODES, uni_maxPeople } from "../../Utils/StaticData";
 import { UnitHttpService } from "../../Services/Unit/UnitHttpService";
-import { useEffect, useState } from "react";
-import { UnitAvailableRequestInterface, UnitInterface } from "../../Models/Unit/UnitInterface";
+import { useState } from "react";
+import { UnitInterface } from "../../Models/Unit/UnitInterface";
 import { useGlobalContext } from "../../Context/Context";
 import { AxiosResponse } from "axios";
 
 
-
 export const UnitAvailableForm = () => {
 
-    const { setAvailableUnits,unitAvailableRequest,setUnitAvailableRequest } = useGlobalContext()
+    const { setAvailableUnits,unitAvailableRequest,setUnitAvailableRequest,setIsReservationSeted } = useGlobalContext()
     const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState<boolean>(false);
 
@@ -21,28 +20,17 @@ export const UnitAvailableForm = () => {
         let axiosResponse: AxiosResponse = {} as AxiosResponse;
         axiosResponse = await unitHttpService.availableUnits(unitAvailableRequest)
         const unitAvailableResponse: UnitInterface[] = axiosResponse.data as UnitInterface[];
-        console.log('unitAvailableResponse',unitAvailableResponse)
+        
         if(axiosResponse.status == HTTP_CODES.NO_CONTENT){
             setIsVisible(true)
         }else{
             setIsVisible(false)
             setAvailableUnits(unitAvailableResponse)
             setUnitAvailableRequest(unitAvailableRequest)
+            setIsReservationSeted(false)
             navigate("/reservation/available-units");
         }
     };
-
-    const setUnitFromCreate = async () => {
-        const unitAvailableListDefault: UnitAvailableRequestInterface = {} as UnitAvailableRequestInterface;
-        unitAvailableListDefault.check_in = ""
-        unitAvailableListDefault.check_out = ""
-        unitAvailableListDefault.people = 0
-        setUnitAvailableRequest(unitAvailableListDefault);
-    }
-
-    useEffect(() => {
-        setUnitFromCreate();
-    }, []);
 
     return (
         <Layout>
@@ -59,14 +47,14 @@ export const UnitAvailableForm = () => {
                     <div className="field-group">
                         <label>Check in</label>
                         <input name="check-in" type="date"
-                            value={unitAvailableRequest.check_in}
+                            value={unitAvailableRequest.check_in || ""}
                             onChange={(event) => setUnitAvailableRequest({ ...unitAvailableRequest, check_in: event.target.value })}
                         />
                     </div>
                     <div className="field-group">
                         <label>Check out</label>
                         <input name="check-out" type="date"
-                            value={unitAvailableRequest.check_out}
+                            value={unitAvailableRequest.check_out || ""}
                             onChange={(event) => setUnitAvailableRequest({ ...unitAvailableRequest, check_out: event.target.value })}
                         />
                     </div>
@@ -74,7 +62,7 @@ export const UnitAvailableForm = () => {
                         <label>Max People</label>
                         <select
                             name="uni_max_people"
-                            value={unitAvailableRequest.people}
+                            value={unitAvailableRequest.people || 0}
                             onChange={(event) => setUnitAvailableRequest({ ...unitAvailableRequest, people: Number(event.target.value) })}
                         >
                             {uni_maxPeople.map((type, index) => (

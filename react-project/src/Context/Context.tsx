@@ -23,8 +23,11 @@ interface GlobalContextProps {
   unitAvailableRequest: UnitAvailableRequestInterface,
   setUnitAvailableRequest: (item: UnitAvailableRequestInterface) => void; 
   unitPrice: UnitPriceInterface,
-  setUnitPrice: (item: UnitPriceInterface) => void; 
-  
+  setUnitPrice: (item: UnitPriceInterface) => void;
+  resId: number,
+  setResId: (item: number) => void;
+  isReservationSeted: boolean,
+  setIsReservationSeted: (item: boolean) => void;
 }
 
 type Props = {
@@ -43,6 +46,8 @@ export const GlobalContextProvider = ({ children }: Props) => {
   const [availableUnits,setAvailableUnits] = useState<UnitInterface[]>(newObj<UnitInterface[]>());
   const [unitAvailableRequest, setUnitAvailableRequest] = useState<UnitAvailableRequestInterface>(newObj<UnitAvailableRequestInterface>);
   const [unitPrice, setUnitPrice] = useState<UnitPriceInterface>(newObj<UnitPriceInterface>);
+  const [resId, setResId] = useState<number>(0)
+  const [isReservationSeted, setIsReservationSeted] = useState<boolean>(false)
 
   const getData = async () => {
     const syncService = new SyncService();
@@ -66,7 +71,11 @@ export const GlobalContextProvider = ({ children }: Props) => {
     unitAvailableRequest,
     setUnitAvailableRequest,
     unitPrice,
-    setUnitPrice
+    setUnitPrice,
+    resId,
+    setResId,
+    isReservationSeted,
+    setIsReservationSeted
   };
 
   return (

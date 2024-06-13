@@ -8,14 +8,9 @@ import { PriceStorageService } from "../../Services/Price/PriceStorageService";
 import { Calendar, momentLocalizer,Views } from 'react-big-calendar';
 import moment from 'moment';
 import './price-calendar.css'
-// Import the default CSS for the calendar
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 // Set up the localizer by providing the moment Object to the correct localizer.
 const localizer = momentLocalizer(moment);
-
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 export const PriceCalendar = () => {
 
@@ -25,6 +20,8 @@ export const PriceCalendar = () => {
     const location = useLocation()
     const { state } = location
     const uniId = state.uni_id;
+
+    
 
     const startEvents = async() => {
         const priceStorageService = new PriceStorageService();

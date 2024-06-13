@@ -3,7 +3,7 @@ import Layout from "../../Components/Layout/Layout"
 import { useGlobalContext } from "../../Context/Context"
 import { useEffect, useState } from "react";
 import { UnitPriceCalculate, UnitPriceInterface } from "../../Models/Unit/UnitInterface";
-import { getFriendlyDate } from "../../Utils/GeneralFunctions";
+import { daysBetween, getFriendlyDate } from "../../Utils/GeneralFunctions";
 
 export const UnitAvailableList = () => {
 
@@ -66,8 +66,8 @@ export const UnitAvailableList = () => {
                 {unitPriceList.map((unit) => (
                     <div key={unit.upri_uni_id} className="table-row" >
                         <NavLink
-                            to='/reservation/save'
-                            state={{ res_id: 0, unitPrice: unit }}
+                            to='/reservation/create'
+                            state={{ unitPrice: unit}}
                         >
                             <div className="tableRow-wrapper">
                                 <p className="tableRow-title">{unit.upri_name}</p>
@@ -75,6 +75,7 @@ export const UnitAvailableList = () => {
                                     <p><i className="icon-enter" /> {getFriendlyDate(unit.upri_check_in)}</p>
                                     <p><i className="icon-exit" /> {getFriendlyDate(unit.upri_check_out)}</p>
                                     <p><i className="icon-users" /> {unit.upri_people}</p>
+                                    <p><i className="icon-sun" /> {daysBetween(unit.upri_check_in,unit.upri_check_out)}</p>
                                 </div>
                                 <div className="tableRow-body">
                                     <p>{unit.upri_max_people} max people</p>

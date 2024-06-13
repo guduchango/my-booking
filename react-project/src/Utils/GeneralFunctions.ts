@@ -1,3 +1,4 @@
+
 export function upperCaseFirst(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -24,14 +25,43 @@ export function getCurrentDate(): string {
 }
 
 export function getFriendlyDate(dateString: string): string {
-    const dateObj = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-        day: "2-digit",
-        month: "long"  
-      };
-    const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(dateObj);
-    const friendlyDate = `${formattedDate.split(' ')[0]} ${formattedDate.split(' ')[1]} `;
 
+    let friendlyDate = "";
+    try{
+        const dateObj = new Date(dateString);
+        const fullYear = dateObj.getFullYear();
+        
+
+        const options: Intl.DateTimeFormatOptions = {
+            day: "2-digit",
+            month: "long"  
+          };
+        const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(dateObj);
+        friendlyDate = `${formattedDate.split(' ')[0]} ${formattedDate.split(' ')[1]} (${fullYear.toString().slice(-2)}) `;
+    } catch(error){
+        if (error instanceof Error) {
+            console.error('Error message:', error.message);
+        } else {
+            console.error('Unexpected error:', error);
+        }
+
+        friendlyDate = dateString
+    }
+        
     return friendlyDate;
+}
+
+export function daysBetween(date1: string, date2: string): number {
+    // Parse the dates
+    const firstDate = new Date(date1);
+    const secondDate = new Date(date2);
+
+    // Calculate the difference in milliseconds
+    const diffInMs = Math.abs(secondDate.getTime() - firstDate.getTime());
+
+    // Convert milliseconds to days
+    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+
+    return diffInDays;
 }
 

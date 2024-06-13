@@ -4,6 +4,7 @@ import './reservation-details.css'
 import { useGlobalContext } from "../../Context/Context";
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { useEffect } from "react";
+import { getFriendlyDate } from "../../Utils/GeneralFunctions";
 
 export const ReservationDetails = () => {
 
@@ -14,13 +15,15 @@ export const ReservationDetails = () => {
     const getReservation = async () => {
         const storageReservationService = new ReservationStorageService()
         const storageReservation = await storageReservationService.getById(resId);
+        console.log("res_id",resId)
+        console.log("storageReservation",storageReservation)
         setReservation(storageReservation);
         setGuest(storageReservation.guest)
         setUnit(storageReservation.unit)
+        console.log(reservation)
     }
 
     useEffect(() => {
-        console.log('useEfect context provider getData()')
         getReservation();
     }, []);
 
@@ -35,50 +38,75 @@ export const ReservationDetails = () => {
                 </div>
             </div>
             <div className="table-reservationDetails">
-                <div className="table-reservationDetails-right">
-                    <p className="table-reservationDetails-title">Name</p>
-                    <p>{guest.gue_name + " " + guest.gue_last_name}</p>
-                    <p className="table-reservationDetails-title">Years</p>
-                    <p>{guest.gue_age}</p>
-                    <p className="table-reservationDetails-title">Check-In</p>
-                    <p>{reservation.res_start_date}</p>
-                    <p className="table-reservationDetails-title">Nights</p>
-                    <p>{reservation.res_nights}</p>
-                    <p className="table-reservationDetails-title">Adults</p>
-                    <p>{reservation.res_adults}</p>
-                    <p className="table-reservationDetails-title">Status</p>
-                    <p>{reservation.res_status}</p>
-                    <p className="table-reservationDetails-title">Pay advance</p>
-                    <p>{reservation.res_advance_payment}</p>
-                    <p className="table-reservationDetails-title">Price</p>
-                    <p>{reservation.res_price_final}</p>
+                <div className="reservationDetails-header">
+                    <div className="reservationDetails-header-left">
+                        <h1>{guest.gue_full_name}</h1>
+                        <h1>{unit.uni_name}</h1>
+                    </div>
+                    <div className="reservationDetails-header-right">
+                        <h1 className="headerTitle-status">{reservation.res_status?.toUpperCase() || ""}</h1>
+                    </div>
                 </div>
-                <div className="table-left">
-                    <p className="table-reservationDetails-title">Phone</p>
-                    <p>{guest.gue_phone_number}</p>
-                    <p className="table-reservationDetails-title">Email</p>
-                    <p>{guest.gue_email}</p>
-                    <p className="table-reservationDetails-title">Check-Out</p>
-                    <p>{reservation.res_end_date}</p>
-                    <p className="table-reservationDetails-title">Aparment</p>
-                    <p>{unit.uni_name}</p>
-                    <p className="table-reservationDetails-title">Children</p>
-                    <p>{reservation.res_children}</p>
-                    <p className="table-reservationDetails-title">Channel</p>
-                    <p>{reservation.res_channel}</p>
-                    <p className="table-reservationDetails-title">Discount</p>
-                    <p>{reservation.res_discount_value}</p>
-                    <p className="table-reservationDetails-title">Price dolar</p>
-                    <p>{reservation.res_price_dolar}</p>
+                
+                <div className="reservationDetails-header-subtitle">
+                    <p><i className="icon-enter" />&nbsp;{getFriendlyDate(reservation.res_start_date)}</p>
+                    <p><i className="icon-exit" />&nbsp;{getFriendlyDate(reservation.res_end_date)}</p>
+                    <p><i className="icon-users" />&nbsp;{reservation.res_adults}</p>
+                    <p><i className="icon-sun" />&nbsp;{reservation.res_nights}</p>
+                </div>
+
+                <div className="reservationPriceDetail-wrapper">
+                    <div className="reservationPriceDetail">
+                        <p>Price: <span className="priceBold">{`$${reservation.res_price}`}</span></p>
+                        <p className="headerTitle-price">Total ({`-${reservation.res_discount_value}%`}): <span className="priceBold">{`$${reservation.res_price_final}`}</span></p>
+                    </div>
+                    <div className="reservationAdvanceDetail">
+                        <p> <i className="icon-checkmark"></i> Advance: <span className="priceBold">${reservation.res_advance_payment}</span></p>
+                    </div>
+                </div>
+
+                <div className="reservationDetailsBody-guest">
+                    <div className="reservationDetailsBody-field">
+                        <p>Phone</p>
+                        <p>{guest.gue_phone_number}</p>
+                    </div>
+                    <div className="reservationDetailsBody-field">
+                        <p>Email</p>
+                        <p>{guest.gue_email}</p>
+                    </div>
+                    <div className="reservationDetailsBody-field">
+                        <p>Channel</p>
+                        <p>{reservation.res_channel}</p>
+                    </div>
+                    <div className="reservationDetailsBody-field">
+                        <p>Adults</p>
+                        <p>{reservation.res_adults}</p>
+                    </div>
+                    <div className="reservationDetailsBody-field">
+                        <p>Children</p>
+                        <p>{reservation.res_children}</p>
+                    </div>
+                    <div className="reservationDetailsBody-field">
+                        <p>Beds</p>
+                        <p>{reservation.res_beds}</p>
+                    </div>
+                </div>
+                <div className="reservationDetails-footer">
+                    <p>Comments:</p>
+                    <p>{reservation.res_comments}</p>
                 </div>
             </div>
 
-            <div className="page-edit">
+
+            <div className="editDetail-button-wrapper">
                 <NavLink
-                    to='/reservation/save'
+                    to='/reservation/edit'
                     state={{ res_id: reservation.res_id }}
                 >
-                    <i className="icon-pencil"></i>
+
+                    <button className="editDetail-button">Edit</button>
+
+
                 </NavLink>
             </div>
 

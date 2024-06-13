@@ -92,6 +92,7 @@ export class PriceStorageService extends StorageService {
             event.start = new Date(item.pri_date);
             event.end = new Date(item.pri_date);
             event.title = `$${String(item.pri_price)}`
+            event.color = "#ccc"
             events.push(event);
         }
 

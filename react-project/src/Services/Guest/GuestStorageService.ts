@@ -1,6 +1,7 @@
 import Dexie from "dexie"
 import { StorageService } from "../StorageService"
 import { GuestInterface } from '../../Models/Guest/GuestInterface';
+import { newObj } from "../../Utils/GeneralFunctions";
 
 export class GuestStorageService extends StorageService {
 
@@ -12,30 +13,36 @@ export class GuestStorageService extends StorageService {
     }
 
     async create(guest: GuestInterface) {
-        this.transaction('rw', this.guests, async () => {
+        return await this.transaction('rw', this.guests, async () => {
 
             if ((await this.guests.where({ gue_id: guest.gue_id }).count()) === 0) {
                 const id = await this.guests.add(
                     guest
                 );
                 console.log(`Added guests with id ${id}`);
+                return await this.getById(id);
             }
+            return newObj<GuestInterface>();
         }).catch(e => {
             console.log(e.stack || e);
+            return newObj<GuestInterface>();
         });
     }
 
     async update(gue_id: number, guest:GuestInterface){
-        this.transaction('rw', this.guests, async () => {
+        return await this.transaction('rw', this.guests, async () => {
             if ((await this.guests.where({ gue_id: guest.gue_id }).count()) !== 0) {
                 const id = await this.guests.update(
                     gue_id,
                     guest
                 );
                 console.log(`Updated guests with id ${id}`);
+                return await this.getById(id);
             }
+            return newObj<GuestInterface>();
         }).catch(e => {
             console.log(e.stack || e);
+            return newObj<GuestInterface>();
         });
     }
 

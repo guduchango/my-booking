@@ -14,43 +14,15 @@ import { ReservationStorageService } from "../../Services/Reservation/Reservatio
 import { ReservationHttpService } from "../../Services/Reservation/ReservationHttpService";
 import { useGlobalContext } from "../../Context/Context";
 
-export const ReservationSave = () => {
+export const ReservationEdit = () => {
+
   const location = useLocation()
   const { state } = location
-  const resId = state.res_id;
-  const unitPriceState = state.unitPrice as UnitPriceInterface;
+  const resId = state?.res_id
   const navigate = useNavigate();
-  const [reservation, setReservation] = useState<ReservationInterface>(newObj<ReservationInterface>);
+  const { reservation, setReservation} = useGlobalContext()
   const [units, setUnits] = useState<UnitInterface[]>([]);
   const [guests, setGuests] = useState<GuestInterface[]>([]);
-  const { setUnitPrice, unitPrice } = useGlobalContext()
-
-
-
-  const setReservationFromCreate = async () => {
-
-    if (resId === 0) {
-      const reservationDefault: ReservationInterface = {} as ReservationInterface;
-      reservationDefault.res_start_date = unitPrice.upri_check_in
-      reservationDefault.res_end_date = unitPrice.upri_check_out
-      reservationDefault.res_adults = unitPrice.upri_people
-      reservationDefault.res_children = 0;
-      reservationDefault.res_beds = unitPrice.upri_people;
-      reservationDefault.res_children = 0;
-      reservationDefault.res_status = Status.approved;
-      reservationDefault.res_channel = Channel.direct;
-      reservationDefault.res_comments = "";
-      reservationDefault.res_uni_id = unitPrice.upri_uni_id;
-      reservationDefault.res_gue_id = 1;
-      setReservation(reservationDefault);
-
-    } else {
-      const storageReservationService = new ReservationStorageService()
-      const storageReservation = await storageReservationService.getById(resId);
-      setReservation(storageReservation);
-      console.log("storage", storageReservation)
-    }
-  }
 
   const getUnits = async () => {
     const unitStorageService = new UnitStorageService()
@@ -62,6 +34,12 @@ export const ReservationSave = () => {
     const guestStorageService = new GuestStorageService()
     const guestStorage = await guestStorageService.getAll();
     setGuests(guestStorage)
+  }
+
+  const getReservation = async () => {
+      const storageReservationService = new ReservationStorageService()
+      const storageReservation = await storageReservationService.getById(resId);
+      setReservation(storageReservation);
   }
 
   const guestItems = guests.map(item => ({
@@ -90,13 +68,9 @@ export const ReservationSave = () => {
   };
 
   useEffect(() => {
-    setUnitPrice(unitPriceState)
-    setReservationFromCreate();
+    getReservation();
     getGuests()
     getUnits();
-    
-    //getReservation();
-    //setReservation(reservation)
   }, []);
 
   return (
@@ -112,7 +86,29 @@ export const ReservationSave = () => {
           </NavLink>
         </div>
       </div>
+      
       <div className="save-form">
+      <div className="field-group">
+          <label>Guest</label>
+          <div className="fieldGroup-selectButton">
+            <div className="fieldGroupSelectButton-select">
+              <Select
+                className="guest-select"
+                options={guestItems}
+                onChange={(event) => setReservation({ ...reservation, res_gue_id: Number(event?.value) })}
+                value={guestItems.filter((option) => (option.value === reservation.res_gue_id))}
+              />
+            </div>
+            <div className="fieldGroupSelectButton-icon">
+              <NavLink
+                to='/guest/save'
+                state={{ gue_id: 0, fromPlace: 'reservation' }}
+              >
+                <i className="icon-plus"></i>
+              </NavLink>
+            </div>
+          </div>
+        </div>
         <div className="field-group">
           <label>Unit</label>
           <Select
@@ -129,7 +125,6 @@ export const ReservationSave = () => {
             value={reservation.res_start_date}
             type="date"
             onChange={(event) => setReservation({ ...reservation, res_start_date: event.target.value })}
-            disabled={(resId == 0) ? true : false}
           />
         </div>
         <div className="field-group">
@@ -139,9 +134,39 @@ export const ReservationSave = () => {
             value={reservation.res_end_date}
             type="date"
             onChange={(event) => setReservation({ ...reservation, res_end_date: event.target.value })}
-            disabled={(resId == 0) ? true : false}
           />
         </div>
+
+        <div className="field-group">
+          <label>Price</label>
+          <input
+            name="res_price"
+            value={reservation.res_price}
+            type="number"
+            onChange={(event) => setReservation({ ...reservation, res_price: parseFloat(event.target.value) })}
+          />
+        </div>
+
+        <div className="field-group">
+          <label>Final Price</label>
+          <input
+            name="res_price_final"
+            value={reservation.res_price}
+            type="number"
+            onChange={(event) => setReservation({ ...reservation, res_price_final: parseFloat(event.target.value) })}
+          />
+        </div>
+
+        <div className="field-group">
+          <label>Advance</label>
+          <input
+            name="res_price_final"
+            value={reservation.res_advance_payment}
+            type="number"
+            onChange={(event) => setReservation({ ...reservation, res_advance_payment: parseFloat(event.target.value) })}
+          />
+        </div>
+
         <div className="field-group">
           <label>Guest</label>
           <div className="fieldGroup-selectButton">
@@ -151,24 +176,18 @@ export const ReservationSave = () => {
                 options={guestItems}
                 onChange={(event) => setReservation({ ...reservation, res_gue_id: Number(event?.value) })}
                 value={guestItems.filter((option) => (option.value === reservation.res_gue_id))}
-                isDisabled={!!resId.id}
               />
             </div>
             <div className="fieldGroupSelectButton-icon">
               <NavLink
                 to='/guest/save'
-                state={{ gue_id: 0, res_id: resId }}
+                state={{ gue_id: 0, fromPlace: 'reservation' }}
               >
                 <i className="icon-plus"></i>
               </NavLink>
             </div>
-
           </div>
-
-
         </div>
-
-
         <div className="field-group">
           <label>Adults</label>
           <select
@@ -216,7 +235,6 @@ export const ReservationSave = () => {
           <label>Status</label>
           <select
             name="res_status"
-            disabled={(resId == 0) ? true : false}
             value={reservation.res_status}
             onChange={(event) => setReservation({ ...reservation, res_status: event.target.value })}
           >

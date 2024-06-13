@@ -39,8 +39,6 @@ export class StorageService extends Dexie {
                 "res_children,"+
                 "res_beds,"+
                 "res_nights,"+
-                "res_discount_value,"+
-                "res_discount_detail,"+
                 "res_price,"+
                 "res_price_dolar,"+
                 "res_price_final,"+
@@ -52,6 +50,7 @@ export class StorageService extends Dexie {
                 "res_updated_at,"+
                 "res_beauty_dates,"+
                 "res_uni_id," +
+                "res_pro_id," +
                 "res_gue_id",
             prices:
                 "pri_id,"+
@@ -64,9 +63,7 @@ export class StorageService extends Dexie {
                 "pri_updated_at",
             promotions:
                 "pro_id,"+
-                "pro_date,"+
-                "pro_units,"+
-                "pro_type,"+
+                "pro_name,"+
                 "pro_value,"+
                 "pro_created_at,"+
                 "pro_updated_at",
