@@ -65,3 +65,65 @@ export function daysBetween(date1: string, date2: string): number {
     return diffInDays;
 }
 
+export function getPercentajeByValue(maxValue: number, minValue: number){
+
+    const result =  ((maxValue - minValue) * 100) / maxValue ;
+
+    return parseFloat(result.toFixed(2))
+}
+
+export function toFix(value:number){
+
+    let result: number = 0;
+    try{
+        result =  parseFloat(value.toFixed(2))
+    } catch(error){
+
+        if (error instanceof Error) {
+            console.error('Error message:', error.message);
+        } else {
+            console.error('Unexpected error:', error);
+        }
+
+        result = value
+    }
+    
+
+    return result;
+}
+
+export function isValidDOB(dob: string): boolean {
+    // Parse the date of birth string to a Date object
+    const birthDate = new Date(dob);
+    const today = new Date();
+    
+    // Check if the date is valid
+    if (isNaN(birthDate.getTime())) {
+        return false;
+    }
+
+    // Calculate age
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    // Adjust age if the birth date hasn't occurred yet this year
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+
+    // Check if age is between 18 and 100
+    return age >= 18 && age < 100;
+}
+
+export function isValidPositiveInteger(str: string): boolean {
+    // Regular expression to match a string that represents a positive integer
+    const positiveIntegerRegex = /^\d+$/;
+    return positiveIntegerRegex.test(str);
+}
+
+export function isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+

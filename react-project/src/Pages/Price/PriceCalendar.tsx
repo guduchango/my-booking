@@ -15,19 +15,14 @@ const localizer = momentLocalizer(moment);
 export const PriceCalendar = () => {
 
     const [priRange, setPriRange] = useState<PriceRageInterface>(newObj<PriceRageInterface>);
-    const [dayPrices, setDayPrices] = useState<CalendarEvent[]>();
-    
+    const [dayPrices, setDayPrices] = useState<CalendarEvent[]>();    
     const location = useLocation()
     const { state } = location
     const uniId = state.uni_id;
 
-    
-
     const startEvents = async() => {
         const priceStorageService = new PriceStorageService();
-        console.log(uniId)
         const priceEvents = await priceStorageService.getPriceUnitEvent(uniId)
-        console.log(priceEvents)
         setDayPrices(priceEvents)
     }
 

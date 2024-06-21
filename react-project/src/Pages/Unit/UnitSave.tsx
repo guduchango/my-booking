@@ -77,7 +77,7 @@ export const UnitSave = () => {
                 <div className="field-group">
                     <label>Name</label>
                     <input
-                        value={unit.uni_name}
+                        value={unit.uni_name || ""}
                         onChange={(event) => setUnit({ ...unit, uni_name: event.target.value })}
                     />
                 </div>
@@ -85,7 +85,7 @@ export const UnitSave = () => {
                     <label>Rooms</label>
                     <select
                         name="uni_rooms"
-                        value={unit.uni_rooms}
+                        value={unit.uni_rooms || ""}
                         onChange={(event) => setUnit({ ...unit, uni_rooms: Number(event.target.value) })}
                     >
                         {uni_rooms.map((type, index) => (
@@ -99,7 +99,7 @@ export const UnitSave = () => {
                     <label>Max People</label>
                     <select
                         name="uni_max_people"
-                        value={unit.uni_max_people}
+                        value={unit.uni_max_people || ""}
                         onChange={(event) => setUnit({ ...unit, uni_max_people: Number(event.target.value) })}
                     >
                         {uni_maxPeople.map((type, index) => (
@@ -113,7 +113,7 @@ export const UnitSave = () => {
                     <label>Single Beds</label>
                     <select
                         name="uni_single_bed"
-                        value={unit.uni_single_bed}
+                        value={unit.uni_single_bed || ""}
                         onChange={(event) => setUnit({ ...unit, uni_single_bed: Number(event.target.value) })}
                     >
                         {uni_sigleBed.map((type, index) => (
@@ -127,7 +127,7 @@ export const UnitSave = () => {
                     <label>Doble Beds</label>
                     <select
                         name="uni_dobule_bed"
-                        value={unit.uni_dobule_bed}
+                        value={unit.uni_dobule_bed || ""}
                         onChange={(event) => setUnit({ ...unit, uni_dobule_bed: Number(event.target.value) })}
                     >
                         {uni_doubleBed.map((type, index) => (

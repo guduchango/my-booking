@@ -64,20 +64,28 @@ a:link, a:visited {
     background-color: var(--blue400)
 }
 
-
 .form-error{
-    margin-block: 2px;
-    
+
 }
 
 .formError-wrapper{
-    border-radius: 5px;
+    border-radius:10px;
     background-color: #FFF5F5;
     font-size: 16px;
-    padding-block: 5px;
-    padding-inline: 5px;
-    text-align: center;
+    text-align: left;
+    padding-block: 2px;
 }
+
+.formError-wrapper ul{
+   margin-block: 0px;
+   margin-inline: 0px;
+}
+
+.formError-wrapper ul li{
+    margin-block: 5px;
+    margin-inline: 0px;
+    color: var(--red700)
+ }
 
 .fieldGroup-selectButton {
     display: flex;

@@ -4,11 +4,13 @@ import Layout from "../../Components/Layout/Layout"
 import { NavLink } from "react-router-dom";
 import { ReservationStorageService } from '../../Services/Reservation/ReservationStorageService';
 import { ReservationInterface } from '../../Models/Reservation/ReservationInterface';
+import { useGlobalContext } from '../../Context/Context';
 
 
 export const ReservationList: React.FC = () => {
 
     const [reservations, setReservations] = useState<ReservationInterface[]>([]);
+    const { setIsReservationSeted} = useGlobalContext()
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filteredResults, setFilteredResults] = useState<ReservationInterface[]>(reservations);
@@ -35,6 +37,7 @@ export const ReservationList: React.FC = () => {
         const storageReservations = await storageReservationService.getAll();
         setReservations(storageReservations);
         setFilteredResults(storageReservations);
+        setIsReservationSeted(false)
     }
 
     const openFilter = () => {

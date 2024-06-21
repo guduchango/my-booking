@@ -2,73 +2,54 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import './guest-create.css'
 import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
-import { GuestInterface } from "../../Models/Guest/GuestInterface";
 import { GuestHttpService } from "../../Services/Guest/GuestHttpService";
 import { useEffect, useState } from "react";
-import { newObj } from "../../Utils/GeneralFunctions";
 import { useGlobalContext } from "../../Context/Context";
+import { GuestModel } from "../../Models/Guest/GuestModel";
 
 export const GuestSave = () => {
     const { setGuest, guest } = useGlobalContext()
-    const [backUrl, setBackUrl] = useState<string>("");
     const location = useLocation()
     const { state } = location
     const gueId = state.gue_id;
     const fromPlace = state.fromPlace;
+    const [guestModel] = useState(new GuestModel(guest));
+    const [backUrl] = useState(guestModel.backUrl(fromPlace));
+    
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [showMessages, setShowMessages] = useState<string[]>([]);
     const navigate = useNavigate();
 
     const onClickSave = async () => {
-        const guestHttpService = new GuestHttpService()
-        let guestResponse: GuestInterface = {} as GuestInterface;
-        const guestStorageService = new GuestStorageService();
-        let returnGuest = newObj<GuestInterface>();
-        if(gueId === 0){
-            guestResponse = await guestHttpService.storeGuest(guest)
-            returnGuest = await guestStorageService.create(guestResponse)
-        }else{
-            guestResponse = await guestHttpService.updateGuest(guest,gueId)
-            returnGuest = await guestStorageService.update(gueId,guestResponse)
+        if(guestModel.validate() === false){
+            setIsVisible(true)
+            setShowMessages(guestModel.showMessages())
+            throw new Error(guestModel.showMessages().toString());
         }
-        setGuest(returnGuest)
+
+        let guestResponse = new GuestModel()
+        if(gueId === 0){
+            guestResponse = await new GuestHttpService().storeGuest(guestModel)
+            guestResponse = await new GuestStorageService().create(guestResponse)
+        }else{
+            guestResponse = await new GuestHttpService().updateGuest(guestModel,gueId)
+            guestResponse = await new GuestStorageService().update(gueId,guestResponse)
+        }
+        setIsVisible(false)
+        setGuest(guestResponse)
         navigate(backUrl);
     };
 
-    const getBackUrl = () => {
-        let backUrlValue= "";
-        switch (fromPlace) {
-            case "reservationCreate":
-                backUrlValue = "/reservation/create";
-                break;
-            case "reservationEdit":
-                backUrlValue = "/reservation/edit";
-                break;
-            case "guest":
-                backUrlValue = "/guest";
-                break;
-        }
-        setBackUrl(backUrlValue)
-    }
-
     const setGuestFromCreate = async () => {
         if (gueId === 0) {
-            const guestDefault: GuestInterface = {} as GuestInterface;
-            guestDefault.gue_id = 0
-            guestDefault.gue_name = ""
-            guestDefault.gue_last_name = ""
-            guestDefault.gue_phone_number = ""
-            guestDefault.gue_email = ""
-            guestDefault.gue_birthday = ""
-            setGuest(guestDefault);
+            setGuest(new GuestModel());
         } else {
-            const storageGuestService = new GuestStorageService()
-            const storageGuest = await storageGuestService.getById(gueId);
-            setGuest(storageGuest);
+            setGuest(await new GuestStorageService().getById(gueId));
         }
     }
 
     useEffect(() => {
         setGuestFromCreate();
-        getBackUrl();
     }, []);
 
     return (
@@ -90,45 +71,56 @@ export const GuestSave = () => {
                 <div className="field-group">
                     <label>Name</label>
                     <input
-                        value={guest.gue_name}
+                        value={guest.gue_name || ""}
                         onChange={(event) => setGuest({ ...guest, gue_name: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
                     <label>Last name</label>
                     <input
-                        value={guest.gue_last_name}
+                        value={guest.gue_last_name || ""}
                         onChange={(event) => setGuest({ ...guest, gue_last_name: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
                     <label>Phone number</label>
                     <input
-                        value={guest.gue_phone_number}
+                        value={guest.gue_phone_number || ""}
                         onChange={(event) => setGuest({ ...guest, gue_phone_number: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
                     <label>Identity document</label>
                     <input
-                        value={guest.gue_identity_document}
+                        value={guest.gue_identity_document || ""}
                         onChange={(event) => setGuest({ ...guest, gue_identity_document: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
                     <label>Email</label>
                     <input
-                        value={guest.gue_email}
+                        value={guest.gue_email || ""}
                         onChange={(event) => setGuest({ ...guest, gue_email: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
                     <label>Date of birth</label>
                     <input type="date"
-                        value={guest.gue_birthday}
+                        value={guest.gue_birthday || ""}
                         onChange={(event) => setGuest({ ...guest, gue_birthday: event.target.value })}
                     />
                 </div>
+                {isVisible && (
+                        <div className="form-error">
+                            <div className="formError-wrapper">
+                            {showMessages.map((guest) => (
+                                <ul>
+                                    <li>{guest}</li>
+                                </ul>
+                            ))}
+                            </div>
+                        </div>
+                    )}
                 <div className="field-group">
                     <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
                 </div>

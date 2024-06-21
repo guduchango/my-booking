@@ -1,0 +1,48 @@
+
+.home{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.home-wrraper{
+    text-align: center;
+    
+}
+
+.home-wrraper h1{
+    padding-bottom: 20px;
+}
+
+
+
+.homeWrapper-grid{
+    display: grid;
+    grid-template-columns: 160px 160px;
+    grid-template-rows: 1fr 1fr;
+    gap: 5px;
+}
+
+.homeWrapper-grid div{
+    padding: 10px;
+    border-radius: 0.5rem;
+    background-color: var(--blue100);
+}
+
+.home-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin: 5px;
+}
+
+.home-items  p {
+    padding-top: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    
+}

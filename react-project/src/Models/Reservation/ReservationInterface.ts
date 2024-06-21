@@ -39,4 +39,5 @@ export interface ReservationInterface {
     res_uni_id: number;
     res_gue_id: number;
     res_pro_id: number;
+    
 }

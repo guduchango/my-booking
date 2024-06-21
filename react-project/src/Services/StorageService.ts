@@ -1,12 +1,12 @@
 
 import Dexie, { Table } from 'dexie';
-import { GuestInterface } from '../Models/Guest/GuestInterface';
 import { ReservationInterface } from '../Models/Reservation/ReservationInterface';
 import {ExpenseInterface} from "../Models/Expense/ExpenseInterface";
 import { PriceInterface } from '../Models/Price/PriceInterface';
 import { PromotionInterface } from '../Models/Promotion/PromotionInterface';
 import { UnitInterface } from '../Models/Unit/UnitInterface';
 import {CurrencyInterface} from "../Models/Currency/CurrencyInterface";
+import { GuestInterface } from '../Models/Guest/GuestInterface';
 
 
 export class StorageService extends Dexie {

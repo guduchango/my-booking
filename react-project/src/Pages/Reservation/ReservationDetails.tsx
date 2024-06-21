@@ -4,7 +4,7 @@ import './reservation-details.css'
 import { useGlobalContext } from "../../Context/Context";
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { useEffect } from "react";
-import { getFriendlyDate } from "../../Utils/GeneralFunctions";
+import { getFriendlyDate, getPercentajeByValue } from "../../Utils/GeneralFunctions";
 
 export const ReservationDetails = () => {
 
@@ -58,10 +58,10 @@ export const ReservationDetails = () => {
                 <div className="reservationPriceDetail-wrapper">
                     <div className="reservationPriceDetail">
                         <p>Price: <span className="priceBold">{`$${reservation.res_price}`}</span></p>
-                        <p className="headerTitle-price">Total ({`-${reservation.res_discount_value}%`}): <span className="priceBold">{`$${reservation.res_price_final}`}</span></p>
+                        <p className="headerTitle-price">Total ({`${getPercentajeByValue(reservation.res_price,reservation.res_price_final)}%`}): <span className="priceBold">{`$${reservation.res_price_final}`}</span></p>
                     </div>
                     <div className="reservationAdvanceDetail">
-                        <p> <i className="icon-checkmark"></i> Advance: <span className="priceBold">${reservation.res_advance_payment}</span></p>
+                        <p> <i className="icon-checkmark"></i> Advance {`(${getPercentajeByValue(reservation.res_price_final,reservation.res_advance_payment)}%):`} <span className="priceBold">${reservation.res_advance_payment}</span></p>
                     </div>
                 </div>
 

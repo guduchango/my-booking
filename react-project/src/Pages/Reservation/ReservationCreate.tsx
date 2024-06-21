@@ -3,7 +3,7 @@ import Layout from "../../Components/Layout/Layout"
 import { UnitInterface, UnitPriceInterface } from "../../Models/Unit/UnitInterface";
 import { Channel, ReservationInterface, Status } from "../../Models/Reservation/ReservationInterface";
 import { useEffect, useMemo, useState } from "react";
-import { getFriendlyDate, upperCaseFirst } from "../../Utils/GeneralFunctions";
+import { daysBetween, getFriendlyDate, toFix, upperCaseFirst } from "../../Utils/GeneralFunctions";
 import Select from "react-select";
 import { res_adults, res_advances, res_beds, res_channels, res_children } from "../../Utils/StaticData";
 import { GuestInterface } from "../../Models/Guest/GuestInterface";
@@ -47,7 +47,7 @@ export const ReservationCreate = () => {
 
     const setInfo = async() => {
         const unitObj = {} as UnitInterface
-        //if (isReservationSeted === false) {
+        if (isReservationSeted === false) {
             reservation.res_start_date = unitPrice.upri_check_in
             reservation.res_end_date = unitPrice.upri_check_out
             reservation.res_adults = unitPrice.upri_people
@@ -65,15 +65,14 @@ export const ReservationCreate = () => {
             reservation.res_advance_payment = 0;
             reservation.unit = unitObj;
             reservation.unit.uni_name = unitPrice.upri_name;
-        //}
+        }
 
         if(guest.gue_id !== 0){
             reservation.res_gue_id = guest.gue_id;
         }
 
-        console.log(reservation)
-
         setReservation(reservation);
+        setIsReservationSeted(true)
     }
 
     const calculatePrice = () => {
@@ -84,9 +83,8 @@ export const ReservationCreate = () => {
         reservation.res_advance_payment = finalAdvance
         const promotionItem = promotions.find(promotion => promotion.pro_value === proValue);
         reservation.res_pro_id = promotionItem?.pro_id || 0
+        reservation.res_nights = daysBetween(reservation.res_start_date,reservation.res_end_date)
         setReservation(reservation);
-        console.log("reservation",reservation)
-    
     }
 
     const onClickSave = async () => {
@@ -136,11 +134,11 @@ export const ReservationCreate = () => {
 
                 <div className="reservationPriceDetail-wrapper">
                     <div className="reservationPriceDetail">
-                        <p>Price: <span className="priceBold">{`$${reservation.res_price}`}</span></p>
-                        <p className="headerTitle-price">Total ({`-${proValue}%`}): <span className="priceBold">{`$${reservation.res_price_final}`}</span></p>
+                        <p>Price: <span className="priceBold">{`$${toFix(reservation.res_price)}`}</span></p>
+                        <p className="headerTitle-price">Total ({`-${proValue}%`}): <span className="priceBold">{`$${toFix(reservation.res_price_final)}`}</span></p>
                     </div>
                     <div className="reservationAdvanceDetail">
-                        <p> <i className="icon-checkmark"></i> Advance: <span className="priceBold">${reservation.res_advance_payment}</span></p>
+                        <p> <i className="icon-checkmark"></i> Advance: <span className="priceBold">${toFix(reservation.res_advance_payment)}</span></p>
                     </div>
                 </div>
 
@@ -148,7 +146,7 @@ export const ReservationCreate = () => {
                     <label>Promotion</label>
                     <select
                         //name="res_pro_id"
-                        value={proValue}
+                        value={proValue || ""}
                         onChange={(event) => setProValue(Number(event.target.value))}
                     >
                         {promotions.map((obj, index) => (
@@ -163,7 +161,7 @@ export const ReservationCreate = () => {
                     <label>Advance</label>
                     <select
                         //name="advance"
-                        value={advance}
+                        value={advance || ""}
                         onChange={(event) => setAdvance(Number(event.target.value))}
                     >
                         {res_advances.map((obj, index) => (
@@ -201,7 +199,7 @@ export const ReservationCreate = () => {
                     <label>Adults</label>
                     <select
                         name="res_adults"
-                        value={reservation.res_adults}
+                        value={reservation.res_adults || ""}
                         onChange={(event) => setReservation({ ...reservation, res_adults: Number(event.target.value) })}
                     >
                         {res_adults.map((type, index) => (
@@ -215,7 +213,7 @@ export const ReservationCreate = () => {
                     <label>Children</label>
                     <select
                         name="res_children"
-                        value={reservation.res_children}
+                        value={reservation.res_children || ""}
                         onChange={(event) => setReservation({ ...reservation, res_children: Number(event.target.value) })}
                     >
                         {res_children.map((type, index) => (
@@ -229,7 +227,7 @@ export const ReservationCreate = () => {
                     <label>Beds</label>
                     <select
                         name="res_beds"
-                        value={reservation.res_beds}
+                        value={reservation.res_beds || ""}
                         onChange={(event) => setReservation({ ...reservation, res_beds: Number(event.target.value) })}
                     >
                         {res_beds.map((type, index) => (
@@ -244,7 +242,7 @@ export const ReservationCreate = () => {
                     <label>Channel</label>
                     <select
                         name="res_channel"
-                        value={reservation.res_channel}
+                        value={reservation.res_channel || ""}
                         onChange={(event) => setReservation({ ...reservation, res_channel: event.target.value })}
                     >
                         {res_channels.map((type, index) => (

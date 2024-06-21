@@ -19,6 +19,7 @@ import { ReservationHttpService } from "./Reservation/ReservationHttpService";
 import { ReservationStorageService } from "./Reservation/ReservationStorageService";
 import { UnitHttpService } from "./Unit/UnitHttpService";
 import { UnitStorageService } from "./Unit/UnitStorageService";
+import { GuestModel } from "../Models/Guest/GuestModel";
 
 export class SyncService {
 
@@ -26,7 +27,7 @@ export class SyncService {
     httpExpenseItems: ExpenseInterface[]
     httpCurrencyItems: CurrencyInterface[]
     httpReservationItems: ReservationInterface[]
-    httpGuestItems: GuestInterface[]
+    httpGuestItems: GuestModel[]
     httpPromotionItems: PromotionInterface[]
     httpPriceItems: PriceInterface[]
 

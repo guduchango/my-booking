@@ -2,17 +2,19 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import './reservation-edit.css'
 import { useEffect, useState } from "react";
-import { newObj, upperCaseFirst } from "../../Utils/GeneralFunctions";
+import { daysBetween, getPercentajeByValue, upperCaseFirst } from "../../Utils/GeneralFunctions";
 import { res_adults, res_beds, res_channels, res_children, res_status } from "../../Utils/StaticData";
 import Select from "react-select";
 import { UnitStorageService } from "../../Services/Unit/UnitStorageService";
-import { UnitInterface, UnitPriceInterface } from "../../Models/Unit/UnitInterface";
+import { UnitInterface } from "../../Models/Unit/UnitInterface";
 import { GuestInterface } from "../../Models/Guest/GuestInterface";
 import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
-import { Channel, ReservationInterface, Status } from "../../Models/Reservation/ReservationInterface";
+import { ReservationInterface } from "../../Models/Reservation/ReservationInterface";
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { ReservationHttpService } from "../../Services/Reservation/ReservationHttpService";
 import { useGlobalContext } from "../../Context/Context";
+import { PromotionStorageService } from "../../Services/Promotion/PromotionStorageService";
+import { PromotionInterface } from "../../Models/Promotion/PromotionInterface";
 
 export const ReservationEdit = () => {
 
@@ -20,9 +22,14 @@ export const ReservationEdit = () => {
   const { state } = location
   const resId = state?.res_id
   const navigate = useNavigate();
-  const { reservation, setReservation} = useGlobalContext()
+  const { reservation, setReservation } = useGlobalContext()
   const [units, setUnits] = useState<UnitInterface[]>([]);
   const [guests, setGuests] = useState<GuestInterface[]>([]);
+  const [promotions, setPromotions] = useState<PromotionInterface[]>([]);
+  const [proValue, setProValue] = useState<number>(0);
+  const [resAdvancePayment, setResAdvancePayment] = useState<number>(0)
+  const [resPrice, setResPrice] = useState<number>(0)
+  const [resFinalPrice, setResFinalPrice] = useState<number>(0)
 
   const getUnits = async () => {
     const unitStorageService = new UnitStorageService()
@@ -37,10 +44,20 @@ export const ReservationEdit = () => {
   }
 
   const getReservation = async () => {
-      const storageReservationService = new ReservationStorageService()
-      const storageReservation = await storageReservationService.getById(resId);
-      setReservation(storageReservation);
+    const storageReservationService = new ReservationStorageService()
+    const storageReservation = await storageReservationService.getById(resId);
+    setResPrice(storageReservation.res_price)
+    setResFinalPrice(storageReservation.res_price_final)
+    setResAdvancePayment(storageReservation.res_advance_payment)
+    setReservation(storageReservation);
   }
+
+  const getPromotions = async () => {
+    const promotionStorageService = new PromotionStorageService()
+    const storagePromotions = await promotionStorageService.getAll();
+    setPromotions(storagePromotions);
+  }
+
 
   const guestItems = guests.map(item => ({
     value: item.gue_id,
@@ -56,21 +73,30 @@ export const ReservationEdit = () => {
     const reservationHttpService = new ReservationHttpService()
     const reservationStorageService = new ReservationStorageService();
     let reservationResponse: ReservationInterface = {} as ReservationInterface;
+    reservation.res_price = resPrice
+    reservation.res_price_final = resFinalPrice
+    reservation.res_advance_payment = resAdvancePayment
+    reservation.res_nights = daysBetween(reservation.res_start_date,reservation.res_end_date)
     if (resId === 0) {
       reservationResponse = await reservationHttpService.storeReservation(reservation)
       await reservationStorageService.create(reservationResponse)
     } else {
       reservationResponse = await reservationHttpService.updateReservation(reservation, resId)
+      console.log("reservation-local",reservation)
       await reservationStorageService.update(resId, reservationResponse)
+      console.log("reservation-api",reservationResponse)
     }
 
     navigate("/reservation");
   };
 
+
+
   useEffect(() => {
     getReservation();
     getGuests()
     getUnits();
+    getPromotions();
   }, []);
 
   return (
@@ -86,27 +112,19 @@ export const ReservationEdit = () => {
           </NavLink>
         </div>
       </div>
-      
+
       <div className="save-form">
-      <div className="field-group">
+        <div className="field-group">
           <label>Guest</label>
-          <div className="fieldGroup-selectButton">
-            <div className="fieldGroupSelectButton-select">
-              <Select
-                className="guest-select"
-                options={guestItems}
-                onChange={(event) => setReservation({ ...reservation, res_gue_id: Number(event?.value) })}
-                value={guestItems.filter((option) => (option.value === reservation.res_gue_id))}
-              />
-            </div>
-            <div className="fieldGroupSelectButton-icon">
-              <NavLink
-                to='/guest/save'
-                state={{ gue_id: 0, fromPlace: 'reservation' }}
-              >
-                <i className="icon-plus"></i>
-              </NavLink>
-            </div>
+          <div className="field-group">
+
+            <Select
+              className="guest-select"
+              options={guestItems}
+              onChange={(event) => setReservation({ ...reservation, res_gue_id: Number(event?.value) })}
+              value={guestItems.filter((option) => (option.value === reservation.res_gue_id))}
+            />
+
           </div>
         </div>
         <div className="field-group">
@@ -140,54 +158,48 @@ export const ReservationEdit = () => {
         <div className="field-group">
           <label>Price</label>
           <input
-            name="res_price"
-            value={reservation.res_price}
+            //name="res_price"
+            value={resPrice}
             type="number"
-            onChange={(event) => setReservation({ ...reservation, res_price: parseFloat(event.target.value) })}
+            onChange={(event) => setResPrice(parseFloat(event.target.value))}
           />
         </div>
 
         <div className="field-group">
-          <label>Final Price</label>
+          <label>Final Price {`(${getPercentajeByValue(resPrice, resFinalPrice)}%)`}</label>
           <input
-            name="res_price_final"
-            value={reservation.res_price}
+            //name="res_price_final"
+            value={resFinalPrice}
             type="number"
-            onChange={(event) => setReservation({ ...reservation, res_price_final: parseFloat(event.target.value) })}
+            onChange={(event) => setResFinalPrice(parseFloat(event.target.value))}
           />
         </div>
 
         <div className="field-group">
-          <label>Advance</label>
+          <label>Promotions</label>
+          <select
+            //name="res_pro_id"
+            value={proValue}
+            onChange={(event) => setProValue(Number(event.target.value))}
+          >
+            {promotions.map((obj, index) => (
+              <option value={obj.pro_id} key={index} >
+                {`${obj.pro_name} (${obj.pro_value}%)`}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="field-group">
+          <label>Advance {`(${getPercentajeByValue(resFinalPrice, resAdvancePayment)}%)`}</label>
           <input
-            name="res_price_final"
-            value={reservation.res_advance_payment}
+            //name="res_price_final"
+            value={resAdvancePayment}
             type="number"
-            onChange={(event) => setReservation({ ...reservation, res_advance_payment: parseFloat(event.target.value) })}
+            onChange={(event) => setResAdvancePayment(parseFloat(event.target.value))}
           />
         </div>
 
-        <div className="field-group">
-          <label>Guest</label>
-          <div className="fieldGroup-selectButton">
-            <div className="fieldGroupSelectButton-select">
-              <Select
-                className="guest-select"
-                options={guestItems}
-                onChange={(event) => setReservation({ ...reservation, res_gue_id: Number(event?.value) })}
-                value={guestItems.filter((option) => (option.value === reservation.res_gue_id))}
-              />
-            </div>
-            <div className="fieldGroupSelectButton-icon">
-              <NavLink
-                to='/guest/save'
-                state={{ gue_id: 0, fromPlace: 'reservation' }}
-              >
-                <i className="icon-plus"></i>
-              </NavLink>
-            </div>
-          </div>
-        </div>
         <div className="field-group">
           <label>Adults</label>
           <select

@@ -38,6 +38,8 @@ export const ReservationCalendar = () => {
         label: item.uni_name
       }));
 
+    
+
     useEffect(() => {
         startEvents();
         getUnits();
@@ -62,8 +64,6 @@ export const ReservationCalendar = () => {
                 <Select
                     options={unitsItems}
                     onChange={(event) => startEvents(Number(event?.value))}
-                    //value={unitsItems.filter((option) => (option.value === reservation.res_uni_id))}
-                    //isDisabled={(resId == 0) ? true : false}
                 />
             </div>
             </div>

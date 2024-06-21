@@ -8,7 +8,6 @@ import { daysBetween, getFriendlyDate } from "../../Utils/GeneralFunctions";
 export const UnitAvailableList = () => {
 
     const { availableUnits, unitAvailableRequest } = useGlobalContext()
-    
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [unitPriceList, setUnitPriceList] = useState<UnitPriceInterface[]>([]);
     const openFilter = () => {

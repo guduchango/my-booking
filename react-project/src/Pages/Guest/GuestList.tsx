@@ -3,13 +3,14 @@ import Layout from "../../Components/Layout/Layout"
 import { GuestInterface } from "../../Models/Guest/GuestInterface";
 import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
 import { NavLink } from "react-router-dom";
+import { GuestModel } from "../../Models/Guest/GuestModel";
 
 export const GuestList = () => {
 
-    const [guests, setGuests] = useState<GuestInterface[]>([]);
+    const [guests, setGuests] = useState<GuestModel[]>([]);
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [filteredResults, setFilteredResults] = useState<GuestInterface[]>(guests);
+    const [filteredResults, setFilteredResults] = useState<GuestModel[]>(guests);
 
     const getGuests = async () => {
         const storageGuestService = new GuestStorageService()

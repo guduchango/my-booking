@@ -62,7 +62,7 @@ export class ReservationStorageService extends StorageService {
             const event: CalendarEvent = newObj<CalendarEvent>()
             event.start = new Date(item.res_start_date);
             event.end = new Date(item.res_end_date);
-            event.title = `${item.guest.gue_name} ${item.res_price}`
+            event.title = `${item.guest.gue_name} $${item.res_price}`
             events.push(event);
         }
 

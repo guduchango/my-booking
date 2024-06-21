@@ -1,7 +1,7 @@
 import Dexie from "dexie"
 import { StorageService } from "../StorageService"
-import { GuestInterface } from '../../Models/Guest/GuestInterface';
-import { newObj } from "../../Utils/GeneralFunctions";
+import { GuestModel } from "../../Models/Guest/GuestModel";
+import { GuestInterface } from "../../Models/Guest/GuestInterface";
 
 export class GuestStorageService extends StorageService {
 
@@ -12,46 +12,55 @@ export class GuestStorageService extends StorageService {
         this.db = this
     }
 
-    async create(guest: GuestInterface) {
+    async create(guest: GuestModel) {
         return await this.transaction('rw', this.guests, async () => {
+            console.log("store create guest",guest.toPlainObject())
 
             if ((await this.guests.where({ gue_id: guest.gue_id }).count()) === 0) {
                 const id = await this.guests.add(
-                    guest
+                    guest.toPlainObject()
                 );
                 console.log(`Added guests with id ${id}`);
-                return await this.getById(id);
+                return new GuestModel (await this.getById(id));
             }
-            return newObj<GuestInterface>();
+            return new GuestModel()
         }).catch(e => {
             console.log(e.stack || e);
-            return newObj<GuestInterface>();
+            return new GuestModel()
         });
     }
 
-    async update(gue_id: number, guest:GuestInterface){
+    async update(gue_id: number, guest:GuestModel){
         return await this.transaction('rw', this.guests, async () => {
             if ((await this.guests.where({ gue_id: guest.gue_id }).count()) !== 0) {
                 const id = await this.guests.update(
                     gue_id,
-                    guest
+                    guest.toPlainObject()
                 );
                 console.log(`Updated guests with id ${id}`);
-                return await this.getById(id);
+                return new GuestModel (await this.getById(id));
             }
-            return newObj<GuestInterface>();
+            return new GuestModel()
         }).catch(e => {
             console.log(e.stack || e);
-            return newObj<GuestInterface>();
+            return new GuestModel()
         });
     }
 
     async getById(gue_id: number) {
-        return await this.guests.where({ gue_id: gue_id }).first() as GuestInterface
+        return new GuestModel(await this.guests.where({ gue_id: gue_id }).first())
     }
 
     async getAll(){
-        return await this.guests.toArray()
+        const items = await this.guests.toArray();
+        const itemsGuestModel = [] as GuestModel[];
+        items.forEach(item => {
+            itemsGuestModel.push(new GuestModel(
+                item
+            ))
+        });
+
+        return  itemsGuestModel;
     }
 
 }
