@@ -7,7 +7,9 @@ Route::get('/', function () {
 });
 
 Route::apiResource('api/reservation', \App\Http\Controllers\ReservationController::class);
-Route::apiResource('api/guest', \App\Http\Controllers\GuestController::class);
+    //->middleware('auth:sanctum');
+Route::apiResource('api/guest', \App\Http\Controllers\GuestController::class)
+        ->middleware('auth:sanctum');
 Route::apiResource('api/unit', \App\Http\Controllers\UnitController::class);
 Route::apiResource('api/price', \App\Http\Controllers\PriceController::class);
 Route::apiResource('api/currency', \App\Http\Controllers\CurrencyController::class);
@@ -16,6 +18,18 @@ Route::apiResource('api/promotion', \App\Http\Controllers\PromotionController::c
 
 Route::post('api/price/range-price', [\App\Http\Controllers\PriceController::class,'savePriceByRange']);
 Route::post('api/unit/units-available', [\App\Http\Controllers\UnitController::class,'getAvailable']);
+
+Route::post('api/user/create', [\App\Http\Controllers\AuthController::class,'create']);
+Route::post('api/user/login', [\App\Http\Controllers\AuthController::class,'login']);
+
+
+Route::post('api/tokens/create', function (\Illuminate\Http\Request $request) {
+    $token = $request->user()->createToken($request->token_name);
+
+    return ['token' => $token->plainTextToken];
+});
+
+
 
 
 Route::get('/artisan/migarte-refresh',function(){

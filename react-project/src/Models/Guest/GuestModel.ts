@@ -17,9 +17,7 @@ export class GuestModel extends BaseModel implements GuestInterface {
     private _gue_updated_at: Date;
 
     public constructor(IGuest?: GuestInterface) {
-
         super();
-
         if (IGuest !== undefined) {
             this.gue_id = (IGuest.gue_id !== undefined) ? IGuest.gue_id : 0
             this.gue_name = (IGuest.gue_name !== undefined) ? IGuest.gue_name : ""
@@ -33,7 +31,6 @@ export class GuestModel extends BaseModel implements GuestInterface {
             this.gue_created_at = (IGuest.gue_created_at !== undefined) ? new Date(IGuest.gue_created_at) : new Date()
             this.gue_updated_at = (IGuest.gue_updated_at !== undefined) ? new Date(IGuest.gue_updated_at) : new Date()
         }
-
         return this;
     }
 
@@ -144,6 +141,8 @@ export class GuestModel extends BaseModel implements GuestInterface {
 
     public validate(): boolean {
 
+        this.cleanMessages();
+
         if (!this.gue_name || this.gue_name.trim() === '') {
             this.addMessage('Guest name is required')
         }
@@ -170,21 +169,6 @@ export class GuestModel extends BaseModel implements GuestInterface {
         }
     }
 
-    public backUrl (urlFromRoute: string){
-        let backUrlValue ="/";
-        switch (urlFromRoute) {
-            case "reservationCreate":
-                backUrlValue = "/reservation/create";
-                break;
-            case "reservationEdit":
-                backUrlValue = "/reservation/edit";
-                break;
-            case "guest":
-                backUrlValue = "/guest";
-                break;
-        }
 
-        return backUrlValue;
-    }
 
 }

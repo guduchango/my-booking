@@ -13,39 +13,53 @@ export const GuestSave = () => {
     const { state } = location
     const gueId = state.gue_id;
     const fromPlace = state.fromPlace;
-    const [guestModel] = useState(new GuestModel(guest));
-    const [backUrl] = useState(guestModel.backUrl(fromPlace));
-    
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [showMessages, setShowMessages] = useState<string[]>([]);
     const navigate = useNavigate();
 
     const onClickSave = async () => {
-        if(guestModel.validate() === false){
+        const guestModel = new GuestModel(guest)
+        if (guestModel.validate() === false) {
             setIsVisible(true)
             setShowMessages(guestModel.showMessages())
             throw new Error(guestModel.showMessages().toString());
         }
-
-        let guestResponse = new GuestModel()
-        if(gueId === 0){
+        let guestResponse = new GuestModel();
+        if (gueId === 0) {
             guestResponse = await new GuestHttpService().storeGuest(guestModel)
-            guestResponse = await new GuestStorageService().create(guestResponse)
-        }else{
-            guestResponse = await new GuestHttpService().updateGuest(guestModel,gueId)
-            guestResponse = await new GuestStorageService().update(gueId,guestResponse)
+            await new GuestStorageService().create(guestResponse)
+        } else {
+            guestResponse = await new GuestHttpService().updateGuest(guestModel, gueId)
+            await new GuestStorageService().update(gueId, guestResponse)
         }
         setIsVisible(false)
         setGuest(guestResponse)
-        navigate(backUrl);
+        navigate(backUrl());
     };
 
     const setGuestFromCreate = async () => {
         if (gueId === 0) {
-            setGuest(new GuestModel());
+            setGuest(new GuestModel().toPlainObject());
         } else {
-            setGuest(await new GuestStorageService().getById(gueId));
+            setGuest(new GuestModel(await new GuestStorageService().getById(gueId)).toPlainObject());
         }
+    }
+
+    const backUrl = () => {
+        let backUrlValue = "/";
+        switch (fromPlace) {
+            case "reservationCreate":
+                backUrlValue = "/reservation/create";
+                break;
+            case "reservationEdit":
+                backUrlValue = "/reservation/edit";
+                break;
+            case "guest":
+                backUrlValue = "/guest";
+                break;
+        }
+
+        return backUrlValue;
     }
 
     useEffect(() => {
@@ -59,8 +73,8 @@ export const GuestSave = () => {
                 <div className="pageback-wrapper">
                     <h1>Guest save</h1>
                     <NavLink
-                        to={backUrl}
-                        state={{gue_id: gueId}}
+                        to={backUrl()}
+                        state={{ gue_id: gueId }}
                     >
                         <i className="icon-arrow-left"></i>
                     </NavLink>
@@ -111,16 +125,16 @@ export const GuestSave = () => {
                     />
                 </div>
                 {isVisible && (
-                        <div className="form-error">
-                            <div className="formError-wrapper">
+                    <div className="form-error">
+                        <div className="formError-wrapper">
                             {showMessages.map((guest) => (
                                 <ul>
                                     <li>{guest}</li>
                                 </ul>
                             ))}
-                            </div>
                         </div>
-                    )}
+                    </div>
+                )}
                 <div className="field-group">
                     <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
                 </div>

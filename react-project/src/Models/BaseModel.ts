@@ -10,10 +10,11 @@ export class BaseModel {
         this.messages.push(message);
     }
 
-    public showMessages(): string[] {
-        //if (this.messages.length > 0) {
-            //console.error('Errors: \n' + this.messages.join('\n'));
-            return this.messages;
-        //}
+    public showMessages(): string[] {    
+        return this.messages;
+    }
+
+    public  cleanMessages() {
+        this.messages = [];
     }
 }

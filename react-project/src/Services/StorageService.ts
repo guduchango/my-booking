@@ -7,6 +7,7 @@ import { PromotionInterface } from '../Models/Promotion/PromotionInterface';
 import { UnitInterface } from '../Models/Unit/UnitInterface';
 import {CurrencyInterface} from "../Models/Currency/CurrencyInterface";
 import { GuestInterface } from '../Models/Guest/GuestInterface';
+import { UserInterface } from '../Models/User/UserInterface';
 
 
 export class StorageService extends Dexie {
@@ -17,6 +18,7 @@ export class StorageService extends Dexie {
     public promotions!: Table<PromotionInterface>;
     public units!: Table<UnitInterface>;
     public currencies!: Table<CurrencyInterface>;
+    public users!: Table<UserInterface>;
 
     public constructor() {
         super("MyBooking");
@@ -90,7 +92,15 @@ export class StorageService extends Dexie {
                 "exp_date,"+
                 "exp_uni_id,"+
                 "exp_created_at,"+
-                "exp_updated_at"
+                "exp_updated_at",
+            users:
+                "id,"+
+                "name,"+
+                "email,"+
+                "token,"+
+                "created_at,"+
+                "updated_at"
+                
 
         });
     }

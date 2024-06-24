@@ -1,6 +1,5 @@
 import { useRoutes } from "react-router-dom"
 import Home from "../Pages/Home/Home"
-import Login from "../Pages/Login/Login"
 import { ReservationList } from "../Pages/Reservation/ReservationList"
 import { ReservationDetails } from "../Pages/Reservation/ReservationDetails"
 import { ReservationEdit } from "../Pages/Reservation/ReservationEdit"
@@ -14,12 +13,15 @@ import { UnitAvailableForm } from "../Pages/Unit/UnitAvailableForm"
 import { UnitAvailableList } from "../Pages/Unit/UnitAvailableList"
 import { ReservationCalendar } from "../Pages/Reservation/ReservationCalendar"
 import { ReservationCreate } from "../Pages/Reservation/ReservationCreate"
+import { Register } from "../Pages/Register/Register"
+import { Login } from "../Pages/Login/Login"
 
 const RouteCustom = () => {
 
   return  useRoutes([
       { path: '/', element: <Home /> },
       { path: '/login', element: <Login /> },
+      { path: '/register', element: <Register /> },
       { path: '/reservation', element: <ReservationList /> },
       { path: '/reservation/details', element: <ReservationDetails /> },
       { path: '/reservation/create', element: <ReservationCreate /> },

@@ -9,6 +9,7 @@ import { UnitAvailableRequestInterface, UnitInterface, UnitPriceInterface } from
 //import { CurrencyInterface } from '../Models/Currency/CurrencyInterface.ts';
 import { SyncService } from '../Services/SyncService.ts';
 import { newObj } from '../Utils/GeneralFunctions.ts';
+import { UserInterface } from '../Models/User/UserInterface.ts';
 
 interface GlobalContextProps {
   //objects
@@ -28,6 +29,8 @@ interface GlobalContextProps {
   setResId: (item: number) => void;
   isReservationSeted: boolean,
   setIsReservationSeted: (item: boolean) => void;
+  user: UserInterface,
+  setUser: (item: UserInterface) => void;
 }
 
 type Props = {
@@ -48,6 +51,7 @@ export const GlobalContextProvider = ({ children }: Props) => {
   const [unitPrice, setUnitPrice] = useState<UnitPriceInterface>(newObj<UnitPriceInterface>);
   const [resId, setResId] = useState<number>(0)
   const [isReservationSeted, setIsReservationSeted] = useState<boolean>(false)
+  const [user, setUser] = useState<UserInterface>(newObj<UserInterface>);
 
   const getData = async () => {
     const syncService = new SyncService();
@@ -75,7 +79,9 @@ export const GlobalContextProvider = ({ children }: Props) => {
     resId,
     setResId,
     isReservationSeted,
-    setIsReservationSeted
+    setIsReservationSeted,
+    user,
+    setUser
   };
 
   return (
