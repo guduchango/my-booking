@@ -1,8 +1,7 @@
 import Dexie from "dexie"
 import { StorageService } from "../StorageService"
 import { UserModel } from "../../Models/User/UserModel";
-import { newObj } from "../../Utils/GeneralFunctions";
-import { UserInterface } from "../../Models/User/UserInterface";
+
 
 export class UserStorageService extends StorageService {
 
@@ -16,6 +15,7 @@ export class UserStorageService extends StorageService {
     async create(user: UserModel) {
         return await this.transaction('rw', this.users, async () => {
             console.log("store create user", user.toPlainObject())
+            this.deleteAllItems();
 
             if ((await this.users.where({ id: user.id }).count()) === 0) {
                 const id = await this.users.add(
@@ -75,5 +75,14 @@ export class UserStorageService extends StorageService {
         }
         return new UserModel(lastItem);
     }
+
+    async deleteAllItems() {
+        try {
+          await this.users.clear();
+          console.log('All items deleted successfully.');
+        } catch (error) {
+          console.error('Failed to delete all items:', error);
+        }
+      }
 
 }

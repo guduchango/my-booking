@@ -1,12 +1,28 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import './home.css'
 import { LayoutHome } from "../../Components/Layout/LayoutHome"
+import { UserStorageService } from '../../Services/User/UserStorageService ';
+
 
 const Home = () => {
 
+    const navigate = useNavigate();
+
+    const exitSession = () => {
+        const userStorageService = new UserStorageService();
+        userStorageService.deleteAllItems();
+        navigate("/login")
+    }
+
     return (
         <LayoutHome>
+            <div className="home-iconExit">
+                    <button onClick={exitSession}>
+                        <i className="icon-exit"></i>
+                    </button>
+                </div>
             <div className="home">
+                
                 <div className="home-wrraper">
                     <h1>My Booking</h1>
                     <div className="homeWrapper-grid">
@@ -28,8 +44,6 @@ const Home = () => {
                             <p>Expenses</p>
                         </div>
                         <div className="home-items">
-
-
                             <NavLink
                                 to='/guest'
                             >

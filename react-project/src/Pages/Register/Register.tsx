@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import Layout from "../../Components/Layout/Layout"
 import { useGlobalContext } from "../../Context/Context"
 import { UserModel } from "../../Models/User/UserModel";
 import { UserHttpService } from "../../Services/User/UserHttpService";
 import { UserStorageService } from "../../Services/User/UserStorageService ";
 import { useNavigate } from "react-router-dom";
+import { LayoutHome } from "../../Components/Layout/LayoutHome";
 
 export const Register = () => {
     
@@ -38,7 +38,7 @@ export const Register = () => {
 
 
     return (
-        <Layout>
+        <LayoutHome>
 
             <div className="page-back">
                 <div className="pageback-wrapper">
@@ -94,6 +94,6 @@ export const Register = () => {
                 </div>
             </div>
 
-        </Layout>
+        </LayoutHome>
     )
 }

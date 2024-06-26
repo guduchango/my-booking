@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\CustomException;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\Validator;
@@ -11,6 +12,8 @@ use \Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+    use ParseMsj;
 
     public function create(Request $request)
     {
@@ -27,7 +30,7 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'validation error',
-                    'errors' => $validateUser->errors()
+                    'errors' => $this->setInfo($validateUser->messages())
                 ], 401);
             }
 
@@ -42,7 +45,7 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message' => $th->getMessage()
+                'message' => $this->setInfo($th->getMessage())
             ], 500);
         }
     }
@@ -61,7 +64,7 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'validation error',
-                    'errors' => $validateUser->errors()
+                    'errors' => $this->setInfo($validateUser->errors())
                 ], 401);
             }
 
@@ -72,19 +75,17 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('emaila', $request->email)->first();
 
-            return response()->json([
-                'status' => true,
-                'message' => 'User Logged In Successfully',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
-            ], 200);
+            return new UserResource($user);
 
-        } catch (\Throwable $th) {
-            return response()->json([
+        } catch (CustomException $th) {
+            //$this->setInfo($th->getMessage());
+
+/*            return response()->json([
                 'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
+                'message' => $this->getMessage()
+            ], 500);*/
         }
     }
 }

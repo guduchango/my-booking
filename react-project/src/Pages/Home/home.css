@@ -8,6 +8,27 @@
     height: 80vh;
 }
 
+.home-iconExit{
+    display: flex;
+    justify-content: right;
+
+}
+
+.home-iconExit i{
+    font-size: 25px;
+    color: var(--red400);
+    display: flex;
+    justify-content: center;
+}
+
+.home-iconExit button{
+    border-radius: 10px;
+    border: solid var(--red500) 2px;
+    padding: 10px;
+    background-color: var(--red50);
+
+}
+
 .home-wrraper{
     text-align: center;
     

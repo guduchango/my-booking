@@ -64,7 +64,7 @@ export class HttpBaseService {
     }
 
     // Generic POST request method using the basic Axios instance
-    public async put<T, R>(url: string, id:number, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
+    public async put<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
         const axiosInstance = this.getAxios();
         return axiosInstance.put<R>(url, data, config);
     }

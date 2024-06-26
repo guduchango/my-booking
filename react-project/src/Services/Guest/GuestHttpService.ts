@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import axiosClient from "../../Api/axiosClient";
 import {GuestInterface } from "../../Models/Guest/GuestInterface";
 import { GuestModel } from "../../Models/Guest/GuestModel";
 import { HttpBaseService } from "../HttpBaseService";

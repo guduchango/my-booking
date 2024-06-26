@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Price;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -28,24 +29,11 @@ class Test extends Command
      */
     public function handle()
     {
-        // Example usage
-        $startDate = '2024-05-08';
-        $endDate = '2024-05-12';
-        $unit = 1;
+        $pet = new Pets("pepe");
+        $pet->setTrait("hola");
 
-        $units = Unit::get();
+        var_dump($pet->getData());
 
-        foreach ($units as $uni){
-
-           $price = new Price();
-            if($price->canReservate($startDate,$endDate,$uni->uni_id)){
-                echo "si puedo reservar";
-            }else{
-                echo "no puedo reservar";
-            }
-
-
-        }
     }
 
 

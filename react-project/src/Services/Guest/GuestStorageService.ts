@@ -1,7 +1,6 @@
 import Dexie from "dexie"
 import { StorageService } from "../StorageService"
 import { GuestModel } from "../../Models/Guest/GuestModel";
-import { GuestInterface } from "../../Models/Guest/GuestInterface";
 
 export class GuestStorageService extends StorageService {
 

@@ -134,5 +134,25 @@ export class UserModel extends BaseModel implements UserInterface {
             return true;
         }
     }
+
+    public loginValidate(): boolean {
+
+        
+        if (!this.email || this.email.trim() === '' || validateEmail(this.email) === false) {
+            this.addMessage('Email is invalid')
+        }
+        if (!this.password || this.password.trim() === '') {
+            this.addMessage('Password is required')
+        }
+        if (this.password.length < 6) {
+            this.addMessage('Password must be at least 6 characters long')
+        }
+
+        if (this.showMessages().length > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     
 }
