@@ -8,6 +8,7 @@ use App\Http\Resources\UnitResource;
 use App\Models\Price;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UnitController extends Controller {
     public function index(Request $request) {
@@ -22,8 +23,18 @@ class UnitController extends Controller {
         }
     }
 
-    public function store(UnitRequest $request) {
+    public function store(Request $request) {
         try {
+
+            $validate = Validator::make($request->all(),
+                $this->getValidationRules()
+            );
+
+            if($validate->fails()){
+                $response = new CustomResource(response(),401,$validate);
+                return $response->show();
+            }
+
             $unit = new Unit();
             $unit->fill($request->all());
             $unit->save();
@@ -34,7 +45,7 @@ class UnitController extends Controller {
         }
     }
 
-    public function update(UnitRequest $request, int $id) {
+    public function update(Request $request, int $id) {
         try {
             $unit = Unit::findOrFail($id);
             $unit->fill($request->all());
@@ -48,6 +59,16 @@ class UnitController extends Controller {
 
     public function getAvailable(Request $request) {
         try {
+
+            $validate = Validator::make($request->all(),
+                $this->getValidationRulesPriceUnit()
+            );
+
+            if($validate->fails()){
+                $response = new CustomResource(response(),401,$validate);
+                return $response->show();
+            }
+
             $checkIn = $request->check_in;
             $checkOut = $request->check_out;
             $people = $request->people;
@@ -74,5 +95,24 @@ class UnitController extends Controller {
             $response = new CustomResource(response(), 500, $th);
             return $response->show();
         }
+    }
+
+    private function getValidationRules(): array {
+        return  [
+            'uni_name' => 'required|string|max_digits:30',
+            'uni_max_people' => 'required|integer',
+            'uni_single_bed' => 'required|integer',
+            'uni_dobule_bed' => 'required|integer',
+            'uni_rooms' => 'required|integer',
+        ];
+    }
+
+    private function getValidationRulesPriceUnit(): array {
+        return  [
+            'check_in' => 'required|date',
+            'check_out' => 'required|date',
+            'people' => 'required|integer',
+
+        ];
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Resources\PriceResource;
 use App\Models\Price;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PriceController extends Controller {
 
@@ -24,9 +25,18 @@ class PriceController extends Controller {
         }
     }
 
-    public function savePriceByRange(PriceRangeRequest $request) {
+    public function savePriceByRange(Request $request) {
 
         try {
+            $validate = Validator::make($request->all(),
+                $this->getValidationRules()
+            );
+
+            if($validate->fails()){
+                $response = new CustomResource(response(),401,$validate);
+                return $response->show();
+            }
+
             $pri_from = date('Y-m-d', strtotime($request->pri_from));
             $pri_to = date('Y-m-d', strtotime($request->pri_to));
             $pri_uni_id = $request->pri_uni_id;
@@ -62,5 +72,15 @@ class PriceController extends Controller {
             $response = new CustomResource(response(), 500, $th);
             return $response->show();
         }
+    }
+
+    private function getValidationRules(): array {
+        return  [
+            'pri_date' => 'required||max_digits:50',
+            'pri_price' => 'required|numeric|max_digits:50',
+            'pri_price_dolar' => 'numeric|max_digits:10',
+            'pri_uni_id' => 'integer|required',
+            'pri_res_id' => 'integer|',
+        ];
     }
 }

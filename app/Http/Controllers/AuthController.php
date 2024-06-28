@@ -59,10 +59,9 @@ class AuthController extends Controller
             }
 
             if(!Auth::attempt($request->only(['email', 'password']))){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Email & Password does not match with our record.',
-                ], 401);
+                $message = 'Email & Password does not match with our record.';
+                $response = new CustomResource(response(),401,$message);
+                return $response->show();
             }
 
             $user = User::where('email', $request->email)->first();

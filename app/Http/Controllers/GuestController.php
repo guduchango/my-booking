@@ -70,12 +70,12 @@ class GuestController extends Controller {
 
     private function getValidationRules(): array {
         return  [
-            'gue_name' => 'required|max:50',
-            'gue_last_name' => 'required|max:50',
-            'gue_identity_document' => 'required|numeric',
-            'gue_email' => 'email|max:50|unique:guests,gue_email',
-            'gue_phone_number' => 'required|numeric|max:50',
-            'gue_birthday' => 'required|date'
+            'gue_name' => 'required|max_digits:50',
+            'gue_last_name' => 'required|max_digits:50',
+            'gue_identity_document' => 'required|numeric|max_digits:10',
+            'gue_email' => 'email|max_digits:50|unique:guests,gue_email',
+            'gue_phone_number' => 'required|numeric|max_digits:20',
+            'gue_birthday' => 'date'
         ];
     }
 }

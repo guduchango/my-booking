@@ -8,12 +8,12 @@ use \Throwable;
 use \Illuminate\Validation\Validator;
 use function Illuminate\Database\Eloquent\Factories\newInstance;
 
-class CustomResource
-{
+class CustomResource {
 
     private ResponseFactory $_response;
     private ?Throwable $_errorThrowable = null;
     private ?Validator $_errorValidator = null;
+    private ?string $_errorString = "";
     private int $_status;
 
     public function __construct(
@@ -23,29 +23,32 @@ class CustomResource
     ) {
         if ($error instanceof Validator) {
             $this->_errorValidator = $error;
-        }elseif ($error instanceof Throwable){
+        } elseif ($error instanceof Throwable) {
             $this->_errorThrowable = $error;
+        }else{
+            $this->_errorString = $error;
         }
         $this->_response = $response;
         $this->_status = $status;
     }
 
 
-    public function show(){
+    public function show() {
 
         $mjs = [];
-        if($this->getErrorThrowable()!==null){
+        if ($this->getErrorThrowable() !== null) {
             $mjs[] = $this->getErrorThrowable()->getMessage();
-        }elseif ($this->getErrorValidator()!==null){
-
+        } elseif ($this->getErrorValidator() !== null) {
             $items = $this->getErrorValidator()->messages()->messages();
-            if(count($items)>0){
-                foreach ($items as $item => $value){
-                    foreach ($value as $val){
+            if (count($items) > 0) {
+                foreach ($items as $item => $value) {
+                    foreach ($value as $val) {
                         $mjs[] = "$item: $val";
                     }
                 }
             }
+        }else{
+            $mjs[] = $this->getErrorString();
         }
 
         $array = [
@@ -53,8 +56,8 @@ class CustomResource
             'error' => $mjs
         ];
 
-        return $this->getResponse()->json($array,$this->getStatus());
-   }
+        return $this->getResponse()->json($array, $this->getStatus());
+    }
 
     /**
      * @return ResponseFactory
@@ -110,6 +113,20 @@ class CustomResource
      */
     public function setStatus(int $status): void {
         $this->_status = $status;
+    }
+
+    /**
+     * @return mixed|string|null
+     */
+    public function getErrorString() {
+        return $this->_errorString;
+    }
+
+    /**
+     * @param mixed|string|null $errorString
+     */
+    public function setErrorString($errorString): void {
+        $this->_errorString = $errorString;
     }
 
 }
