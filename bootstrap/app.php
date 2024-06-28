@@ -24,11 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
-            if ($request->is('admin/*')) {
-                return true;
+            if ($request->is('api/*')) {
+                return $request->expectsJson();
             }
-
-            return $request->expectsJson();
         });
     })->create();
         //

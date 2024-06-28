@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\CustomException;
+use App\Http\Resources\CustomResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\Validator;
@@ -12,8 +12,6 @@ use \Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-
-    use ParseMsj;
 
     public function create(Request $request)
     {
@@ -27,11 +25,8 @@ class AuthController extends Controller
                 ]);
 
             if($validateUser->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $this->setInfo($validateUser->messages())
-                ], 401);
+                $response = new CustomResource(response(),401,$validateUser);
+                return $response->show();
             }
 
             $user = User::create([
@@ -43,10 +38,8 @@ class AuthController extends Controller
             return new UserResource(User::findOrFail($user->id));
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $this->setInfo($th->getMessage())
-            ], 500);
+            $response = new CustomResource(response(),$th,500);
+            return $response->show();
         }
     }
 
@@ -61,11 +54,8 @@ class AuthController extends Controller
                 ]);
 
             if($validateUser->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $this->setInfo($validateUser->errors())
-                ], 401);
+                $response = new CustomResource(response(),401,$validateUser);
+                return $response->show();
             }
 
             if(!Auth::attempt($request->only(['email', 'password']))){
@@ -75,17 +65,13 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $user = User::where('emaila', $request->email)->first();
+            $user = User::where('email', $request->email)->first();
 
             return new UserResource($user);
 
-        } catch (CustomException $th) {
-            //$this->setInfo($th->getMessage());
-
-/*            return response()->json([
-                'status' => false,
-                'message' => $this->getMessage()
-            ], 500);*/
+        } catch (\Throwable $th) {
+            $response = new CustomResource(response(),500,$th);
+            return $response->show();
         }
     }
 }

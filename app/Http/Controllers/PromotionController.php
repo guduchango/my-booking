@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CustomResource;
 use App\Http\Resources\PromotionResource;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 
-class PromotionController extends Controller
-{
-    public function index(Request $request)
-    {
-        return PromotionResource::collection(
-            Promotion::orderBy('pro_created_at', 'desc')
-                ->get()
-        );
+class PromotionController extends Controller {
+    public function index(Request $request) {
+        try {
+            return PromotionResource::collection(
+                Promotion::orderBy('pro_created_at', 'desc')
+                    ->get()
+            );
+        } catch (\Throwable $th) {
+            $response = new CustomResource(response(), 500, $th);
+            return $response->show();
+        }
     }
 }
