@@ -20,12 +20,12 @@ export const Login = () => {
             setShowMessages(userModel.showMessages())
             throw new Error(userModel.showMessages().toString());
         }
-        let userResponse = await new UserHttpService().loginUser(userModel)
-        const userStorageService = new UserStorageService();
-        userResponse = await userStorageService.create(userResponse)
+        const userResponse = 
+        await new UserHttpService().loginUser(userModel);
         setIsVisible(false)
         setUser(userResponse)
         navigate("/")
+
     };
 
     const setDefaultForm = async () => {

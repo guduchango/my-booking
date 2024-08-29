@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "../../Api/axiosClient";
 import {UnitAvailableRequestInterface, UnitInterface } from "../../Models/Unit/UnitInterface";
+import { ApiResponseInterface } from "../../Models/ApiResponseInterface";
 
 export class UnitHttpService {
 
@@ -9,7 +10,7 @@ export class UnitHttpService {
     public async getUnits (): Promise<UnitInterface[]> { 
         const response: AxiosResponse<UnitInterface[]> = 
         await axiosClient.get<UnitInterface[]>(this.url);
-        return response.data;
+        return response.data?.data as UnitInterface[]
     }
 
     public async storeUnit (guest: UnitInterface): Promise<UnitInterface> { 

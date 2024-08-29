@@ -2,10 +2,10 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import './guest-create.css'
 import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
-import { GuestHttpService } from "../../Services/Guest/GuestHttpService";
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../../Context/Context";
 import { GuestModel } from "../../Models/Guest/GuestModel";
+import { AxiosError } from "axios";
 
 export const GuestSave = () => {
     const { setGuest, guest } = useGlobalContext()
@@ -24,17 +24,17 @@ export const GuestSave = () => {
             setShowMessages(guestModel.showMessages())
             throw new Error(guestModel.showMessages().toString());
         }
-        let guestResponse = new GuestModel();
-        if (gueId === 0) {
-            guestResponse = await new GuestHttpService().storeGuest(guestModel)
-            await new GuestStorageService().create(guestResponse)
-        } else {
-            guestResponse = await new GuestHttpService().updateGuest(guestModel, gueId)
-            await new GuestStorageService().update(gueId, guestResponse)
+        const guestResponse = await guestModel.saveOrUpdate(gueId);
+        if(guestResponse instanceof AxiosError){
+            setIsVisible(true)
+            setShowMessages(guestModel.showMessages())
+            throw new Error(guestModel.showMessages().toString());
         }
+
         setIsVisible(false)
         setGuest(guestResponse)
         navigate(backUrl());
+
     };
 
     const setGuestFromCreate = async () => {

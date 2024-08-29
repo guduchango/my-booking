@@ -23,6 +23,7 @@ export const UnitAvailableList = () => {
         for (const unit of availableUnits) {
             const { check_in, check_out, people } = unitAvailableRequest;
             const priceCalculate = new UnitPriceCalculate(unit, check_in, check_out, people)
+            
             const unitPriceObj = await priceCalculate.getUnitPriceInfo()
             unitPriceArray = [...unitPriceArray, unitPriceObj]
         }

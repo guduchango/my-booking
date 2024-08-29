@@ -1,6 +1,9 @@
-import { isValidDOB, isValidEmail, isValidPositiveInteger } from "../../Utils/GeneralFunctions";
+import { AxiosError } from "axios";
+import axiosClient from "../../Api/axiosClient";
 import { BaseModel } from "../BaseModel";
 import { GuestInterface } from "./GuestInterface";
+import { z } from 'zod';
+import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
 
 export class GuestModel extends BaseModel implements GuestInterface {
     // Private properties
@@ -135,38 +138,99 @@ export class GuestModel extends BaseModel implements GuestInterface {
             gue_birthday: this.gue_birthday,
             gue_age: this.gue_age,
             gue_created_at: this.gue_created_at,
-            gue_updated_at: this.gue_updated_at
+            gue_updated_at: this.gue_updated_at,
         };
     }
 
+
+    public async store(): Promise<GuestInterface | AxiosError>{
+        return await axiosClient.post(`/guest/`, this.toPlainObject())
+        .then(response => {
+          return response.data.data as GuestInterface
+        })
+        .catch((error: AxiosError) => {
+            const items = error.response?.data?.errors;
+            if(items[0]){
+                for (let i = 0; i < items.length; i++) {
+                    this.addMessage(items[i])
+                  }
+            }else{
+                this.addMessage(error.message)
+            }
+          return error
+        });
+    }
+
+    public async update(id: number): Promise<GuestInterface | AxiosError>{
+        return await axiosClient.put(`/guest/${id}`, this.toPlainObject())
+        .then(response => {
+          return response.data.data as GuestInterface
+        })
+        .catch((error: AxiosError) => {
+            const items = error.response?.data?.errors;
+            if(items[0]){
+                for (let i = 0; i < items.length; i++) {
+                    this.addMessage(items[i])
+                  }
+            }else{
+                this.addMessage(error.message)
+            }
+            
+          return error
+        });
+    }
+
+    public async saveOrUpdate(id: number): Promise<GuestInterface | AxiosError>{
+        
+        if(id === 0){
+            const response: GuestInterface | AxiosError = await this.store()
+            if(!(response instanceof AxiosError)){
+                console.log(response)
+                await new GuestStorageService().create(new GuestModel(response))
+            }
+            
+        }
+        const response: GuestInterface | AxiosError = await this.update(id)
+        if(!(response instanceof AxiosError)){
+            await new GuestStorageService().update(id,new GuestModel(response))
+        }
+
+        return response;
+    }
+
+
     public validate(): boolean {
 
-        this.cleanMessages();
-
-        if (!this.gue_name || this.gue_name.trim() === '') {
-            this.addMessage('Guest name is required')
-        }
-        if (!this.gue_last_name || this.gue_last_name.trim() === '') {
-            this.addMessage('Last name is required')
-        }
-
-        if (this.gue_birthday.trim() !== '' && isValidDOB(this.gue_birthday) === false) {
-            this.addMessage('Date of birth is invalid')
-        }
-
-        if (this.gue_phone_number.trim() !== '' && isValidPositiveInteger(this.gue_phone_number) === false) {
-            this.addMessage('Phone number is invalid')
-        }
-
-        if (this.gue_email.trim() !== '' && isValidEmail(this.gue_email) === false) {
-            this.addMessage('Email is invalid')
-        }
-
+        const FormSchema = z.object({
+            gue_name: z.string().nonempty(),
+            gue_last_name: z.string().nonempty(),
+            //gue_email: z.string().email(),
+          });
+          
+          type FormData = z.infer<typeof FormSchema>;
+          
+          // Validation
+          try {
+            const data: FormData = FormSchema.parse(this.toPlainObject());
+            console.log("data",data);
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                
+              for (const issue of error.issues) {
+                const messageTxt = issue.path[0]+":"+issue.message;
+                this.addMessage(messageTxt.toLowerCase())
+              }
+            } else {
+                this.addMessage(`Unexpected error: ${error}`)
+            }
+          }
+         
         if (this.showMessages().length > 0) {
             return false;
         } else {
             return true;
         }
+
     }
 
 

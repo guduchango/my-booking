@@ -10,6 +10,6 @@ export class CurrencyHttpService {
     public async getCurrencys (): Promise<CurrencyInterface[]> { 
         const response: AxiosResponse<CurrencyInterface[]> = 
         await axiosClient.get<CurrencyInterface[]>(this.url);
-        return response.data;
+        return response.data?.data as CurrencyInterface[];
     }
 }

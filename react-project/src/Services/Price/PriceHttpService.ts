@@ -9,7 +9,7 @@ export class PriceHttpService {
     public async getPrices (): Promise<PriceInterface[]> { 
         const response: AxiosResponse<PriceInterface[]> = 
         await axiosClient.get<PriceInterface[]>(this.url);
-        return response.data;
+        return response.data?.data as PriceInterface[];
     }
 
     public async storeRangePrice (priceRange: PriceRageInterface): Promise<PriceInterface[]>  { 

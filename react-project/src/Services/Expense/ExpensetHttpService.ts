@@ -9,6 +9,6 @@ export class ExpenseHttpService {
     public async getExpenses (): Promise<ExpenseInterface[]> { 
         const response: AxiosResponse<ExpenseInterface[]> = 
         await axiosClient.get<ExpenseInterface[]>(this.url);
-        return response.data;
+        return response.data?.data as ExpenseInterface[];
     }
 }

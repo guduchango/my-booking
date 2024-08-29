@@ -76,11 +76,10 @@ class PriceController extends Controller {
 
     private function getValidationRules(): array {
         return  [
-            'pri_date' => 'required||max_digits:50',
-            'pri_price' => 'required|numeric|max_digits:50',
-            'pri_price_dolar' => 'numeric|max_digits:10',
+            'pri_from' => 'required|',
+            'pri_to' => 'required',
+            'pri_value' => 'required|numeric',
             'pri_uni_id' => 'integer|required',
-            'pri_res_id' => 'integer|',
         ];
     }
 }

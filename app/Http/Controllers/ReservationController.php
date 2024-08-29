@@ -41,6 +41,15 @@ class ReservationController extends Controller {
         }
     }
 
+    public function show(int $id) {
+        try {
+            return new ReservationResource(Reservation::findOrFail($id));
+        } catch (\Throwable $th) {
+            $response = new CustomResource(response(), 500, $th);
+            return $response->show();
+        }
+    }
+
     public function update(Request $request, int $id) {
         try {
 

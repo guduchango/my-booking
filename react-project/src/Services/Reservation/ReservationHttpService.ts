@@ -9,7 +9,7 @@ export class ReservationHttpService {
     public async getReservations (): Promise<ReservationInterface[]> { 
         const response: AxiosResponse<ReservationInterface[]> = 
         await axiosClient.get<ReservationInterface[]>(this.url);
-        return response.data;
+        return response.data.data as ReservationInterface[];
     }
 
     public async storeReservation (reservation: ReservationInterface): Promise<ReservationInterface> { 

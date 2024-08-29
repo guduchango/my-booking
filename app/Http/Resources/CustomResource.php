@@ -53,7 +53,7 @@ class CustomResource {
 
         $array = [
             'data' => [],
-            'error' => $mjs
+            'errors' => $mjs
         ];
 
         return $this->getResponse()->json($array, $this->getStatus());

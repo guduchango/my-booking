@@ -12,6 +12,9 @@ export class UserModel extends BaseModel implements UserInterface {
     private _token: string;
     private _created_at: Date;
     private _updated_at: Date;
+    
+    //error
+    private _error: Array<string> = new Array("");
 
     constructor(IUser?: UserInterface) {
         super();
@@ -89,6 +92,16 @@ export class UserModel extends BaseModel implements UserInterface {
 
     set updated_at(value: Date) {
         this._updated_at = value;
+    }
+
+     // Getter for the error property
+     get error(): string[] {
+        return this._error;
+    }
+
+    // Setter for the error property
+    setError(value: string) {
+        this._error.push(value);
     }
 
     // Method to convert instance to plain object for serialization

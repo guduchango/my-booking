@@ -9,6 +9,6 @@ export class PromotionHttpService {
     public async getPromotions (): Promise<PromotionInterface[]> { 
         const response: AxiosResponse<PromotionInterface[]> = 
         await axiosClient.get<PromotionInterface[]>(this.url);
-        return response.data;
+        return response.data?.data as PromotionInterface[]
     }
 }

@@ -1,3 +1,4 @@
+import { ApiResponse } from "../Models/Guest/GuestInterface";
 import { UserStorageService } from "./User/UserStorageService ";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
@@ -7,9 +8,10 @@ export class HttpBaseService {
 
 
     // Method to create a basic Axios instance
-    private getAxios(): AxiosInstance {
+    public getAxios(): AxiosInstance {
         const axiosClient = axios.create({
             baseURL: `${import.meta.env.VITE_API_BASE_URL}/`,
+            validateStatus: () => true
         });
 
         axiosClient.defaults.withCredentials = true;
@@ -23,8 +25,9 @@ export class HttpBaseService {
         const axiosClient = axios.create({
             baseURL: `${import.meta.env.VITE_API_BASE_URL}/`,
             headers: {
-                Authorization: `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
+            validateStatus: () => true
         });
 
         axiosClient.defaults.withCredentials = true;
@@ -47,14 +50,15 @@ export class HttpBaseService {
 
     // Generic GET request method using the Axios instance with Bearer token
     public async getPrivate<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+        console.log(this.getUserToken)
         const axiosInstance = this.getAxiosBearer(await this.getUserToken());
         return axiosInstance.get<T>(url, config);
     }
 
     // Generic POST request method using the basic Axios instance
     public async post<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
-        const axiosInstance = this.getAxios();
-        return axiosInstance.post<R>(url, data, config);
+            const axiosInstance = this.getAxios();
+            return axiosInstance.post<R>(url, data, config);
     }
 
     // Generic POST request method using the Axios instance with Bearer token
@@ -64,7 +68,7 @@ export class HttpBaseService {
     }
 
     // Generic POST request method using the basic Axios instance
-    public async put<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
+    public async put<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<ApiResponse<R>> {
         const axiosInstance = this.getAxios();
         return axiosInstance.put<R>(url, data, config);
     }
