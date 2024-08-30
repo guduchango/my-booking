@@ -86,7 +86,6 @@ class ReservationController extends Controller {
             'res_advance_payment' => 'required|numeric',
             'res_status' => 'required|string',
             'res_channel' => 'required|string',
-            'res_comments' => 'string',
             'res_pro_id' => 'integer',
             'res_gue_id' => 'integer|required',
             'res_uni_id' => 'integer|required',

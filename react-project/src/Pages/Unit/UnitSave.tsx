@@ -1,11 +1,12 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import Layout from "../../Components/Layout/Layout"
 import { UnitInterface } from "../../Models/Unit/UnitInterface";
-import { UnitHttpService } from "../../Services/Unit/UnitHttpService";
 import { UnitStorageService } from "../../Services/Unit/UnitStorageService";
 import { useEffect, useState } from "react";
 import { newObj } from "../../Utils/GeneralFunctions";
 import {uni_doubleBed, uni_maxPeople, uni_rooms, uni_sigleBed } from "../../Utils/StaticData";
+import { UnitModel } from "../../Models/Unit/UnitModel";
+import { AxiosError } from "axios";
 
 export const UnitSave = () => {
 
@@ -13,18 +14,23 @@ export const UnitSave = () => {
     const location = useLocation()
     const { state } = location
     const unitId = state.uni_id;
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [showMessages, setShowMessages] = useState<string[]>([]);
     const navigate = useNavigate();
 
     const onClickSave = async () => {
-        const unitHttpService = new UnitHttpService()
-        let unitResponse: UnitInterface = {} as UnitInterface;
-        const unitStorageService = new UnitStorageService();
-        if (unitId === 0) {
-            unitResponse = await unitHttpService.storeUnit(unit)
-            await unitStorageService.create(unitResponse)
-        } else {
-            unitResponse = await unitHttpService.updateUnit(unit, unitId)
-            await unitStorageService.update(unitId, unitResponse)
+
+        const unitModel = new UnitModel(unit)
+        if (unitModel.validate() === false) {
+            setIsVisible(true)
+            setShowMessages(unitModel.showMessages())
+            throw new Error(unitModel.showMessages().toString());
+        }
+        const unitResponse = await unitModel.saveOrUpdate(unitId);
+        if(unitResponse instanceof AxiosError){
+            setIsVisible(true)
+            setShowMessages(unitModel.showMessages())
+            throw new Error(unitModel.showMessages().toString());
         }
 
         navigate("/unit");
@@ -32,18 +38,9 @@ export const UnitSave = () => {
 
     const setUnitFromCreate = async () => {
         if (unitId === 0) {
-            const unitDefault: UnitInterface = {} as UnitInterface;
-            unitDefault.uni_id = 0
-            unitDefault.uni_name = ""
-            unitDefault.uni_max_people = 0
-            unitDefault.uni_single_bed = 0
-            unitDefault.uni_dobule_bed = 0
-            unitDefault.uni_rooms = 0
-            setUnit(unitDefault);
+            setUnit(new UnitModel().toPlainObject());
         } else {
-            const storageUnitService = new UnitStorageService()
-            const storageUnit = await storageUnitService.getById(unitId);
-            setUnit(storageUnit);
+            setUnit(new UnitModel(await new UnitStorageService().getById(unitId)).toPlainObject());
         }
     }
 
@@ -126,9 +123,9 @@ export const UnitSave = () => {
                 <div className="field-group">
                     <label>Doble Beds</label>
                     <select
-                        name="uni_dobule_bed"
-                        value={unit.uni_dobule_bed || ""}
-                        onChange={(event) => setUnit({ ...unit, uni_dobule_bed: Number(event.target.value) })}
+                        name="uni_double_bed"
+                        value={unit.uni_double_bed || ""}
+                        onChange={(event) => setUnit({ ...unit, uni_double_bed: Number(event.target.value) })}
                     >
                         {uni_doubleBed.map((type, index) => (
                             <option value={type} key={index} >
@@ -137,6 +134,17 @@ export const UnitSave = () => {
                         ))}
                     </select>
                 </div>
+                {isVisible && (
+                    <div className="form-error">
+                        <div className="formError-wrapper">
+                            {showMessages.map((guest) => (
+                                <ul>
+                                    <li>{guest}</li>
+                                </ul>
+                            ))}
+                        </div>
+                    </div>
+                )}
                 <div className="field-group">
                     <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
                 </div>

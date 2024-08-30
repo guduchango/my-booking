@@ -19,7 +19,7 @@ export const UnitAvailableForm = () => {
         const unitHttpService = new UnitHttpService()
         let axiosResponse: AxiosResponse = {} as AxiosResponse;
         axiosResponse = await unitHttpService.availableUnits(unitAvailableRequest)
-        const unitAvailableResponse: UnitInterface[] = axiosResponse.data as UnitInterface[];
+        const unitAvailableResponse: UnitInterface[] = axiosResponse.data
         
         if(axiosResponse.status == HTTP_CODES.NO_CONTENT){
             setIsVisible(true)

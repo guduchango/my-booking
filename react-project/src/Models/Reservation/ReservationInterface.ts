@@ -30,8 +30,8 @@ export interface ReservationInterface {
     res_status: Status | string;
     res_channel: Channel | string;
     res_comments: string;
-    res_created_at: string;
-    res_updated_at: string;
+    res_created_at: Date;
+    res_updated_at: Date;
     res_beauty_dates: string;
     unit: UnitInterface;
     guest: GuestInterface;

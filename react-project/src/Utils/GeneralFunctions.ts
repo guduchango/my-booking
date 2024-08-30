@@ -62,14 +62,20 @@ export function daysBetween(date1: string, date2: string): number {
     // Convert milliseconds to days
     const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
 
+    console.log("diffDays",diffInDays)
+
     return diffInDays;
 }
 
 export function getPercentajeByValue(maxValue: number, minValue: number){
 
-    const result =  ((maxValue - minValue) * 100) / maxValue ;
-
-    return parseFloat(result.toFixed(2))
+    try{
+        const result =  ((maxValue - minValue) * 100) / maxValue ;
+        return parseFloat(result.toFixed(2))??0
+    }catch (e){
+        return 0;
+    }
+    
 }
 
 export function toFix(value:number){

@@ -16,7 +16,7 @@ class CustomResource {
     private ?string $_errorString = "";
     private int $_status;
 
-    public function __construct(
+    public function     __construct(
         ResponseFactory $response,
         int $status,
         mixed $error = null

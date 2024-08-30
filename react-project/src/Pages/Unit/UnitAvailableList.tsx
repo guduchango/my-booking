@@ -2,8 +2,9 @@ import { NavLink } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import { useGlobalContext } from "../../Context/Context"
 import { useEffect, useState } from "react";
-import { UnitPriceCalculate, UnitPriceInterface } from "../../Models/Unit/UnitInterface";
 import { daysBetween, getFriendlyDate } from "../../Utils/GeneralFunctions";
+import { UnitPriceInterface } from "../../Models/Unit/UnitPriceInterface";
+import { UnitPriceCalculate } from "../../Models/Unit/UnitPriceCalculate";
 
 export const UnitAvailableList = () => {
 
@@ -81,7 +82,7 @@ export const UnitAvailableList = () => {
                                     <p>{unit.upri_max_people} max people</p>
                                     <p>{unit.upri_rooms} rooms</p>
                                     <p>{unit.upri_single_bed} single bed</p>
-                                    <p>{unit.upri_dobule_bed} double bed</p>
+                                    <p>{unit.upri_double_bed} double bed</p>
                                 </div>
                                 <div className="tableRow-footer">
                                     <p>{unit.upri_price} USD</p>

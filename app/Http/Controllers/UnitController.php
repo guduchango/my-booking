@@ -87,7 +87,9 @@ class UnitController extends Controller {
                 $units = Unit::whereIn('uni_id', $availableUnits)->get();
                 $response = UnitResource::collection($units);
             } else {
-                $response = response()->noContent();
+                $error = new \Exception('No unit available');
+                $response = new CustomResource(response(), 401, $error);
+                return $response->show();
             }
 
             return $response;
@@ -99,10 +101,10 @@ class UnitController extends Controller {
 
     private function getValidationRules(): array {
         return  [
-            'uni_name' => 'required|string|max_digits:30',
+            'uni_name' => 'required|string|max:30|min:5',
             'uni_max_people' => 'required|integer',
             'uni_single_bed' => 'required|integer',
-            'uni_dobule_bed' => 'required|integer',
+            'uni_double_bed' => 'required|integer',
             'uni_rooms' => 'required|integer',
         ];
     }

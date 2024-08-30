@@ -19,6 +19,8 @@ export const PriceCalendar = () => {
     const location = useLocation()
     const { state } = location
     const uniId = state.uni_id;
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [showMessages, setShowMessages] = useState<string[]>([]);
 
     const startEvents = async() => {
         const priceStorageService = new PriceStorageService();

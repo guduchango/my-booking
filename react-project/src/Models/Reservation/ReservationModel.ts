@@ -1,9 +1,14 @@
-import { ReservationInterface } from "./ReservationInterface";
+import {  ReservationInterface } from "./ReservationInterface";
 import { UnitInterface } from "../Unit/UnitInterface";
 import { GuestInterface } from "../Guest/GuestInterface";
 import { PromotionInterface } from "../Promotion/PromotionInterface";
+import { BaseModel } from "../BaseModel";
+import { AxiosError } from "axios";
+import axiosClient from "../../Api/axiosClient";
+import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
+import { z } from 'zod';
 
-export class ReservationModel implements ReservationInterface {
+export class ReservationModel extends BaseModel implements ReservationInterface {
 
     private _res_id: number;
     private _res_start_date: string;
@@ -19,8 +24,8 @@ export class ReservationModel implements ReservationInterface {
     private _res_status: string;
     private _res_channel: string;
     private _res_comments: string;
-    private _res_created_at: string;
-    private _res_updated_at: string;
+    private _res_created_at: Date;
+    private _res_updated_at: Date;
     private _res_beauty_dates: string;
     private _unit: UnitInterface;
     private _guest: GuestInterface;
@@ -29,56 +34,34 @@ export class ReservationModel implements ReservationInterface {
     private _res_gue_id: number;
     private _res_pro_id: number;
 
-    constructor(
-        res_id: number,
-        res_start_date: string,
-        res_end_date: string,
-        res_adults: number,
-        res_children: number,
-        res_beds: number,
-        res_nights: number,
-        res_price: number,
-        res_price_dolar: number,
-        res_price_final: number,
-        res_advance_payment: number,
-        res_status: string,
-        res_channel: string,
-        res_comments: string,
-        res_created_at: string,
-        res_updated_at: string,
-        res_beauty_dates: string,
-        unit: UnitInterface,
-        guest: GuestInterface,
-        promotion: PromotionInterface,
-        res_uni_id: number,
-        res_gue_id: number,
-        res_pro_id: number
-    ) {
-        this._res_id = res_id;
-        this._res_start_date = res_start_date;
-        this._res_end_date = res_end_date;
-        this._res_adults = res_adults;
-        this._res_children = res_children;
-        this._res_beds = res_beds;
-        this._res_nights = res_nights;
-        this._res_price = res_price;
-        this._res_price_dolar = res_price_dolar;
-        this._res_price_final = res_price_final;
-        this._res_advance_payment = res_advance_payment;
-        this._res_status = res_status;
-        this._res_channel = res_channel;
-        this._res_comments = res_comments;
-        this._res_created_at = res_created_at;
-        this._res_updated_at = res_updated_at;
-        this._res_beauty_dates = res_beauty_dates;
-        this._unit = unit;
-        this._guest = guest;
-        this._promotion = promotion;
-        this._res_uni_id = res_uni_id;
-        this._res_gue_id = res_gue_id;
-        this._res_pro_id = res_pro_id;
+    public constructor(IReservation?: ReservationInterface) {
+        super();
+        if (IReservation !== undefined) {
+            this.res_id = (IReservation.res_id !== undefined) ? IReservation.res_id : 0
+            this.res_start_date = (IReservation.res_start_date !== undefined) ? IReservation.res_start_date : ""
+            this.res_end_date = (IReservation.res_end_date !== undefined) ? IReservation.res_end_date : ""
+            this.res_adults = (IReservation.res_adults !== undefined) ? IReservation.res_adults : 0
+            this.res_children = (IReservation.res_children !== undefined) ? IReservation.res_children : 0
+            this.res_beds = (IReservation.res_beds !== undefined) ? IReservation.res_beds : 0
+            this.res_nights = (IReservation.res_nights !== undefined) ? IReservation.res_nights : 0
+            this.res_price = (IReservation.res_price !== undefined) ? IReservation.res_price : 0
+            this.res_price_final = (IReservation.res_price_final !== undefined) ? IReservation.res_price_final : 0
+            this.res_advance_payment = (IReservation.res_advance_payment !== undefined) ? IReservation.res_advance_payment : 0
+            this.res_status = (IReservation.res_status !== undefined) ? IReservation.res_status : ""
+            this.res_channel = (IReservation.res_channel !== undefined) ? IReservation.res_channel : ""
+            this.res_comments = (IReservation.res_comments !== undefined) ? IReservation.res_comments : ""
+            this.res_created_at = (IReservation.res_created_at !== undefined) ? new Date(IReservation.res_created_at) : new Date()
+            this.res_updated_at = (IReservation.res_updated_at !== undefined) ? new Date(IReservation.res_updated_at) : new Date()
+            this.res_beauty_dates = (IReservation.res_beauty_dates !== undefined) ? IReservation.res_beauty_dates : ""
+            this.unit = (IReservation.unit !== undefined) ? IReservation.unit : {} as UnitInterface
+            this.guest = (IReservation.guest !== undefined) ? IReservation.guest : {} as GuestInterface
+            this.promotion = (IReservation.promotion !== undefined) ? IReservation.promotion : {} as PromotionInterface
+            this.res_uni_id = (IReservation.res_uni_id !== undefined) ? IReservation.res_uni_id : 0
+            this.res_gue_id = (IReservation.res_gue_id !== undefined) ? IReservation.res_gue_id : 0
+            this.res_pro_id = (IReservation.res_pro_id !== undefined) ? IReservation.res_pro_id : 0
+        }
+        return this;
     }
-
 
     // res_id
     public get res_id(): number {
@@ -193,18 +176,18 @@ export class ReservationModel implements ReservationInterface {
     }
 
     // res_created_at
-    public get res_created_at(): string {
+    public get res_created_at(): Date {
         return this._res_created_at;
     }
-    public set res_created_at(value: string) {
+    public set res_created_at(value: Date) {
         this._res_created_at = value;
     }
 
     // res_updated_at
-    public get res_updated_at(): string {
+    public get res_updated_at(): Date {
         return this._res_updated_at;
     }
-    public set res_updated_at(value: string) {
+    public set res_updated_at(value: Date) {
         this._res_updated_at = value;
     }
 
@@ -263,5 +246,136 @@ export class ReservationModel implements ReservationInterface {
     public set res_pro_id(value: number) {
         this._res_pro_id = value;
     }
+
+     // Method to convert instance to plain object for serialization
+     public toPlainObject(): ReservationInterface {
+        return {
+            res_id: this.res_id,
+            res_start_date: this.res_start_date,
+            res_end_date: this.res_end_date,
+            res_adults: this.res_adults,
+            res_children: this.res_children,
+            res_beds: this.res_beds,
+            res_nights: this.res_nights,
+            res_price: this.res_price,
+            res_price_dolar: this.res_price,
+            res_price_final: this.res_price_final,
+            res_advance_payment: this.res_advance_payment,
+            res_status:  this.res_status,
+            res_channel: this.res_channel,
+            res_comments: this.res_comments,
+            res_created_at: this.res_created_at,
+            res_updated_at: this.res_updated_at,
+            res_beauty_dates: this.res_beauty_dates,
+            unit: this.unit,
+            guest: this.guest,
+            promotion: this.promotion,
+            res_uni_id: this.res_uni_id,
+            res_gue_id: this.res_gue_id,
+            res_pro_id: this.res_pro_id,
+        };
+    }
+
+
+    public async store(): Promise<ReservationInterface | AxiosError>{
+        console.log("before post create reservation",this.toPlainObject())
+        return await axiosClient.post(`/reservation/`, this.toPlainObject())
+        .then(response => {
+            const responseData: ReservationInterface | AxiosError =  response.data.data as ReservationInterface
+            console.log('responseData',responseData)
+            if(!(responseData instanceof AxiosError)){
+                new ReservationStorageService().create(responseData)
+            }
+
+            return responseData;
+        })
+        .catch((error: AxiosError) => {
+            const items = error.response?.data?.errors;
+            if(items[0]){
+                for (let i = 0; i < items.length; i++) {
+                    this.addMessage(items[i])
+                  }
+            }else{
+                this.addMessage(error.message)
+            }
+          return error
+        });
+    }
+
+    public async update(id: number): Promise<ReservationInterface | AxiosError>{
+        return await axiosClient.put(`/reservation/${id}`, this.toPlainObject())
+        .then(response => {
+            const responseData: ReservationInterface | AxiosError =  response.data.data as ReservationInterface
+            if(!(responseData instanceof AxiosError)){
+                new ReservationStorageService().update(id,responseData)
+            }
+
+            return responseData;
+        })
+        .catch((error: AxiosError) => {
+            const items = error.response?.data?.errors;
+            if(items[0]){
+                for (let i = 0; i < items.length; i++) {
+                    this.addMessage(items[i])
+                  }
+            }else{
+                this.addMessage(error.message)
+            }
+            
+          return error
+        });
+    }
+
+    public async saveOrUpdate(id: number): Promise<ReservationInterface | AxiosError>{
+        if(id === 0){
+            return await this.store()
+        }
+        return await this.update(id)
+    }
+
+
+    public validate(): boolean {
+
+        this.cleanMessages()
+        const channels = ["direct", "booking", "airbnb"] as const;
+        
+        const FormSchema = z.object({
+            res_start_date: z.string().date().min(6),
+            res_end_date: z.string().date().min(6),
+            res_gue_id: z.number().min(1),
+            res_uni_id: z.number().min(1),
+            res_adults: z.number().min(1),
+            res_channel: z.enum(channels),
+            res_advance_payment: z.number().min(1),
+            //gue_email: z.string().email(),
+          });
+          
+          type FormData = z.infer<typeof FormSchema>;
+          
+          // Validation
+          try {
+            const data: FormData = FormSchema.parse(this.toPlainObject());
+            console.log("data",data);
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                
+              for (const issue of error.issues) {
+                const messageTxt = issue.path[0]+":"+issue.message;
+                this.addMessage(messageTxt.toLowerCase())
+              }
+            } else {
+                this.addMessage(`Unexpected error: ${error}`)
+            }
+          }
+         
+        if (this.showMessages().length > 0) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+
     
 }

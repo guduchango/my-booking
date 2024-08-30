@@ -9,12 +9,12 @@ import { UnitStorageService } from "../../Services/Unit/UnitStorageService";
 import { UnitInterface } from "../../Models/Unit/UnitInterface";
 import { GuestInterface } from "../../Models/Guest/GuestInterface";
 import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
-import { ReservationInterface } from "../../Models/Reservation/ReservationInterface";
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
-import { ReservationHttpService } from "../../Services/Reservation/ReservationHttpService";
 import { useGlobalContext } from "../../Context/Context";
 import { PromotionStorageService } from "../../Services/Promotion/PromotionStorageService";
 import { PromotionInterface } from "../../Models/Promotion/PromotionInterface";
+import { ReservationModel } from "../../Models/Reservation/ReservationModel";
+import { AxiosError } from "axios";
 
 export const ReservationEdit = () => {
 
@@ -30,6 +30,8 @@ export const ReservationEdit = () => {
   const [resAdvancePayment, setResAdvancePayment] = useState<number>(0)
   const [resPrice, setResPrice] = useState<number>(0)
   const [resFinalPrice, setResFinalPrice] = useState<number>(0)
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [showMessages, setShowMessages] = useState<string[]>([]);
 
   const getUnits = async () => {
     const unitStorageService = new UnitStorageService()
@@ -70,27 +72,25 @@ export const ReservationEdit = () => {
   }));
 
   const onClickSave = async () => {
-    const reservationHttpService = new ReservationHttpService()
-    const reservationStorageService = new ReservationStorageService();
-    let reservationResponse: ReservationInterface = {} as ReservationInterface;
     reservation.res_price = resPrice
     reservation.res_price_final = resFinalPrice
     reservation.res_advance_payment = resAdvancePayment
-    reservation.res_nights = daysBetween(reservation.res_start_date,reservation.res_end_date)
-    if (resId === 0) {
-      reservationResponse = await reservationHttpService.storeReservation(reservation)
-      await reservationStorageService.create(reservationResponse)
-    } else {
-      reservationResponse = await reservationHttpService.updateReservation(reservation, resId)
-      console.log("reservation-local",reservation)
-      await reservationStorageService.update(resId, reservationResponse)
-      console.log("reservation-api",reservationResponse)
-    }
+    reservation.res_nights = daysBetween(reservation.res_start_date, reservation.res_end_date)
 
+    const reservationModel = new ReservationModel(reservation)
+    if (reservationModel.validate() === false) {
+      setIsVisible(true)
+      setShowMessages(reservationModel.showMessages())
+      throw new Error(reservationModel.showMessages().toString());
+    }
+    const reservationResponse = await reservationModel.update(resId);
+    if (reservationResponse instanceof AxiosError) {
+      setIsVisible(true)
+      setShowMessages(reservationModel.showMessages())
+      throw new Error(reservationModel.showMessages().toString());
+    }
     navigate("/reservation");
   };
-
-
 
   useEffect(() => {
     getReservation();
@@ -161,7 +161,7 @@ export const ReservationEdit = () => {
             //name="res_price"
             value={resPrice}
             type="number"
-            onChange={(event) => setResPrice(parseFloat(event.target.value))}
+            onChange={(event) => setResPrice(parseFloat(event.target.value) ?? 0)}
           />
         </div>
 
@@ -171,7 +171,7 @@ export const ReservationEdit = () => {
             //name="res_price_final"
             value={resFinalPrice}
             type="number"
-            onChange={(event) => setResFinalPrice(parseFloat(event.target.value))}
+            onChange={(event) => setResFinalPrice(parseFloat(event.target.value) ?? 0)}
           />
         </div>
 
@@ -282,6 +282,17 @@ export const ReservationEdit = () => {
           >
           </textarea>
         </div>
+        {isVisible && (
+          <div className="form-error">
+            <div className="formError-wrapper">
+              {showMessages.map((guest) => (
+                <ul>
+                  <li>{guest}</li>
+                </ul>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="field-group">
           <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
         </div>

@@ -1,7 +1,7 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import { UnitInterface, UnitPriceInterface } from "../../Models/Unit/UnitInterface";
-import { Channel, ReservationInterface, Status } from "../../Models/Reservation/ReservationInterface";
+import { Channel, Status } from "../../Models/Reservation/ReservationInterface";
 import { useEffect, useMemo, useState } from "react";
 import { daysBetween, getFriendlyDate, toFix, upperCaseFirst } from "../../Utils/GeneralFunctions";
 import Select from "react-select";
@@ -9,10 +9,10 @@ import { res_adults, res_advances, res_beds, res_channels, res_children } from "
 import { GuestInterface } from "../../Models/Guest/GuestInterface";
 import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
 import { useGlobalContext } from "../../Context/Context";
-import { ReservationHttpService } from "../../Services/Reservation/ReservationHttpService";
-import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { PromotionStorageService } from "../../Services/Promotion/PromotionStorageService";
 import { PromotionInterface } from "../../Models/Promotion/PromotionInterface";
+import { ReservationModel } from "../../Models/Reservation/ReservationModel";
+import { AxiosError } from "axios";
 
 export const ReservationCreate = () => {
 
@@ -24,6 +24,8 @@ export const ReservationCreate = () => {
     const [promotions, setPromotions] = useState<PromotionInterface[]>([]);
     const [proValue, setProValue] = useState<number>(0);
     const [advance, setAdvance] = useState<number>(0)
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [showMessages, setShowMessages] = useState<string[]>([]);
     const navigate = useNavigate();
 
     const getGuests = async () => {
@@ -88,11 +90,18 @@ export const ReservationCreate = () => {
     }
 
     const onClickSave = async () => {
-        const reservationHttpService = new ReservationHttpService()
-        const reservationStorageService = new ReservationStorageService();
-        let reservationResponse: ReservationInterface = {} as ReservationInterface;
-        reservationResponse = await reservationHttpService.storeReservation(reservation)
-        await reservationStorageService.create(reservationResponse)
+        const reservationModel = new ReservationModel(reservation)
+        if (reservationModel.validate() === false) {
+            setIsVisible(true)
+            setShowMessages(reservationModel.showMessages())
+            throw new Error(reservationModel.showMessages().toString());
+        }
+        const reservationResponse = await reservationModel.store();
+        if(reservationResponse instanceof AxiosError){
+            setIsVisible(true)
+            setShowMessages(reservationModel.showMessages())
+            throw new Error(reservationModel.showMessages().toString());
+        }
         navigate("/reservation");
     };
 
@@ -262,6 +271,17 @@ export const ReservationCreate = () => {
                     >
                     </textarea>
                 </div>
+                {isVisible && (
+                    <div className="form-error">
+                        <div className="formError-wrapper">
+                            {showMessages.map((guest) => (
+                                <ul>
+                                    <li>{guest}</li>
+                                </ul>
+                            ))}
+                        </div>
+                    </div>
+                )}
                 <div className="field-group">
                     <button onClick={onClickSave} className="fieldGroup-button-save" >Save</button>
                 </div>

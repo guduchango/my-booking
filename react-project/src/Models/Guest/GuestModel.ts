@@ -146,7 +146,12 @@ export class GuestModel extends BaseModel implements GuestInterface {
     public async store(): Promise<GuestInterface | AxiosError>{
         return await axiosClient.post(`/guest/`, this.toPlainObject())
         .then(response => {
-          return response.data.data as GuestInterface
+            const responseData: GuestInterface | AxiosError =  response.data.data as GuestInterface
+            if(!(responseData instanceof AxiosError)){
+                new GuestStorageService().create(responseData)
+            }
+
+            return responseData;
         })
         .catch((error: AxiosError) => {
             const items = error.response?.data?.errors;
@@ -164,7 +169,12 @@ export class GuestModel extends BaseModel implements GuestInterface {
     public async update(id: number): Promise<GuestInterface | AxiosError>{
         return await axiosClient.put(`/guest/${id}`, this.toPlainObject())
         .then(response => {
-          return response.data.data as GuestInterface
+            const responseData: GuestInterface | AxiosError =  response.data.data as GuestInterface
+            if(!(responseData instanceof AxiosError)){
+                new GuestStorageService().update(id,responseData)
+            }
+
+            return responseData;
         })
         .catch((error: AxiosError) => {
             const items = error.response?.data?.errors;
@@ -181,21 +191,10 @@ export class GuestModel extends BaseModel implements GuestInterface {
     }
 
     public async saveOrUpdate(id: number): Promise<GuestInterface | AxiosError>{
-        
         if(id === 0){
-            const response: GuestInterface | AxiosError = await this.store()
-            if(!(response instanceof AxiosError)){
-                console.log(response)
-                await new GuestStorageService().create(new GuestModel(response))
-            }
-            
+            return await this.store()
         }
-        const response: GuestInterface | AxiosError = await this.update(id)
-        if(!(response instanceof AxiosError)){
-            await new GuestStorageService().update(id,new GuestModel(response))
-        }
-
-        return response;
+        return await this.update(id)
     }
 
 

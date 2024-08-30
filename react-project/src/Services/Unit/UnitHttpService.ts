@@ -29,6 +29,6 @@ export class UnitHttpService {
     public async availableUnits(availableUnitRequest: UnitAvailableRequestInterface): Promise<AxiosResponse>{
         const response: AxiosResponse<UnitInterface[]> = 
         await axiosClient.post<UnitInterface[]>(this.url+'/units-available',availableUnitRequest)
-        return response;
+        return response.data as UnitInterface[];
     }
 }

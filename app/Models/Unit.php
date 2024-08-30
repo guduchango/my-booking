@@ -17,7 +17,7 @@ class Unit extends Model
         'uni_name',
         'uni_max_people',
         'uni_single_bed',
-        'uni_dobule_bed',
+        'uni_double_bed',
         'uni_rooms'
     ];
 
@@ -27,7 +27,7 @@ class Unit extends Model
             'uni_name' => 'string',
             'uni_max_people' => 'integer',
             'uni_single_bed' => 'integer',
-            'uni_dobule_bed' => 'integer',
+            'uni_double_bed' => 'integer',
             'uni_rooms' => 'integer',
         ];
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('uni_name');
             $table->tinyInteger('uni_max_people');
             $table->tinyInteger('uni_single_bed');
-            $table->tinyInteger('uni_dobule_bed');
+            $table->tinyInteger('uni_double_bed');
             $table->tinyInteger('uni_rooms');
             $table->timestamp('uni_created_at')->nullable();
             $table->timestamp('uni_updated_at')->nullable();

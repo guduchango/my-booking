@@ -20,6 +20,7 @@ export class ReservationStorageService extends StorageService {
                 const id = await this.reservations.add(
                     reservation
                 );
+                console.log('reservationBySync',reservation)
                 console.log(`Added reservation with id ${id}`);
             }
         }).catch(e => {
