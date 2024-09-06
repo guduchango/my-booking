@@ -11,9 +11,14 @@ import Select from "react-select";
 import { UnitStorageService } from '../../Services/Unit/UnitStorageService';
 import { UnitInterface } from '../../Models/Unit/UnitInterface';
 import './reservation-calendar.css'
+import 'moment/locale/es' 
+import 'moment-timezone' 
 
-export const ReservationCalendar = () => {
+export const ReservationCalendar = (props) => {
 
+    moment.tz.setDefault('America/Argentina/Buenos_Aires')
+
+    
     const localizer = momentLocalizer(moment);
     const [reservationEvents, setReservationEvents] = useState<CalendarEvent[]>([]);
     const [units, setUnits] = useState<UnitInterface[]>([]);
@@ -24,6 +29,7 @@ export const ReservationCalendar = () => {
         const reservationStorageService = new ReservationStorageService();
         const uniId = (!uni_id)?unitFirst?.uni_id:uni_id       
         const reservationEvents = await reservationStorageService.getReservationEvent(uniId)
+        console.log('reservation',reservationEvents)
         setReservationEvents(reservationEvents)
     }
 
@@ -37,7 +43,6 @@ export const ReservationCalendar = () => {
         value: item.uni_id,
         label: item.uni_name
       }));
-
     
 
     useEffect(() => {
@@ -75,6 +80,12 @@ export const ReservationCalendar = () => {
                     endAccessor="end"
                     defaultView={Views.MONTH}
                     style={{ height: 500 }}
+                    culture="es-AR" 
+                    eventPropGetter={(myEventsList) => {
+                        const backgroundColor = '#31ad48';
+                        const color = '#31ad48';
+                        return { style: { backgroundColor ,color} }
+                      }}
                 />
             </div>
         </Layout>

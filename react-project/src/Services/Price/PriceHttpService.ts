@@ -16,6 +16,6 @@ export class PriceHttpService {
         const storeRangePriceUrl = this.url + "/range-price"
         const response: AxiosResponse<PriceInterface[]> = 
         await axiosClient.post(storeRangePriceUrl,priceRange);
-        return response.data as PriceInterface[]
+        return response.data?.data as PriceInterface[]
     }
 }

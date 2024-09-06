@@ -1,35 +1,44 @@
 
 import { NavLink, useNavigate } from "react-router-dom"
 import Layout from "../../Components/Layout/Layout"
-import { HTTP_CODES, uni_maxPeople } from "../../Utils/StaticData";
-import { UnitHttpService } from "../../Services/Unit/UnitHttpService";
+import { uni_maxPeople } from "../../Utils/StaticData";
 import { useState } from "react";
-import { UnitInterface } from "../../Models/Unit/UnitInterface";
 import { useGlobalContext } from "../../Context/Context";
-import { AxiosResponse } from "axios";
+import { AxiosError } from "axios";
+import { UnitAvailableModel } from "../../Models/Unit/UnitAvailableModel";
 
 
 export const UnitAvailableForm = () => {
 
-    const { setAvailableUnits,unitAvailableRequest,setUnitAvailableRequest,setIsReservationSeted } = useGlobalContext()
+    const { setAvailableUnits, unitAvailableRequest, setUnitAvailableRequest, setIsReservationSeted } = useGlobalContext()
     const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [showMessages, setShowMessages] = useState<string[]>([]);
+    const today = new Date().toISOString().split('T')[0];
 
     const onClickSave = async () => {
-        const unitHttpService = new UnitHttpService()
-        let axiosResponse: AxiosResponse = {} as AxiosResponse;
-        axiosResponse = await unitHttpService.availableUnits(unitAvailableRequest)
-        const unitAvailableResponse: UnitInterface[] = axiosResponse.data
-        
-        if(axiosResponse.status == HTTP_CODES.NO_CONTENT){
+
+        const unitAvailableModel = new UnitAvailableModel(unitAvailableRequest)
+        if (unitAvailableModel.validate() === false) {
             setIsVisible(true)
-        }else{
-            setIsVisible(false)
-            setAvailableUnits(unitAvailableResponse)
-            setUnitAvailableRequest(unitAvailableRequest)
-            setIsReservationSeted(false)
-            navigate("/reservation/available-units");
+            setShowMessages(unitAvailableModel.showMessages())
+            throw new Error(unitAvailableModel.showMessages().toString());
+        } 
+
+        const unitAvailableResponse = await unitAvailableModel.checkAvailable();
+        if(unitAvailableResponse instanceof AxiosError){
+            setIsVisible(true)
+            setShowMessages(unitAvailableModel.showMessages())
+            throw new Error(unitAvailableModel.showMessages().toString());
         }
+
+        console.log("unitAvailableResques",unitAvailableRequest)
+
+        navigate("/reservation/available-units");
+        setIsReservationSeted(false)
+        setUnitAvailableRequest(unitAvailableRequest)
+        setAvailableUnits(unitAvailableResponse)
+        setIsVisible(false)
     };
 
     return (
@@ -46,18 +55,29 @@ export const UnitAvailableForm = () => {
                 <div className="save-form">
                     <div className="field-group">
                         <label>Check in</label>
-                        <input name="check-in" type="date"
-                            value={unitAvailableRequest.check_in || ""}
+                        <input
+                            type="date"
+                            id="check-in"
+                            name="check-in"
+                            value={unitAvailableRequest.check_in || today}
                             onChange={(event) => setUnitAvailableRequest({ ...unitAvailableRequest, check_in: event.target.value })}
+                            min={today} // Set the minimum date to today
+                            required
                         />
                     </div>
                     <div className="field-group">
                         <label>Check out</label>
-                        <input name="check-out" type="date"
-                            value={unitAvailableRequest.check_out || ""}
+                        <input
+                            type="date"
+                            id="check-out"
+                            name="check-out"
+                            value={unitAvailableRequest.check_out || today}
                             onChange={(event) => setUnitAvailableRequest({ ...unitAvailableRequest, check_out: event.target.value })}
+                            min={today} // Set the minimum date to check-in or today
+                            required
                         />
                     </div>
+                    
                     <div className="field-group">
                         <label>Max People</label>
                         <select
@@ -75,7 +95,11 @@ export const UnitAvailableForm = () => {
                     {isVisible && (
                         <div className="form-error">
                             <div className="formError-wrapper">
-                                No units find
+                                {showMessages.map((guest) => (
+                                    <ul>
+                                        <li>{guest}</li>
+                                    </ul>
+                                ))}
                             </div>
                         </div>
                     )}

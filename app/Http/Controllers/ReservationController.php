@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CustomResource;
 use App\Http\Resources\ReservationResource;
+use App\Models\Price;
 use App\Models\Reservation;
+use App\Rules\ReservationRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,6 +24,11 @@ class ReservationController extends Controller {
     }
 
     public function store(Request $request) {
+        $checkIn = $request->res_start_date;
+        $checkOut = $request->res_end_date;
+        $unitId = $request->res_uni_id;
+        $resId = 0;
+
         try {
 
             $validate = Validator::make($request->all(),
@@ -33,7 +40,15 @@ class ReservationController extends Controller {
                 return $response->show();
             }
 
+            $validateRule = new ReservationRule($checkIn,$checkOut,$unitId,$resId);
+            if($validateRule->validate()){
+                $error = "The range of days is not available. Check reservations/prices";
+                $response = new CustomResource(response(), 401, $error);
+                return $response->show();
+            }
+
             $reservation = Reservation::create($request->all());
+            $reservation->updateByStatus();
             return new ReservationResource(Reservation::findOrFail($reservation->res_id));
         } catch (\Throwable $th) {
             $response = new CustomResource(response(), 500, $th);
@@ -51,8 +66,17 @@ class ReservationController extends Controller {
     }
 
     public function update(Request $request, int $id) {
-        try {
 
+        $newReservation = new Reservation();
+        $newReservation->fill($request->all());
+
+
+        $checkIn = $request->res_start_date;
+        $checkOut = $request->res_end_date;
+        $unitId = $request->res_uni_id;
+        $resId = $request->res_id;
+
+        try {
             $validate = Validator::make($request->all(),
                 $this->getValidationRules()
             );
@@ -62,9 +86,17 @@ class ReservationController extends Controller {
                 return $response->show();
             }
 
+            $validateRule = new ReservationRule($checkIn,$checkOut,$unitId,$resId);
+            if($validateRule->validate() === false){
+                $error = json_encode($validateRule->getErrorMessage());
+                $response = new CustomResource(response(), 401, $error);
+                return $response->show();
+            }
+
             $reservation = Reservation::findOrFail($id);
             $reservation->fill($request->all());
             $reservation->save();
+            $reservation->updateByStatus();
             return new ReservationResource(Reservation::findOrFail($reservation->res_id));
         } catch (\Throwable $th) {
             $response = new CustomResource(response(), 500, $th);

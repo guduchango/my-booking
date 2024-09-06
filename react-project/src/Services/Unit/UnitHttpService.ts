@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "../../Api/axiosClient";
-import {UnitAvailableRequestInterface, UnitInterface } from "../../Models/Unit/UnitInterface";
-import { ApiResponseInterface } from "../../Models/ApiResponseInterface";
+import {UnitInterface } from "../../Models/Unit/UnitInterface";
+import { UnitAvailableInterface } from "../../Models/Unit/UnitAvailableInterface";
 
 export class UnitHttpService {
 
@@ -26,7 +26,7 @@ export class UnitHttpService {
         return response.data;
     }
 
-    public async availableUnits(availableUnitRequest: UnitAvailableRequestInterface): Promise<AxiosResponse>{
+    public async availableUnits(availableUnitRequest: UnitAvailableInterface): Promise<AxiosResponse>{
         const response: AxiosResponse<UnitInterface[]> = 
         await axiosClient.post<UnitInterface[]>(this.url+'/units-available',availableUnitRequest)
         return response.data as UnitInterface[];

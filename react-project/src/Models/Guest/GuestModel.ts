@@ -31,8 +31,8 @@ export class GuestModel extends BaseModel implements GuestInterface {
             this.gue_phone_number = (IGuest.gue_phone_number !== undefined) ? IGuest.gue_phone_number : ""
             this.gue_birthday = (IGuest.gue_birthday !== undefined) ? IGuest.gue_birthday : ""
             this.gue_age = (IGuest.gue_age !== undefined) ? IGuest.gue_age : 0
-            this.gue_created_at = (IGuest.gue_created_at !== undefined) ? new Date(IGuest.gue_created_at) : new Date()
-            this.gue_updated_at = (IGuest.gue_updated_at !== undefined) ? new Date(IGuest.gue_updated_at) : new Date()
+            this.gue_created_at = (IGuest.gue_created_at !== undefined) ? IGuest.gue_created_at : new Date()
+            this.gue_updated_at = (IGuest.gue_updated_at !== undefined) ? IGuest.gue_updated_at : new Date()
         }
         return this;
     }
@@ -155,7 +155,7 @@ export class GuestModel extends BaseModel implements GuestInterface {
         })
         .catch((error: AxiosError) => {
             const items = error.response?.data?.errors;
-            if(items[0]){
+            if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
                     this.addMessage(items[i])
                   }
@@ -178,7 +178,7 @@ export class GuestModel extends BaseModel implements GuestInterface {
         })
         .catch((error: AxiosError) => {
             const items = error.response?.data?.errors;
-            if(items[0]){
+            if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
                     this.addMessage(items[i])
                   }

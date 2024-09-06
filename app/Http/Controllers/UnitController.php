@@ -68,15 +68,13 @@ class UnitController extends Controller {
                 $response = new CustomResource(response(),401,$validate);
                 return $response->show();
             }
-
             $checkIn = $request->check_in;
             $checkOut = $request->check_out;
             $people = $request->people;
             $units = Unit::get();
-            $price = new Price();
             $availableUnits = [];
             foreach ($units as $unit) {
-                if ($price->canReservate($checkIn, $checkOut, $unit->uni_id)) {
+                if (Price::canReservate($checkIn, $checkOut, $unit->uni_id)) {
                     if ($people <= $unit->uni_max_people) {
                         $availableUnits[] = $unit->uni_id;
                     }
@@ -87,8 +85,7 @@ class UnitController extends Controller {
                 $units = Unit::whereIn('uni_id', $availableUnits)->get();
                 $response = UnitResource::collection($units);
             } else {
-                $error = new \Exception('No unit available');
-                $response = new CustomResource(response(), 401, $error);
+                $response = new CustomResource(response(), 500, "No unit available");
                 return $response->show();
             }
 

@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 import axiosClient from "../../Api/axiosClient";
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { z } from 'zod';
+import { newDate } from "../../Utils/GeneralFunctions";
 
 export class ReservationModel extends BaseModel implements ReservationInterface {
 
@@ -50,8 +51,8 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
             this.res_status = (IReservation.res_status !== undefined) ? IReservation.res_status : ""
             this.res_channel = (IReservation.res_channel !== undefined) ? IReservation.res_channel : ""
             this.res_comments = (IReservation.res_comments !== undefined) ? IReservation.res_comments : ""
-            this.res_created_at = (IReservation.res_created_at !== undefined) ? new Date(IReservation.res_created_at) : new Date()
-            this.res_updated_at = (IReservation.res_updated_at !== undefined) ? new Date(IReservation.res_updated_at) : new Date()
+            this.res_created_at = (IReservation.res_created_at !== undefined) ? IReservation.res_created_at : new Date()
+            this.res_updated_at = (IReservation.res_updated_at !== undefined) ? IReservation.res_updated_at : new Date()
             this.res_beauty_dates = (IReservation.res_beauty_dates !== undefined) ? IReservation.res_beauty_dates : ""
             this.unit = (IReservation.unit !== undefined) ? IReservation.unit : {} as UnitInterface
             this.guest = (IReservation.guest !== undefined) ? IReservation.guest : {} as GuestInterface
@@ -291,7 +292,7 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
         })
         .catch((error: AxiosError) => {
             const items = error.response?.data?.errors;
-            if(items[0]){
+            if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
                     this.addMessage(items[i])
                   }
@@ -314,7 +315,7 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
         })
         .catch((error: AxiosError) => {
             const items = error.response?.data?.errors;
-            if(items[0]){
+            if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
                     this.addMessage(items[i])
                   }

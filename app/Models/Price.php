@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
-class Price extends Model
-{
+class Price extends Model {
     use HasFactory;
 
     const CREATED_AT = 'pri_created_at';
@@ -32,19 +33,11 @@ class Price extends Model
         ];
     }
 
-    public function unit(): HasOne
-    {
-        return $this->hasOne(Unit::class,'uni_id', 'pri_uni_id');
+    public function unit(): HasOne {
+        return $this->hasOne(Unit::class, 'uni_id', 'pri_uni_id');
     }
 
-    function canReservate(string $start, string $end, int $uni_id): bool{
-
-        $count = $this->where('pri_date','>=',$start)
-            ->where('pri_date','<=',$end)
-            ->where('pri_uni_id' ,'=',$uni_id)
-            ->where('pri_res_id','<>','0')
-            ->count();
-
-        return ($count > 0) ? false : true;
+    public function updatePriResId(int $resId){
+        $this->where('pri_res_id', $resId)->update(['pri_res_id' => $resId]);
     }
 }

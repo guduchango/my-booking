@@ -8,6 +8,7 @@ use App\Models\Reservation;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use DateTime;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class ReservationSeeder extends Seeder {
      */
     public function run(): void {
 
-        $prices = [
+/*        $prices = [
             [
                 'start' => '01-08-2024',
                 'end' => '30-10-2024',
@@ -44,9 +45,9 @@ class ReservationSeeder extends Seeder {
             'end' => '30-10-2024',
             'unit' => '5'
         ]
-        ];
+        ];*/
 
-        foreach ($prices as $item) {
+/*        foreach ($prices as $item) {
             $startDate = Carbon::createFromFormat('d-m-Y', $item['start'])->format('Y-m-d');
             $endDate = Carbon::createFromFormat('d-m-Y', $item['end'])->format('Y-m-d');
             $unit = $item['unit'];
@@ -58,70 +59,70 @@ class ReservationSeeder extends Seeder {
                 $price->pri_uni_id = $unit;
                 $price->save();
             }
-        }
+        }*/
 
         $reservatios = [
             [
                 'unit' => 1,
-                'start' => '01-08-2024',
-                'end' => '07-08-2024',
+                'start' => '01-09-2024',
+                'end' => '07-09-2024',
             ],
             [
 
                 'unit' => 1,
-                'start' => '13-08-2024',
-                'end' => '20-08-2024',
-            ],
-            [
-                'unit' => 1,
-                'start' => '21-08-2024',
-                'end' => '30-08-2024',
-            ],
-            [
-                'unit' => 1,
-                'start' => '05-09-2024',
-                'end' => '10-09-2024',
-            ],
-            [
-                'unit' => 1,
-                'start' => '15-09-2024',
+                'start' => '13-09-2024',
                 'end' => '20-09-2024',
             ],
             [
                 'unit' => 1,
-                'start' => '26-09-2024',
+                'start' => '21-09-2024',
                 'end' => '30-09-2024',
+            ],
+            [
+                'unit' => 1,
+                'start' => '05-10-2024',
+                'end' => '10-10-2024',
+            ],
+            [
+                'unit' => 1,
+                'start' => '15-10-2024',
+                'end' => '20-10-2024',
+            ],
+            [
+                'unit' => 1,
+                'start' => '26-10-2024',
+                'end' => '30-10-2024',
             ],
             //unit 2
             [
                 'unit' => 2,
-                'start' => '05-08-2024',
-                'end' => '15-08-2024',
-            ],
-            [
-                'unit' => 2,
-                'start' => '18-08-2024',
-                'end' => '25-08-2024',
-            ],
-            [
-                'unit' => 2,
-                'start' => '27-08-2024',
-                'end' => '30-08-2024',
-            ],
-            [
-                'unit' => 2,
                 'start' => '05-09-2024',
+                'end' => '15-09-2024',
+            ],
+            [
+                'unit' => 2,
+                'start' => '18-09-2024',
+                'end' => '25-09-2024',
+            ],
+            [
+                'unit' => 2,
+                'start' => '27-09-2024',
+                'end' => '30-09-2024',
+            ],
+            [
+                'unit' => 2,
+                'start' => '05-10-2024',
                 'end' => '09-06-2024',
             ],
             [
                 'unit' => 2,
-                'start' => '14-09-2024',
-                'end' => '18-09-2024',
+                'start' => '14-10-2024',
+                'end' => '18-10-2024',
             ],
             [
                 'unit' => 2,
-                'start' => '25-09-2024',
-                'end' => '30-09-2024',
+                'start' => '25-10-2024',
+                'end' => '30-10-2024',
             ],
 
         ];
@@ -129,12 +130,24 @@ class ReservationSeeder extends Seeder {
         //$units = Unit::select('uni_id')->get('uni_id')->pluck('uni_id');
 
         foreach ($reservatios as $item) {
-            $startDate = Carbon::createFromFormat('d-m-Y', $item['start'])->format('Y-m-d');
-            $endDate = Carbon::createFromFormat('d-m-Y', $item['end'])->format('Y-m-d');
+
+
+            //$startDate = CarbonImmutable::createFromFormat('d-m-Y', $item['start'])->format('Y-m-d');
+            //$endDate = CarbonImmutable::createFromFormat('d-m-Y', $item['end'])->subDay()->format('Y-m-d');
+
+            $dateString = $item['start'];  // Ejemplo de fecha en formato dd-mm-yyyy
+            $date = DateTime::createFromFormat('d-m-Y', $dateString);
+            $startDate = $date->format('Y-m-d');
+
+            $dateString = $item['end'];  // Ejemplo de fecha en formato dd-mm-yyyy
+            $date = DateTime::createFromFormat('d-m-Y', $dateString);
+            $endDate = $date->format('Y-m-d');
+
+            //$this->command->alert($startDate."-".$endDate);
             $unit = $item['unit'];
 
-            $reservationDays = fake()->numberBetween(2, 7);
-            $initialDay = fake()->dateTimeBetween('+1 day', '+90 day')->format('Y-m-d');
+            //$reservationDays = fake()->numberBetween(2, 7);
+            //$initialDay = fake()->dateTimeBetween('+1 day', '+90 day')->format('Y-m-d');
             //$currentStart =  Carbon::createFromFormat('Y-m-d',$initialDay);
             //$currentEnd = Carbon::createFromFormat('Y-m-d',$initialDay);
             //$currentEnd =  $currentEnd->addDays($reservationDays);
@@ -161,7 +174,15 @@ class ReservationSeeder extends Seeder {
             $dates = getDaysBetweenDates($startDate,$endDate);
             foreach ($dates as $date) {
 
-                $price = DB::table('prices')
+                $price = $reservation->res_price / $reservation->res_nights;
+                $newPrice = new Price();
+                $newPrice->pri_date = $date;
+                $newPrice->pri_price = $price;
+                $newPrice->pri_uni_id = $unit;
+                $newPrice->pri_res_id = $reservation->res_id;
+                $newPrice->save();
+
+/*                $price = DB::table('prices')
                     ->where('pri_date', '=', $date)
                     ->where('pri_uni_id', '=', $unit);
 
@@ -176,7 +197,7 @@ class ReservationSeeder extends Seeder {
                     $price->pri_uni_id = $unit;
                     $price->pri_res_id = $reservation->res_id;
                     $price->save();
-                }
+                }*/
             }
 
         }

@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Validator;
 class PriceController extends Controller {
 
     public function index(Request $request) {
+
         try {
             return PriceResource::collection(
-                Price::where('pri_date', '>=', date('Y-m-d'))
-                    ->orderBy('pri_created_at', 'desc')
+                Price::orderBy('pri_id', 'asc')
                     ->get()
             );
         } catch (\Throwable $th) {
@@ -41,33 +41,34 @@ class PriceController extends Controller {
             $pri_to = date('Y-m-d', strtotime($request->pri_to));
             $pri_uni_id = $request->pri_uni_id;
 
-            $period = new \DatePeriod(new \DateTime($pri_from),
-                new \DateInterval('P1D'),
-                new \DateTime($pri_to . ' +1 day'));
+
+            $period = getDaysBetweenDates($pri_from,$pri_to);
 
             foreach ($period as $date) {
 
-                $price = DB::table('prices')
+                $prices = DB::table('prices')
                     ->where('pri_date', '=', $date)
                     ->where('pri_uni_id', '=', $pri_uni_id);
 
-                if ($price->count() == 0) {
+                if ($prices->count() == 0) {
                     $price = new Price();
                     $price->pri_date = $date;
                     $price->pri_price = $request->pri_value;
                     $price->pri_uni_id = $request->pri_uni_id;
                     $price->save();
                 } else {
-                    $priceOld = $price->first();
-                    $price = Price::find($priceOld->pri_id);
-                    $price->pri_date = $date;
-                    $price->pri_price = $request->pri_value;
-                    $price->pri_uni_id = $request->pri_uni_id;
-                    $price->save();
+                    $priceOld = $prices->first();
+                    if($priceOld->pri_res_id == 0){
+                        $price = Price::find($priceOld->pri_id);
+                        $price->pri_date = $date;
+                        $price->pri_price = $request->pri_value;
+                        $price->pri_uni_id = $request->pri_uni_id;
+                        $price->save();
+                    }
                 }
             }
 
-            return PriceResource::collection($price->get());
+            return PriceResource::collection(Price::all());
         } catch (\Throwable $th) {
             $response = new CustomResource(response(), 500, $th);
             return $response->show();

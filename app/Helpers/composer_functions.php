@@ -54,7 +54,7 @@ function getDaysBetweenDates($startDate, $endDate) {
     $end = new \DateTime($endDate);
 
     // Add one day to the end date to include it in the range
-    $end->modify('+1 day');
+    //$end->modify('+1 day');
 
     // Create an interval of one day
     $interval = new \DateInterval('P1D');

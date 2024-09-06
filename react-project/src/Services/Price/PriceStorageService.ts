@@ -1,7 +1,7 @@
 import Dexie from "dexie"
 import { StorageService } from "../StorageService"
 import { CalendarEvent, PriceInterface } from '../../Models/Price/PriceInterface';
-import { newObj } from "../../Utils/GeneralFunctions";
+import { newDate, newObj } from "../../Utils/GeneralFunctions";
 
 export class PriceStorageService extends StorageService {
 
@@ -65,14 +65,18 @@ export class PriceStorageService extends StorageService {
     }
 
     async  calculateTotal (uni_id: number, check_in: string, check_out: string) {
-        
+
+        console.log('caltotal_check-in',check_in)
+        console.log('caltotal_check-out',check_out)
+        console.log('uni_id',uni_id);
+
         const total = await this.prices
             .where('pri_uni_id')
             .equals(uni_id)
             .and(record => record.pri_date >= check_in && record.pri_date <= check_out)
             .toArray()
             .then(records => records.reduce((sum, record) => sum + record.pri_price, 0));
-    
+
         return total;
     }
 
@@ -89,8 +93,8 @@ export class PriceStorageService extends StorageService {
         const events: CalendarEvent[] = [];
         for(const item of pricesByUnit){
             const event: CalendarEvent = newObj<CalendarEvent>()
-            event.start = new Date(item.pri_date);
-            event.end = new Date(item.pri_date);
+            event.start = newDate(item.pri_date);
+            event.end = newDate(item.pri_date);
             event.title = `$${String(item.pri_price)}`
             event.color = "#ccc"
             events.push(event);

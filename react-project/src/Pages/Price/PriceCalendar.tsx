@@ -8,6 +8,9 @@ import { PriceStorageService } from "../../Services/Price/PriceStorageService";
 import { Calendar, momentLocalizer,Views } from 'react-big-calendar';
 import moment from 'moment';
 import './price-calendar.css'
+import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
+import { PriceRangeModel } from "../../Models/Price/PriceRangeModel";
+import { AxiosError } from "axios";
 
 // Set up the localizer by providing the moment Object to the correct localizer.
 const localizer = momentLocalizer(moment);
@@ -25,7 +28,13 @@ export const PriceCalendar = () => {
     const startEvents = async() => {
         const priceStorageService = new PriceStorageService();
         const priceEvents = await priceStorageService.getPriceUnitEvent(uniId)
-        setDayPrices(priceEvents)
+        const reservationStorageService = new ReservationStorageService();
+        const reservationEvents = await reservationStorageService.getReservationEvent(uniId)
+        
+        const concatArray = 
+        [...priceEvents, ...reservationEvents];
+
+        setDayPrices(concatArray)
     }
 
 
@@ -35,14 +44,23 @@ export const PriceCalendar = () => {
 
 
     const onClickSave = async () => {
-        const priceHttpService = new PriceHttpService()
-        priRange.pri_uni_id = uniId;
-        const priceStorageService = new PriceStorageService();
-        const priceResponse: PriceInterface[] = await priceHttpService.storeRangePrice(priRange)
-        for (const price of priceResponse) {
-            await priceStorageService.createOrUpdate(price)
+        const priceRangeModel = new PriceRangeModel(priRange)
+        priceRangeModel.pri_uni_id = uniId
+
+        if (priceRangeModel.validate() === false) {
+            setIsVisible(true)
+            setShowMessages(priceRangeModel.showMessages())
+            throw new Error(priceRangeModel.showMessages().toString());
         }
+        const priceRangeResponse = await priceRangeModel.storeRangePrice();
+        if(priceRangeResponse instanceof AxiosError){
+            setIsVisible(true)
+            setShowMessages(priceRangeModel.showMessages())
+            throw new Error(priceRangeModel.showMessages().toString());
+        }
+        setIsVisible(false)
         startEvents()
+    
     };
 
     return (
@@ -94,6 +112,17 @@ export const PriceCalendar = () => {
                         onChange={(event) => setPriRange({ ...priRange, pri_to: event.target.value })}
                     />
                 </div>
+                {isVisible && (
+                    <div className="form-error">
+                        <div className="formError-wrapper">
+                            {showMessages.map((guest) => (
+                                <ul>
+                                    <li>{guest}</li>
+                                </ul>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 <div className="field-group">
                     <button className="fieldGroup-button-save" onClick={onClickSave}>Save</button>

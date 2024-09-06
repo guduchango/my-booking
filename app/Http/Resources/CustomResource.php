@@ -37,7 +37,11 @@ class CustomResource {
 
         $mjs = [];
         if ($this->getErrorThrowable() !== null) {
-            $mjs[] = $this->getErrorThrowable()->getMessage();
+            $mjs[] =
+                'msj'.$this->getErrorThrowable()->getMessage().
+                'line:'.$this->getErrorThrowable()->getLine().
+                'file:'.$this->getErrorThrowable()->getFile().
+                'code:'.$this->getErrorThrowable()->getCode();
         } elseif ($this->getErrorValidator() !== null) {
             $items = $this->getErrorValidator()->messages()->messages();
             if (count($items) > 0) {

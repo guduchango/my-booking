@@ -12,14 +12,6 @@ export interface PriceInterface {
     pri_updated_at: Date;
 }
 
-export interface PriceRageInterface {
-    pri_from: string;
-    pri_to: string;
-    pri_value: number;
-    pri_uni_id: number;
-}
-
-
 // Define the type for the event
 export interface CalendarEvent extends Event {
     title: string;

@@ -25,8 +25,8 @@ export class UnitModel extends BaseModel implements UnitInterface {
             this.uni_single_bed = (IUnit.uni_single_bed !== undefined) ? IUnit.uni_single_bed : 0
             this.uni_double_bed = (IUnit.uni_double_bed !== undefined) ? IUnit.uni_double_bed : 0
             this.uni_rooms = (IUnit.uni_rooms !== undefined) ? IUnit.uni_rooms : 1
-            this.uni_created_at = (IUnit.uni_created_at !== undefined) ? new Date(IUnit.uni_created_at) : new Date()
-            this.uni_updated_at = (IUnit.uni_updated_at !== undefined) ? new Date(IUnit.uni_updated_at) : new Date()
+            this.uni_created_at = (IUnit.uni_created_at !== undefined) ? IUnit.uni_created_at : new Date()
+            this.uni_updated_at = (IUnit.uni_updated_at !== undefined) ? IUnit.uni_updated_at : new Date()
         }
         return this;
     }
@@ -129,7 +129,7 @@ export class UnitModel extends BaseModel implements UnitInterface {
         })
         .catch((error: AxiosError) => {
             const items = error.response?.data?.errors;
-            if(items[0]){
+            if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
                     this.addMessage(items[i])
                   }
@@ -152,7 +152,7 @@ export class UnitModel extends BaseModel implements UnitInterface {
         })
         .catch((error: AxiosError) => {
             const items = error.response?.data?.errors;
-            if(items[0]){
+            if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
                     this.addMessage(items[i])
                   }

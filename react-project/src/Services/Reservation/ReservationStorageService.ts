@@ -2,7 +2,7 @@ import Dexie from "dexie"
 import { StorageService } from "../StorageService"
 import { ReservationInterface } from '../../Models/Reservation/ReservationInterface';
 import { CalendarEvent } from "../../Models/Price/PriceInterface";
-import { newObj } from "../../Utils/GeneralFunctions";
+import { newDate, newObj } from "../../Utils/GeneralFunctions";
 
 export class ReservationStorageService extends StorageService {
 
@@ -61,9 +61,10 @@ export class ReservationStorageService extends StorageService {
         const events: CalendarEvent[] = [];
         for(const item of unitReservations){
             const event: CalendarEvent = newObj<CalendarEvent>()
-            event.start = new Date(item.res_start_date);
-            event.end = new Date(item.res_end_date);
-            event.title = `${item.guest.gue_name} $${item.res_price}`
+            event.start = newDate(item.res_start_date);
+            event.end = newDate(item.res_end_date);
+            event.title = `${item.guest.gue_name} $${item.res_price}`;
+        
             events.push(event);
         }
 

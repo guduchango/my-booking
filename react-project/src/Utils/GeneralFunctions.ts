@@ -30,11 +30,11 @@ export function getFriendlyDate(dateString: string): string {
     try{
         const dateObj = new Date(dateString);
         const fullYear = dateObj.getFullYear();
-        
+
 
         const options: Intl.DateTimeFormatOptions = {
             day: "2-digit",
-            month: "long"  
+            month: "long"
           };
         const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(dateObj);
         friendlyDate = `${formattedDate.split(' ')[0]} ${formattedDate.split(' ')[1]} (${fullYear.toString().slice(-2)}) `;
@@ -47,14 +47,14 @@ export function getFriendlyDate(dateString: string): string {
 
         friendlyDate = dateString
     }
-        
+
     return friendlyDate;
 }
 
 export function daysBetween(date1: string, date2: string): number {
     // Parse the dates
-    const firstDate = new Date(date1);
-    const secondDate = new Date(date2);
+    const firstDate = newDate(date1);
+    const secondDate = newDate(date2);
 
     // Calculate the difference in milliseconds
     const diffInMs = Math.abs(secondDate.getTime() - firstDate.getTime());
@@ -62,28 +62,28 @@ export function daysBetween(date1: string, date2: string): number {
     // Convert milliseconds to days
     const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
 
-    console.log("diffDays",diffInDays)
+    console.log("diffDays", diffInDays)
 
     return diffInDays;
 }
 
-export function getPercentajeByValue(maxValue: number, minValue: number){
+export function getPercentajeByValue(maxValue: number, minValue: number) {
 
-    try{
-        const result =  ((maxValue - minValue) * 100) / maxValue ;
-        return parseFloat(result.toFixed(2))??0
-    }catch (e){
+    try {
+        const result = ((maxValue - minValue) * 100) / maxValue;
+        return parseFloat(result.toFixed(2)) ?? 0
+    } catch (e) {
         return 0;
     }
-    
+
 }
 
-export function toFix(value:number){
+export function toFix(value: number) {
 
     let result: number = 0;
-    try{
-        result =  parseFloat(value.toFixed(2))
-    } catch(error){
+    try {
+        result = parseFloat(value.toFixed(2))
+    } catch (error) {
 
         if (error instanceof Error) {
             console.error('Error message:', error.message);
@@ -93,7 +93,7 @@ export function toFix(value:number){
 
         result = value
     }
-    
+
 
     return result;
 }
@@ -102,7 +102,7 @@ export function isValidDOB(dob: string): boolean {
     // Parse the date of birth string to a Date object
     const birthDate = new Date(dob);
     const today = new Date();
-    
+
     // Check if the date is valid
     if (isNaN(birthDate.getTime())) {
         return false;
@@ -136,5 +136,48 @@ export function isValidEmail(email: string): boolean {
 export function validateEmail(email: string): boolean {
     const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return re.test(email);
+}
+
+export function validateReservationDates(checkInDate: string, checkOutDate: string): boolean {
+    const today = new Date();
+  today.setHours(0, 0, 0, 0); // Ignore the time to compare only dates
+
+  const checkIn = new Date(checkInDate);
+  const checkOut = new Date(checkOutDate);
+
+  // Check if check-in and check-out are valid dates
+  if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
+    console.error("Invalid dates");
+    return false;
   }
+
+  // Check that the check-in date is not before today
+  if (checkIn < today) {
+    console.error("The check-in date cannot be earlier than today");
+    return false;
+  }
+
+  // Check that the check-out date is after the check-in date
+  if (checkOut <= checkIn) {
+    console.error("The check-out date must be after the check-in date");
+    return false;
+  }
+
+  // If all validations pass
+  return true;
+}
+
+export function newDate(date: string){
+    try{
+        return new Date(date.replace(/-/g, '/'));
+    }catch(error){
+        if (error instanceof Error) {
+            console.log('error funcion newDate'+ error.message)
+        } else {
+            console.error('Unexpected error:', error);
+        }
+        return new Date(date);
+    }
+
+}
 

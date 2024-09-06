@@ -2,14 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Resources\CustomResource;
+use App\Http\Resources\UnitResource;
 use App\Models\Price;
 use App\Models\Unit;
 use App\Models\User;
+use App\Rules\ReservationRule;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class Test extends Command
-{
+class Test extends Command {
     /**
      * The name and signature of the console command.
      *
@@ -27,12 +29,24 @@ class Test extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
-    {
-        $pet = new Pets("pepe");
-        $pet->setTrait("hola");
+    public function handle() {
 
-        var_dump($pet->getData());
+        $start = '2024-09-18';
+        $end = '2024-09-21';
+        $unitId = 1;
+        $people = 2;
+        $resId = 3;
+
+        $validateRule = new ReservationRule($start,$end,$unitId,$resId);
+
+        if($validateRule->validate()){
+            $this->info('correcto');
+        }else{
+            $this->info('incorrecto');
+        }
+
+
+
 
     }
 

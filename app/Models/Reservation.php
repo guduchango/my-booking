@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Reservation extends Model
@@ -72,9 +73,23 @@ class Reservation extends Model
         return $this->hasOne(Promotion::class,'pro_id', 'res_pro_id');
     }
 
+    public function prices(): HasMany
+    {
+        return $this->hasMany(Price::class,'pri_id', 'res_pro_id');
+    }
+
     public function getBeautyDates(){
         $startDate = Carbon::createFromFormat('Y-m-d',$this->res_start_date);
         $endDate = Carbon::createFromFormat('Y-m-d',$this->res_end_date);
         return $startDate->isoFormat('D MMM')." - ".$endDate->isoFormat('D MMM YYYY');
+    }
+
+    public function updateByStatus(){
+        $price = new Price();
+        if($this->res_status == 'approved'){
+            $price->updatePriResId($this->res_id);
+        }else{
+            $price->updatePriResId(0);
+        }
     }
 }

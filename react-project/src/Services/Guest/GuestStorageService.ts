@@ -13,7 +13,6 @@ export class GuestStorageService extends StorageService {
 
     async create(guest: GuestModel) {
         return await this.transaction('rw', this.guests, async () => {
-            console.log("store create guest",guest.toPlainObject())
 
             if ((await this.guests.where({ gue_id: guest.gue_id }).count()) === 0) {
                 const id = await this.guests.add(
