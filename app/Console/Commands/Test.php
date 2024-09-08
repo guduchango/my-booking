@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Resources\CustomResource;
 use App\Http\Resources\UnitResource;
 use App\Models\Price;
+use App\Models\Reservation;
 use App\Models\Unit;
 use App\Models\User;
 use App\Rules\ReservationRule;
@@ -31,19 +32,9 @@ class Test extends Command {
      */
     public function handle() {
 
-        $start = '2024-09-18';
-        $end = '2024-09-21';
-        $unitId = 1;
-        $people = 2;
-        $resId = 3;
-
-        $validateRule = new ReservationRule($start,$end,$unitId,$resId);
-
-        if($validateRule->validate()){
-            $this->info('correcto');
-        }else{
-            $this->info('incorrecto');
-        }
+       $reservation = new Reservation();
+       $reservation = $reservation->find(1);
+       $reservation->updateByStatus();
 
 
 

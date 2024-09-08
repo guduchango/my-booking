@@ -28,6 +28,7 @@ class ReservationController extends Controller {
         $checkOut = $request->res_end_date;
         $unitId = $request->res_uni_id;
         $resId = 0;
+        $totalPeople = $request->res_children + $request->res_adults;
 
         try {
 
@@ -40,9 +41,9 @@ class ReservationController extends Controller {
                 return $response->show();
             }
 
-            $validateRule = new ReservationRule($checkIn,$checkOut,$unitId,$resId);
-            if($validateRule->validate()){
-                $error = "The range of days is not available. Check reservations/prices";
+            $validateRule = new ReservationRule($checkIn,$checkOut,$totalPeople,$unitId,$resId);
+            if($validateRule->validate() === false){
+                $error = json_encode($validateRule->getErrorMessage());
                 $response = new CustomResource(response(), 401, $error);
                 return $response->show();
             }
@@ -75,6 +76,7 @@ class ReservationController extends Controller {
         $checkOut = $request->res_end_date;
         $unitId = $request->res_uni_id;
         $resId = $request->res_id;
+        $maxPeople = $request->res_children + $request->res_adults;
 
         try {
             $validate = Validator::make($request->all(),
@@ -86,7 +88,7 @@ class ReservationController extends Controller {
                 return $response->show();
             }
 
-            $validateRule = new ReservationRule($checkIn,$checkOut,$unitId,$resId);
+            $validateRule = new ReservationRule($checkIn,$checkOut,$maxPeople,$unitId,$resId);
             if($validateRule->validate() === false){
                 $error = json_encode($validateRule->getErrorMessage());
                 $response = new CustomResource(response(), 401, $error);

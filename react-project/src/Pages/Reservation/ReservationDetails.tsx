@@ -63,6 +63,9 @@ export const ReservationDetails = () => {
                     <div className="reservationAdvanceDetail">
                         <p> <i className="icon-checkmark"></i> Advance {`(${getPercentajeByValue(reservation.res_price_final,reservation.res_advance_payment)}%):`} <span className="priceBold">${reservation.res_advance_payment}</span></p>
                     </div>
+                    <div className="reservationAdvanceDetail">
+                        <p> <i className="icon-gift"></i> Promotion {`(${reservation.promotion.pro_name})`} <span className="priceBold">{reservation.promotion.pro_value}%</span></p>
+                    </div>
                 </div>
 
                 <div className="reservationDetailsBody-guest">

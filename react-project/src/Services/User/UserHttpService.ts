@@ -15,14 +15,14 @@ export class UserHttpService extends HttpBaseService {
             return error
         })
         console.log("response",response)
-        return new UserModel(response.data)
+        return new UserModel(response.data.data)
     }
 
     public async loginUser(guest: UserModel): Promise<UserModel> { 
             const response: AxiosResponse<UserModel> = 
             await this.post<UserInterface,UserModel>(this.login,guest.toPlainObject())
             //if(response.status > 2)
-            return new UserModel(response.data)
+            return new UserModel(response.data.data)
     }
 
 }

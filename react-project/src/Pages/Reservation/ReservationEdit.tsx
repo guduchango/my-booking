@@ -179,8 +179,8 @@ export const ReservationEdit = () => {
           <label>Promotions</label>
           <select
             //name="res_pro_id"
-            value={proValue}
-            onChange={(event) => setProValue(Number(event.target.value))}
+            value={reservation.res_pro_id}
+            onChange={(event) => setReservation({ ...reservation, res_pro_id: parseInt(event.target.value) })}
           >
             {promotions.map((obj, index) => (
               <option value={obj.pro_id} key={index} >

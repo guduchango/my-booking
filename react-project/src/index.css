@@ -30,6 +30,28 @@
   --gray20: #B0B0B0;
   --pink10: #A081B0;
   --red10: #EA3547;
+
+  --yellow50: #fffceb;
+  --yellow100: #fff6c6;
+  --yellow200: #ffe875;
+  --yellow400: #ffc820;
+  --yellow600: #dd7e02;
+  --yellow900: #7a380d;
+
+  --green50: #f0fce9;
+  --green100: #dcf8cf;
+  --green200: #bdf1a5;
+  --green400: #6ed645;
+  --green600: #39961a;
+  --green900: #254d1a;
+
+  --pink50: #fdf4ff;
+  --pink100: #fbe9fe;
+  --pink200: #f6d1fd;
+  --pink400: #eb7cf6;
+  --pink600: #c42acf;
+  --pink900: #c42acf;
+
 }
 
 .roboto-thin {

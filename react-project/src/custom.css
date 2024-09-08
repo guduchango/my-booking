@@ -15,7 +15,7 @@ a:link, a:visited {
     margin-block: 5px;
     justify-content: space-between;
     display: flex;
-    
+
 }
 
 .pageback-wrapper i{
@@ -137,6 +137,17 @@ a:link, a:visited {
     background-color: var(--blue50);
 }
 
+.tableRow-NotResult {
+    display: flex;
+    border: solid 1px var(--blue950);
+    align-items: center;
+    justify-content: center;
+    padding-block: 10px;
+    font-size: 16px;
+    border-radius: 0.5rem;
+    color: var(--red600)
+}
+
 
 .tableRow-footer p{
     font-weight: 700;
@@ -149,6 +160,46 @@ a:link, a:visited {
 
 .tableRow-wrapper p {
     margin: 0;
+}
+
+.tableRowReservartion-wrapper{
+    margin-inline: 15px;
+    margin-block: 5px;
+    display: grid;
+    grid-template-columns: 1.5fr 0.5fr; /* Divide en dos columnas iguales */
+    gap: 10px;
+}
+
+.tableRowReservartion-right{
+    display: flex;
+    justify-content: right;
+}
+
+.tableRowReservartion-right p{
+    display: flex;
+    justify-content: right;
+    margin-block: 2px;
+    padding-inline: 5px;
+    padding-block: 2px;
+    border-radius: 5px;
+    font-size: 12px;
+    border: solid 1px var(--blue800);
+}
+
+.status-pending p{
+    background-color: var(--yellow100);
+}
+
+.status-approved p{
+    background-color: var(--green100);
+}
+
+.status-canceled p{
+    background-color: var(--red200);
+}
+
+.status-finished p{
+    background-color: var(--pink200);
 }
 
 .tableRow-title {
@@ -210,9 +261,37 @@ a:link, a:visited {
     margin-block-end: 5px;
 }
 
+.showBox {
+    display: grid;
+    grid-template-columns: 1.5fr 0.5fr; /* Divide en dos columnas iguales */
+    gap: 10px;
+}
+
+.showBox-select{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.showBox-select select {
+    border-radius: 3;
+    background-color: 0;
+}
+
+.showBox-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.showBox-input input {
+    margin-block-end: 0;
+}
+
 .reservationPriceDetail-wrapper{
     border: var(--blue600) solid 1px;
-    border-radius: 0.5rem;  
+    border-radius: 0.5rem;
     margin-block-end: 10px;
 }
 
@@ -226,7 +305,7 @@ a:link, a:visited {
 }
 
 .reservationAdvanceDetail{
-    padding: 10px;
+    padding: 2px;
     font-size: 16px;
     display: flex;
     flex-direction: row;

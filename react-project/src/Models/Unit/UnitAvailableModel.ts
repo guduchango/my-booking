@@ -82,7 +82,10 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
         this.cleanMessages()
 
         try {
-            validateReservationDates(this.check_in, this.check_out);
+            if(!validateReservationDates(this.check_in, this.check_out)){
+                this.addMessage('Error range days')
+            }
+
         } catch (error) {
             this.addMessage(`${error}`)
         }
@@ -114,7 +117,6 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
         if (this.showMessages().length > 0) {
             return false;
         } else {
-            this.cleanMessages()
             return true;
         }
 

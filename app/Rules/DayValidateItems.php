@@ -38,59 +38,49 @@ class DayValidateItems {
         $hasPrice = false;
         if ($this->getPrice() != 0) {
             $hasPrice = true;
-        }else{
+        } else {
             $hasPrice = false;
-            $this->addErrorMessage($this->getDay().":No tiene precio.");
+            $this->addErrorMessage($this->getDay() . ":No tiene precio.");
         }
 
         $hasValidReservationId = false;
-        if ($this->getUpdateReservationId()  > 0) {
-            if($this->updateReservationModel->res_status == 'approved'){
+        if ($this->getUpdateReservationId() > 0) {
                 if ($this->getItemReservationId() == 0) {
                     $hasValidReservationId = true;
-                }else{
-                    if($this->getItemReservationId() == $this->getUpdateReservationId()  ){
-                        if($this->itemReservationModel->res_status == "approved") {
-                            $hasValidReservationId = true;
-                        }else{
-                            $this->addErrorMessage($this->getDay().": PriResId no tiene status aprobada");
-                            $hasValidReservationId = false;
-                        }
-                    }else{
-                        $this->addErrorMessage($this->getDay().":La reserva del item es distinta a la reserva a actualizar");
+                } else {
+                    if ($this->getItemReservationId() == $this->getUpdateReservationId()) {
+                        $hasValidReservationId = true;
+                    } else {
+                        $this->addErrorMessage($this->getDay() . ":La reserva del item es distinta a la reserva a actualizar");
                         $hasValidReservationId = false;
                     }
                 }
-            }else{
-                $this->addErrorMessage($this->getDay().":La reserva no tiene estado aprobado");
-                $hasValidReservationId = false;
-            }
         } else {
             if ($this->getItemReservationId() == 0) {
                 $hasValidReservationId = true;
-            }else{
-                $this->addErrorMessage($this->getDay().":Ya tiene reserva seteada");
+            } else {
+                $this->addErrorMessage($this->getDay() . ":Ya tiene reserva seteada");
                 $hasValidReservationId = false;
             }
         }
 
-        if($hasPrice === true && $hasValidReservationId === true){
-            $this->addErrorMessage($this->getDay().":Error en algun lugar");
+        if ($hasPrice === true && $hasValidReservationId === true) {
             return true;
         }
 
+        $this->addErrorMessage($this->getDay() . ":Error en algun lugar");
         return false;
     }
 
     public function getItemReservationModel(): Reservation {
-        if($this->getItemReservationId() > 0){
+        if ($this->getItemReservationId() > 0) {
             return Reservation::find($this->getItemReservationId());
         }
         return new Reservation();
     }
 
     public function getUpdateReservationModel(): Reservation {
-        if($this->getUpdateReservationId()>0){
+        if ($this->getUpdateReservationId() > 0) {
             return Reservation::find($this->getUpdateReservationId());
         }
         return new Reservation();

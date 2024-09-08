@@ -1,6 +1,7 @@
 <?php
 namespace App\Rules;
 use App\Models\Reservation;
+use App\Models\Unit;
 use App\Rules\StatusReservation;
 use Illuminate\Support\Facades\DB;
 
@@ -12,19 +13,23 @@ class ReservationRule {
     private int $reservationId;
     private Reservation $reservationModel;
     private array $rangeDays;
+    private Unit $unitModel;
+    private int $totalPeople = 0;
 
     private array $errorMessage = [];
 
-    public function __construct(string $checkIn, string $checkOut, int $unitId, int $reservationId) {
+    public function __construct(string $checkIn, string $checkOut, $totalPeople, int $unitId, int $reservationId) {
         $this->checkIn = $checkIn;
         $this->checkOut = $checkOut;
         $this->unitId = $unitId;
         $this->reservationId = $reservationId;
         $this->rangeDays = getDaysBetweenDates($this->getCheckIn(), $this->getCheckOut());
+        $this->unitModel =  $this->getUnitModel();
+        $this->reservationModel = $this->getReservationModel();
+        $this->totalPeople = $totalPeople;
     }
 
     public function validate(){
-        $this->reservationModel = $this->getReservationModel();
         foreach ($this->rangeDays as $day) {
             $pricesArray = $this->getPrices($day);
             $priPrice = 0;
@@ -45,12 +50,25 @@ class ReservationRule {
             );
 
             if($dayValidateItems->validate() == false){
-                $this->setErrorMessage($dayValidateItems->getErrorMessages());
+                $this->setErrorMessages($dayValidateItems->getErrorMessages());
                 return false;
             }
         }
 
+        if($this->getTotalPeople() > $this->getUnitModel()->uni_max_people){
+            return false;
+            $this->setErrorMessage("Esta reserva supero la cantidad de huespedes en la unidad.");
+        }
+
         return true;
+    }
+
+    private function getUnitModel(){
+        if($this->getUnitId()>0){
+            return Unit::find($this->getUnitId());
+        }else{
+            return new Unit();
+        }
     }
 
     private function getReservationModel(){
@@ -102,7 +120,7 @@ class ReservationRule {
         $this->reservationId = $reservationId;
     }
 
-    public function setErrorMessage(array $errorMessage): void {
+    public function setErrorMessages(array $errorMessage): void {
 
         $this->errorMessage = $errorMessage;
     }
@@ -110,5 +128,18 @@ class ReservationRule {
     public function getErrorMessage(): array {
         return $this->errorMessage;
     }
+
+    public function setErrorMessage(string $message): void {
+        $this->errorMessage[] = $message;
+    }
+
+    public function getTotalPeople(): int {
+        return $this->totalPeople;
+    }
+
+    public function setTotalPeople(int $totalPeople): void {
+        $this->totalPeople = $totalPeople;
+    }
+
 
 }

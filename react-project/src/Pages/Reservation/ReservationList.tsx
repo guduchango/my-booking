@@ -7,12 +7,14 @@ import { ReservationInterface } from '../../Models/Reservation/ReservationInterf
 import { useGlobalContext } from '../../Context/Context';
 
 
+
 export const ReservationList: React.FC = () => {
 
     const [reservations, setReservations] = useState<ReservationInterface[]>([]);
-    const { setIsReservationSeted} = useGlobalContext()
+    const { setIsReservationSeted } = useGlobalContext()
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [selectTerm, setSelectTerm] = useState<string>('');
     const [filteredResults, setFilteredResults] = useState<ReservationInterface[]>(reservations);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +29,20 @@ export const ReservationList: React.FC = () => {
                 reservation.guest.gue_last_name.toString().includes(value) ||
                 reservation.res_start_date.toLowerCase().includes(value) ||
                 reservation.res_end_date.toLowerCase().includes(value)
+            );
+            setFilteredResults(filtered);
+        }
+    };
+
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = event.target.value.toLowerCase();
+        setSelectTerm(value);
+
+        if (value === '') {
+            setFilteredResults(reservations);
+        } else {
+            const filtered = reservations.filter(reservation =>
+                reservation.res_status.toLowerCase().includes(value)
             );
             setFilteredResults(filtered);
         }
@@ -87,33 +103,62 @@ export const ReservationList: React.FC = () => {
                 <div className="filter-input">
                     {showFilter && (
                         <div className="showBox">
-                            <input
-                                type="text"
-                                placeholder="Buscar...."
-                                onChange={handleInputChange}
-                                value={searchTerm}
-                            ></input>
+                            <div className='showBox-input'>
+                                <input
+                                    type="text"
+                                    placeholder="Buscar...."
+                                    onChange={handleInputChange}
+                                    value={searchTerm}
+                                ></input>
+                            </div>
+                            <div className='showBox-select'>
+                                <select name="cars" id="cars"
+                                    onChange={handleSelectChange}
+                                    value={selectTerm}
+                                >
+                                    <option value="">view all</option>
+                                    <option value="approved">approved</option>
+                                    <option value="pending">pending</option>
+                                    <option value="finished">finished</option>
+                                    <option value="canceled">canceled</option>
+                                </select>
+                            </div>
                         </div>
                     )}
                 </div>
             </div>
             <div className="table">
-                {filteredResults.map((reservation) => (
-                    <div key={reservation.res_id} className="table-row" >
-                        <NavLink
-                            to='/reservation/details'
-                            state={{ res_id: reservation.res_id }}
-                        >
-                            <div className="tableRow-wrapper">
-                                <p className="tableRow-title">{reservation.guest.gue_name + " " + reservation.guest.gue_last_name}</p>
-                                <p>{reservation.res_beauty_dates}</p>
-                                <p>{reservation.res_nights} nights</p>
-                                <p>{reservation.res_adults} adults, {reservation.res_children} children</p>
-                                <p>{reservation.unit.uni_name}</p>
-                            </div>
-                        </NavLink>
+                {filteredResults.length > 0 ? (
+                    filteredResults.map((reservation) => (
+                        <div key={reservation.res_id} className="table-row">
+                            <NavLink
+                                to='/reservation/details'
+                                state={{ res_id: reservation.res_id }}
+                            >
+                                <div className="tableRowReservartion-wrapper">
+                                    <div className='tableRowReservartion-left'>
+                                        <p className="tableRow-title">
+                                            {reservation.guest.gue_name + " " + reservation.guest.gue_last_name}
+                                        </p>
+                                        <p>{reservation.res_beauty_dates}</p>
+                                        <p>{reservation.res_nights} nights</p>
+                                        <p>{reservation.res_adults} adults, {reservation.res_children} children</p>
+                                        <p>{reservation.unit.uni_name}</p>
+                                    </div>
+                                    <div className='tableRowReservartion-right'>
+                                        <div className={`status-${reservation.res_status}`}>
+                                            <p>{reservation.res_status}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </NavLink>
+                        </div>
+                    ))
+                ) : (
+                    <div key="1" className="tableRow-NotResult">
+                        <p>Not result found</p>
                     </div>
-                ))}
+                )}
             </div>
         </Layout>
     )

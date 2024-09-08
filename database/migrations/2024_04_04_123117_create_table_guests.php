@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('gue_identity_document');
             $table->string('gue_email');
             $table->string('gue_phone_number');
-            $table->date('gue_birthday');
+            $table->date('gue_birthday')->nullable();
             $table->timestamp('gue_created_at')->nullable();
             $table->timestamp('gue_updated_at')->nullable();
         });

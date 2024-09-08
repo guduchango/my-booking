@@ -51,7 +51,9 @@ export class ReservationStorageService extends StorageService {
     }
 
     async getReservationByUnit(uni_id?: number) {
-        return this.reservations.where({ res_uni_id: uni_id }).toArray()
+        return this.reservations.where({ res_uni_id: uni_id })
+        .filter(item => item.res_status === 'approved')
+        .toArray()
     }
 
 

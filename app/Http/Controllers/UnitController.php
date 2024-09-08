@@ -7,6 +7,7 @@ use App\Http\Resources\CustomResource;
 use App\Http\Resources\UnitResource;
 use App\Models\Price;
 use App\Models\Unit;
+use App\Rules\ReservationRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -73,11 +74,12 @@ class UnitController extends Controller {
             $people = $request->people;
             $units = Unit::get();
             $availableUnits = [];
+
             foreach ($units as $unit) {
-                if (Price::canReservate($checkIn, $checkOut, $unit->uni_id)) {
-                    if ($people <= $unit->uni_max_people) {
+                $unitId = $unit->uni_id;
+                $reservationRule = new ReservationRule($checkIn,$checkOut,$people,$unitId,0);
+                if ($reservationRule->validate()) {
                         $availableUnits[] = $unit->uni_id;
-                    }
                 }
             }
 
@@ -85,7 +87,7 @@ class UnitController extends Controller {
                 $units = Unit::whereIn('uni_id', $availableUnits)->get();
                 $response = UnitResource::collection($units);
             } else {
-                $response = new CustomResource(response(), 500, "No unit available");
+                $response = new CustomResource(response(), 500, "No unit available check prices/reservations");
                 return $response->show();
             }
 

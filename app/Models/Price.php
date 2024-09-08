@@ -37,7 +37,4 @@ class Price extends Model {
         return $this->hasOne(Unit::class, 'uni_id', 'pri_uni_id');
     }
 
-    public function updatePriResId(int $resId){
-        $this->where('pri_res_id', $resId)->update(['pri_res_id' => $resId]);
-    }
 }

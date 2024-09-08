@@ -28,7 +28,7 @@ export function getFriendlyDate(dateString: string): string {
 
     let friendlyDate = "";
     try{
-        const dateObj = new Date(dateString);
+        const dateObj = newDate(dateString)
         const fullYear = dateObj.getFullYear();
 
 
@@ -179,5 +179,16 @@ export function newDate(date: string){
         return new Date(date);
     }
 
+}
+
+export function statusColor(status: string){
+    switch (status) {
+        case 'pending':
+            return ''
+            break;
+    
+        default:
+            break;
+    }
 }
 

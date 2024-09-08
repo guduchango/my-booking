@@ -85,11 +85,21 @@ class Reservation extends Model
     }
 
     public function updateByStatus(){
-        $price = new Price();
+
+        $resId = $this->res_id;
+        $checkIn = $this->res_start_date;
+        $checkOut = $this->res_end_date;
+        $uniId = $this->res_uni_id;
+
         if($this->res_status == 'approved'){
-            $price->updatePriResId($this->res_id);
+            Price::where('pri_date', '>=' ,$checkIn)
+                ->where('pri_date', '<' ,$checkOut)
+                ->where('pri_uni_id',$uniId)
+                ->update(
+                    ['pri_res_id' => $resId]
+                );
         }else{
-            $price->updatePriResId(0);
+            Price::where('pri_res_id', $resId)->update(['pri_res_id' => 0]);
         }
     }
 }

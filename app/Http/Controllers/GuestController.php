@@ -84,8 +84,7 @@ class GuestController extends Controller {
             'gue_last_name' => 'required|min:3|max:50',
             'gue_identity_document' => 'required|numeric|digits_between:5,10',
             'gue_email' => "email|max:50",
-            'gue_phone_number' => 'required|string|min:9|max:20',
-            'gue_birthday' => 'date'
+            'gue_phone_number' => 'required|string|min:9|max:20'
         ];
     }
 }

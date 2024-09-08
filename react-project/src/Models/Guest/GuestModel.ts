@@ -147,8 +147,10 @@ export class GuestModel extends BaseModel implements GuestInterface {
         return await axiosClient.post(`/guest/`, this.toPlainObject())
         .then(response => {
             const responseData: GuestInterface | AxiosError =  response.data.data as GuestInterface
+            const guest = new GuestModel(responseData)
+            const guestService = new GuestStorageService();
             if(!(responseData instanceof AxiosError)){
-                new GuestStorageService().create(responseData)
+                guestService.create(guest)
             }
 
             return responseData;
@@ -170,8 +172,10 @@ export class GuestModel extends BaseModel implements GuestInterface {
         return await axiosClient.put(`/guest/${id}`, this.toPlainObject())
         .then(response => {
             const responseData: GuestInterface | AxiosError =  response.data.data as GuestInterface
+            const guestService = new GuestStorageService();
+            const guest = new GuestModel(responseData)
             if(!(responseData instanceof AxiosError)){
-                new GuestStorageService().update(id,responseData)
+                guestService.update(id,guest)
             }
 
             return responseData;
@@ -192,21 +196,25 @@ export class GuestModel extends BaseModel implements GuestInterface {
 
     public async saveOrUpdate(id: number): Promise<GuestInterface | AxiosError>{
         if(id === 0){
-            return await this.store()
+            return this.store()
         }
-        return await this.update(id)
+        return this.update(id)
     }
 
 
     public validate(): boolean {
 
         const FormSchema = z.object({
-            gue_name: z.string().nonempty(),
-            gue_last_name: z.string().nonempty(),
-            //gue_email: z.string().email(),
+            gue_name: z.string().min(3),
+            gue_last_name:  z.string().min(3),
+            gue_identity_document: z.string().min(3),
+            gue_email: z.string().email(),
+            gue_phone_number: z.string().min(3)
           });
           
           type FormData = z.infer<typeof FormSchema>;
+
+          console.log("plain",this.toPlainObject())
           
           // Validation
           try {
