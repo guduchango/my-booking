@@ -36,7 +36,7 @@ a:link, a:visited {
 .save-form .field-group{
     display: flex;
     flex-direction: column;
-    margin-block: 10px;
+    margin-block: 5px;
 }
 
 .save-form .field-group label {
@@ -130,7 +130,7 @@ a:link, a:visited {
     border-radius: 4px;
     font-size: 18px;
     font-weight: bold;
-    margin-block: 10px;
+    margin-block: 5px;
     padding-block: 5px;
     padding-inline-start: 5px;
     background-color: var(--blue100);
@@ -142,19 +142,22 @@ a:link, a:visited {
 
 .fieldGroup-datePriceDetails{
     display: flex;
+    flex-wrap: wrap;
 }
 
 .fieldGroupDatePriceDetails-wrapper{
     display: flex;
     flex-direction: column;
-    gap: 2.5px;
+    gap: 0.5px;
     background-color: var(--blue100);
-    margin-inline: 5px;
-    padding-inline: 10px;
+    margin-inline: 2px;
+    margin-block: 1px;
+    padding-inline: 5px;
     border-radius: 8px;
     padding-block: 5px;
     align-content: center;
     text-align: center;
+    
 }
 
 .fieldGroupDatePriceDetails-wrapper span:nth-child(1){

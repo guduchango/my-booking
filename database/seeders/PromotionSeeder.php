@@ -13,21 +13,21 @@ class PromotionSeeder extends Seeder {
      */
     public function run(): void {
         $data = [
-            ['0', 'nada'],
-            ['5', '5% de descuento'],
-            ['10', '10% de descuento'],
-            ['15', '15% de descuento'],
-            ['20', '20% de descuento'],
-            ['25', '25% de descuento'],
-            ['30', '30% de descuento'],
-            ['35', '35% de descuento'],
-            ['40', '40% de descuento'],
-            ['45', '45% de descuento'],
-            ['50', '50% de descuento'],
-            ['60', '60% de descuento'],
-            ['70', '70% de descuento'],
-            ['80', '80% de descuento'],
-            ['90', '90% de descuento'],
+            ['0', '0%'],
+            ['5', '5%'],
+            ['10', '10%'],
+            ['15', '15%'],
+            ['20', '20%'],
+            ['25', '25%'],
+            ['30', '30%'],
+            ['35', '35%'],
+            ['40', '40%'],
+            ['45', '45%'],
+            ['50', '50%'],
+            ['60', '60%'],
+            ['70', '70%'],
+            ['80', '80%'],
+            ['90', '90%'],
         ];
 
         $users = User::all();

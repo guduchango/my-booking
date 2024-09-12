@@ -17,7 +17,7 @@ class UnitFactory extends Factory
     public function definition(): array
     {
         return [
-            'uni_name' => fake()->words(3,true),
+            'uni_name' => fake()->numerify('Departamento-#'),
             'uni_single_bed' => fake()->numberBetween(0, 3),
             'uni_double_bed' => fake()->numberBetween(0, 3),
             'uni_max_people' => fake()->numberBetween(1, 10),

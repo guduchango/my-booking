@@ -2,7 +2,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import './reservation-edit.css'
 import { useEffect, useState } from "react";
-import { daysBetween, diffFloatNumber, getOnlyDay, getPercentajeOther, upperCaseFirst } from "../../Utils/GeneralFunctions";
+import { daysBetween, diffFloatNumber, getOnlyDay, getPercentajeByValue, getPercentajeOther, upperCaseFirst } from "../../Utils/GeneralFunctions";
 import { res_adults, res_advances, res_beds, res_channels, res_children, res_status } from "../../Utils/StaticData";
 import Select from "react-select";
 import { UnitStorageService } from "../../Services/Unit/UnitStorageService";
@@ -15,7 +15,6 @@ import { PromotionStorageService } from "../../Services/Promotion/PromotionStora
 import { PromotionInterface } from "../../Models/Promotion/PromotionInterface";
 import { ReservationModel } from "../../Models/Reservation/ReservationModel";
 import { PriceStorageService } from "../../Services/Price/PriceStorageService";
-import { async } from '../../Services/Guest/GuestServiceAxios';
 import { PriceInterface } from "../../Models/Price/PriceInterface";
 
 export const ReservationEdit = () => {
@@ -39,6 +38,7 @@ export const ReservationEdit = () => {
   const [resStartDate, setResStartDate] = useState<string>("")
   const [resEndDate, setResEndDate] = useState<string>("")
   const [unitsArray, setUnitsArray] = useState<PriceInterface[]>([])
+  const [unitId, setUnitId] = useState<number>(0)
 
   const today = new Date().toISOString().split('T')[0];
   
@@ -58,15 +58,17 @@ export const ReservationEdit = () => {
   const getReservation = async () => {
     const storageReservationService = new ReservationStorageService()
     const storageReservation = await storageReservationService.getById(resId);
-    //const priceStorageService = new PriceStorageService()
-    //const pricesArray = await priceStorageService.getDatesPriceArray(reservation.res_uni_id,resStartDate,resEndDate)
+    const advancePercentaje  = getPercentajeByValue(storageReservation.res_price_final,storageReservation.res_advance_payment)
+    
     setReservation(storageReservation)
-    // setUnitsArray(pricesArray)
-    // setResPrice(reservation.res_price)
-    // setResFinalPrice(reservation.res_price_final)
-    // setResAdvancePayment(reservation.res_advance_payment)
-    // setResStartDate(reservation.res_start_date)
-    // setResEndDate(reservation.res_end_date)
+    setUnitId(storageReservation.res_uni_id)
+    setResPrice(storageReservation.res_price)
+    setResFinalPrice(storageReservation.res_price_final)
+    setResAdvancePayment(storageReservation.res_advance_payment)
+    setResStartDate(storageReservation.res_start_date)
+    setResEndDate(storageReservation.res_end_date)
+    setProValue(storageReservation.promotion.pro_value)
+    setAdvance(advancePercentaje)
   }
 
   const getPromotions = async () => {
@@ -83,7 +85,8 @@ export const ReservationEdit = () => {
     setResFinalPricePercentaje(finalPricePercentaje)
     setProValue(value)
     setResFinalPrice(finalPrice)
-    console.log(promotionItem)
+    setAdvance(0)
+    setResAdvancePayment(0)
   };
 
   const handleFinalPriceChange = (value: number): void => {
@@ -92,27 +95,48 @@ export const ReservationEdit = () => {
 
   const handleAdvanceChange = (value: number): void => {
     setAdvance(value)
-    const advanceConst = resFinalPrice * value * 0.01
+    const advanceConst = parseFloat((resFinalPrice * value * 0.01).toFixed(2));
     const fixedAdvanceConst = parseFloat(advanceConst.toFixed(2)) ?? 0
     setResAdvancePayment(fixedAdvanceConst)
   };
 
   const handleStartDateChange = async(value: string): Promise<void> => {
     const priceStorageService = new PriceStorageService()
-    const price = await priceStorageService.calculateTotal(reservation.res_uni_id,resStartDate,resEndDate)
-    const pricesArray = await priceStorageService.getDatesPriceArray(reservation.res_uni_id,resStartDate,resEndDate)
+    const price = await priceStorageService.calculateTotal(reservation.res_uni_id,value,resEndDate)
+    const pricesArray = await priceStorageService.getDatesPriceArray(reservation.res_uni_id,value,resEndDate)
     setUnitsArray(pricesArray)
     setResPrice(price);
     setResStartDate(value)
+    setProValue(0)
+    setResAdvancePayment(0)
+    setAdvance(0)
   };
 
   const handleEndDateChange = async(value: string): Promise<void> => {
     const priceStorageService = new PriceStorageService()
-    const price = await priceStorageService.calculateTotal(reservation.res_uni_id,resStartDate,resEndDate)
-    const pricesArray = await priceStorageService.getDatesPriceArray(reservation.res_uni_id,resStartDate,resEndDate)
+    const price = await priceStorageService.calculateTotal(reservation.res_uni_id,resStartDate,value)
+    const pricesArray = await priceStorageService.getDatesPriceArray(reservation.res_uni_id,resStartDate,value)
+    console.log("endDateFromChange",value);
     setUnitsArray(pricesArray)
     setResPrice(price);
     setResEndDate(value)
+    setProValue(0)
+    setResAdvancePayment(0)
+    setAdvance(0)
+  };
+
+
+  const handleUnitChange = async(value: number): Promise<void> => {
+    const priceStorageService = new PriceStorageService()
+    const price = await priceStorageService.calculateTotal(value,resStartDate,resEndDate)
+    const pricesArray = await priceStorageService.getDatesPriceArray(value,resStartDate,resEndDate)
+    setUnitsArray(pricesArray)
+    setResPrice(price);
+    setResFinalPrice(price)
+    setProValue(0)
+    setResAdvancePayment(0)
+    setAdvance(0)
+    setUnitId(value)
   };
 
 
@@ -150,41 +174,36 @@ export const ReservationEdit = () => {
   };
 
   useEffect(() => {
-    getReservation();
-    getGuests();
-    getUnits();
-    getPromotions();
+    const init = async () => {
+      if(reservation){
+        getGuests();
+        getUnits();
+        getPromotions();
+        getReservation();
+      }
+    }
+
+    init();
+    
   }, []);
 
-  // Supongamos que 'reservation' es el estado que depende del valor de 'setReservation'
 useEffect(() => {
-  // Definir una función asíncrona dentro de useEffect
   const fetchPrices = async () => {
     if (reservation) { 
       console.log("v1",reservation)
       const priceStorageService = new PriceStorageService();
-
-      // Esperar a que la función getDatesPriceArray se resuelva
       const pricesArray = await priceStorageService.getDatesPriceArray(
         reservation.res_uni_id,
         resStartDate,
         resEndDate
       );
-
-      // Actualizar los estados después de obtener los datos
       setUnitsArray(pricesArray);
-      setResPrice(reservation.res_price);
-      setResFinalPrice(reservation.res_price_final);
-      setResAdvancePayment(reservation.res_advance_payment);
-      setResStartDate(reservation.res_start_date);
-      setResEndDate(reservation.res_end_date);
     }
   };
 
-  // Llamar a la función asincrónica
   fetchPrices();
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [reservation,resStartDate,resEndDate]);
+}, [reservation]);
 
   return (
     <Layout>
@@ -224,8 +243,9 @@ useEffect(() => {
             <label>Alojamiento</label>
             <Select
               options={unitsItems}
-              onChange={(event) => setReservation({ ...reservation, res_uni_id: Number(event?.value) })}
-              value={unitsItems.filter((option) => (option.value === reservation.res_uni_id))}
+              onChange={(event) => handleUnitChange(Number(event?.value))}
+              //onChange={(event) => setReservation({ ...reservation, res_uni_id: Number(event?.value) })}
+              value={unitsItems.filter((option) => (option.value === unitId))}
               isDisabled={(resId == 0) ? true : false}
             />
           </div>
@@ -328,9 +348,6 @@ useEffect(() => {
           <p>Detalle pago:</p>
         </div>
         <div className="saveForm-wrapper">
-
-         
-
           <div className="field-group">
             <div className="field-readOnly">
               <label>Total (sin descuento)</label>

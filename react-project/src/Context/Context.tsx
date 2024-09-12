@@ -13,6 +13,7 @@ import { UserInterface } from '../Models/User/UserInterface.ts';
 import { UnitPriceInterface } from '../Models/Unit/UnitPriceInterface.ts';
 import { UnitAvailableInterface } from '../Models/Unit/UnitAvailableInterface.ts';
 import { PromotionInterface } from '../Models/Promotion/PromotionInterface.ts';
+import i18n from '../i18n.ts';
 
 interface GlobalContextProps {
   //objects
@@ -65,7 +66,7 @@ export const GlobalContextProvider = ({ children }: Props) => {
   }
  
   useEffect(() => {
-    console.log('useEfect context provider getData()')
+    i18n.changeLanguage('es');
     getData();
   },[unitPrice]);
 

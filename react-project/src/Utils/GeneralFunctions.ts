@@ -256,7 +256,6 @@ export function statusColor(status: string){
     }
 }
 
-
 export function getOnlyDay(date: string){
     console.log("onlyDay",date)
     try{
@@ -265,4 +264,8 @@ export function getOnlyDay(date: string){
     }catch(e){
         return "";
     }
+}
+
+export function transStatus(status: string){
+    
 }
