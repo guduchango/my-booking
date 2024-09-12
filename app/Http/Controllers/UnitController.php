@@ -9,13 +9,15 @@ use App\Models\Price;
 use App\Models\Unit;
 use App\Rules\ReservationRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UnitController extends Controller {
     public function index(Request $request) {
         try {
             return UnitResource::collection(
-                Unit::orderBy('uni_created_at', 'desc')
+                Unit::where('uni_usu_id',Auth::user()->id)
+                    ->orderBy('uni_created_at', 'desc')
                     ->get()
             );
         } catch (\Throwable $th) {
@@ -38,6 +40,7 @@ class UnitController extends Controller {
 
             $unit = new Unit();
             $unit->fill($request->all());
+            $unit->uni_usu_id = Auth::user()->id;
             $unit->save();
             return new UnitResource(Unit::findOrFail($unit->uni_id));
         } catch (\Throwable $th) {
@@ -50,6 +53,7 @@ class UnitController extends Controller {
         try {
             $unit = Unit::findOrFail($id);
             $unit->fill($request->all());
+            $unit->uni_usu_id = Auth::user()->id;
             $unit->save();
             return new UnitResource(Unit::findOrFail($unit->uni_id));
         } catch (\Throwable $th) {
@@ -72,7 +76,7 @@ class UnitController extends Controller {
             $checkIn = $request->check_in;
             $checkOut = $request->check_out;
             $people = $request->people;
-            $units = Unit::get();
+            $units = Unit::where('uni_usu_id',Auth::user()->id)->get();
             $availableUnits = [];
 
             foreach ($units as $unit) {

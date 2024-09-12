@@ -22,6 +22,8 @@ export const Login = () => {
         }
         const userResponse = 
         await new UserHttpService().loginUser(userModel);
+        await new UserStorageService().create(new UserModel(userResponse))
+
         setIsVisible(false)
         setUser(userResponse)
         navigate("/")

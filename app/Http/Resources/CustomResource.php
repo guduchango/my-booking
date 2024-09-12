@@ -13,6 +13,8 @@ class CustomResource {
     private ResponseFactory $_response;
     private ?Throwable $_errorThrowable = null;
     private ?Validator $_errorValidator = null;
+    private ?array $_errorArray = null;
+
     private ?string $_errorString = "";
     private int $_status;
 
@@ -25,6 +27,8 @@ class CustomResource {
             $this->_errorValidator = $error;
         } elseif ($error instanceof Throwable) {
             $this->_errorThrowable = $error;
+        } elseif (is_array($error)) {
+            $this->_errorArray = $error;
         }else{
             $this->_errorString = $error;
         }
@@ -51,6 +55,12 @@ class CustomResource {
                     }
                 }
             }
+        } elseif (!empty($this->getErrorArray())) {
+
+            foreach ($this->getErrorArray() as $item){
+                $mjs[] = "$item";
+            }
+
         }else{
             $mjs[] = $this->getErrorString();
         }
@@ -131,6 +141,14 @@ class CustomResource {
      */
     public function setErrorString($errorString): void {
         $this->_errorString = $errorString;
+    }
+
+    public function getErrorArray(): ?array {
+        return $this->_errorArray;
+    }
+
+    public function setErrorArray(?array $errorArray): void {
+        $this->_errorArray = $errorArray;
     }
 
 }

@@ -8,13 +8,15 @@ use App\Models\Price;
 use App\Models\Reservation;
 use App\Rules\ReservationRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ReservationController extends Controller {
     public function index(Request $request) {
         try {
             return ReservationResource::collection(
-                Reservation::orderBy('res_created_at', 'desc')
+                Reservation::where('res_usu_id',Auth::user()->id)
+                    ->orderBy('res_created_at', 'desc')
                     ->get()
             );
         } catch (\Throwable $th) {
@@ -47,8 +49,10 @@ class ReservationController extends Controller {
                 $response = new CustomResource(response(), 401, $error);
                 return $response->show();
             }
-
-            $reservation = Reservation::create($request->all());
+            $reservation = new Reservation();
+            $reservation->fill($request->all());
+            $reservation->res_usu_id = Auth::user()->id;
+            $reservation->save();
             $reservation->updateByStatus();
             return new ReservationResource(Reservation::findOrFail($reservation->res_id));
         } catch (\Throwable $th) {
@@ -68,10 +72,6 @@ class ReservationController extends Controller {
 
     public function update(Request $request, int $id) {
 
-        $newReservation = new Reservation();
-        $newReservation->fill($request->all());
-
-
         $checkIn = $request->res_start_date;
         $checkOut = $request->res_end_date;
         $unitId = $request->res_uni_id;
@@ -90,13 +90,14 @@ class ReservationController extends Controller {
 
             $validateRule = new ReservationRule($checkIn,$checkOut,$maxPeople,$unitId,$resId);
             if($validateRule->validate() === false){
-                $error = json_encode($validateRule->getErrorMessage());
+                $error = $validateRule->getErrorMessage();
                 $response = new CustomResource(response(), 401, $error);
                 return $response->show();
             }
 
             $reservation = Reservation::findOrFail($id);
             $reservation->fill($request->all());
+            $reservation->res_usu_id = Auth::user()->id;
             $reservation->save();
             $reservation->updateByStatus();
             return new ReservationResource(Reservation::findOrFail($reservation->res_id));

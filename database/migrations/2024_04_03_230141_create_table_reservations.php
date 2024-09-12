@@ -25,11 +25,12 @@ return new class extends Migration
             $table->float('res_price_final')->nullable();
             $table->float('res_advance_payment')->nullable();
             $table->enum('res_status',['pending','approved','finished','canceled'])->default('pending');
-            $table->enum('res_channel',['direct','booking','block'])->default('direct');
+            $table->enum('res_channel',['direct','booking','airbnb'])->default('direct');
             $table->tinyText('res_comments')->nullable();
+            $table->integer('res_usu_id');
             $table->integer('res_gue_id');
             $table->integer('res_uni_id');
-            $table->integer('res_pro_id')->nullable();
+            $table->integer('res_pro_id');
             $table->timestamp('res_created_at')->nullable();
             $table->timestamp('res_updated_at')->nullable();
         });

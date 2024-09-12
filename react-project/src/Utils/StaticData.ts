@@ -16,7 +16,7 @@ export enum HTTP_CODES {
   NO_CONTENT = 204
 }
 
-interface KeyValue {
+export interface KeyValue {
   key: string;
   value: number;
 }

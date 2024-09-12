@@ -4,23 +4,25 @@ import './reservation-details.css'
 import { useGlobalContext } from "../../Context/Context";
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { useEffect } from "react";
-import { getFriendlyDate, getPercentajeByValue } from "../../Utils/GeneralFunctions";
+import { getFriendlyDate, getPercentaje, getPercentajeByValue } from "../../Utils/GeneralFunctions";
 
 export const ReservationDetails = () => {
 
-    const { reservation, setReservation, guest, setGuest, unit, setUnit } = useGlobalContext()
+    const { reservation, setReservation, guest, setGuest, unit, setUnit, promotion, setPromotion } = useGlobalContext()
     const location = useLocation();
     const resId = location.state.res_id;
+    const advancePercentaje = getPercentajeByValue(reservation.res_price_final,reservation.res_advance_payment);
+    const advanceValue = getPercentaje(reservation.res_price_final,advancePercentaje )
+    
 
     const getReservation = async () => {
         const storageReservationService = new ReservationStorageService()
         const storageReservation = await storageReservationService.getById(resId);
-        console.log("res_id",resId)
-        console.log("storageReservation",storageReservation)
         setReservation(storageReservation);
         setGuest(storageReservation.guest)
         setUnit(storageReservation.unit)
-        console.log(reservation)
+        setPromotion(storageReservation.promotion)
+        
     }
 
     useEffect(() => {
@@ -57,15 +59,15 @@ export const ReservationDetails = () => {
 
                 <div className="reservationPriceDetail-wrapper">
                     <div className="reservationPriceDetail">
-                        <p>Price: <span className="priceBold">{`$${reservation.res_price}`}</span></p>
-                        <p className="headerTitle-price">Total ({`${getPercentajeByValue(reservation.res_price,reservation.res_price_final)}%`}): <span className="priceBold">{`$${reservation.res_price_final}`}</span></p>
+                        <p>Precio total: <span className="priceBold">{`$${reservation.res_price}`}</span></p>
+                        <p className="headerTitle-price">Precio ({`-${getPercentajeByValue(reservation.res_price,reservation.res_price_final)}%`}): <span className="priceBold">{`$${reservation.res_price_final}`}</span></p>
                     </div>
                     <div className="reservationAdvanceDetail">
-                        <p> <i className="icon-checkmark"></i> Advance {`(${getPercentajeByValue(reservation.res_price_final,reservation.res_advance_payment)}%):`} <span className="priceBold">${reservation.res_advance_payment}</span></p>
+                        <p> <i className="icon-checkmark"></i> Advance {`(${getPercentajeByValue(reservation.res_price_final,reservation.res_advance_payment)}%):`} <span className="priceBold">${advanceValue}</span></p>
                     </div>
-                    <div className="reservationAdvanceDetail">
+                    {/* <div className="reservationAdvanceDetail">
                         <p> <i className="icon-gift"></i> Promotion {`(${reservation.promotion.pro_name})`} <span className="priceBold">{reservation.promotion.pro_value}%</span></p>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="reservationDetailsBody-guest">

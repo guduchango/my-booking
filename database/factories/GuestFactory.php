@@ -22,7 +22,8 @@ class GuestFactory extends Factory
             'gue_identity_document' => fake()->bothify('########'),
             'gue_email' => fake()->email(),
             'gue_phone_number' => fake()->phoneNumber(),
-            'gue_birthday' => fake()->dateTimeInInterval('-30 year', '-20 year')
+            'gue_birthday' => fake()->dateTimeInInterval('-30 year', '-20 year'),
+            'gue_usu_id' => fake()->numberBetween(1, 5)
         ];
     }
 }

@@ -144,7 +144,7 @@ export class GuestModel extends BaseModel implements GuestInterface {
 
 
     public async store(): Promise<GuestInterface | AxiosError>{
-        return await axiosClient.post(`/guest/`, this.toPlainObject())
+        return await this.postPrivate(`/guest/`, this.toPlainObject())
         .then(response => {
             const responseData: GuestInterface | AxiosError =  response.data.data as GuestInterface
             const guest = new GuestModel(responseData)
@@ -169,7 +169,7 @@ export class GuestModel extends BaseModel implements GuestInterface {
     }
 
     public async update(id: number): Promise<GuestInterface | AxiosError>{
-        return await axiosClient.put(`/guest/${id}`, this.toPlainObject())
+        return await this.putPrivate(`/guest/${id}`, this.toPlainObject())
         .then(response => {
             const responseData: GuestInterface | AxiosError =  response.data.data as GuestInterface
             const guestService = new GuestStorageService();
@@ -208,7 +208,7 @@ export class GuestModel extends BaseModel implements GuestInterface {
             gue_name: z.string().min(3),
             gue_last_name:  z.string().min(3),
             gue_identity_document: z.string().min(3),
-            gue_email: z.string().email(),
+            //gue_email: z.string().email(),
             gue_phone_number: z.string().min(3)
           });
           

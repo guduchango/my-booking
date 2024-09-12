@@ -18,7 +18,8 @@ class Unit extends Model
         'uni_max_people',
         'uni_single_bed',
         'uni_double_bed',
-        'uni_rooms'
+        'uni_rooms',
+        'uni_usu_id'
     ];
 
     protected function casts(): array {
@@ -29,6 +30,7 @@ class Unit extends Model
             'uni_single_bed' => 'integer',
             'uni_double_bed' => 'integer',
             'uni_rooms' => 'integer',
+            'uni_usu_id' => 'integer',
         ];
     }
 }

@@ -32,6 +32,7 @@ class Reservation extends Model
         'res_pro_id',
         'res_gue_id',
         'res_uni_id',
+        'res_usu_id',
 
     ];
 
@@ -51,9 +52,10 @@ class Reservation extends Model
             'res_status' => 'string',
             'res_channel' => 'string',
             'res_comments' => 'string',
-            'res_pro_id' => 'string',
+            'res_pro_id' => 'integer',
             'res_gue_id' => 'integer',
             'res_uni_id' => 'integer',
+            'res_usu_id' => 'integer',
         ];
     }
 
@@ -90,11 +92,13 @@ class Reservation extends Model
         $checkIn = $this->res_start_date;
         $checkOut = $this->res_end_date;
         $uniId = $this->res_uni_id;
+        $usuId = $this->res_usu_id;
 
         if($this->res_status == 'approved'){
             Price::where('pri_date', '>=' ,$checkIn)
                 ->where('pri_date', '<' ,$checkOut)
                 ->where('pri_uni_id',$uniId)
+                ->where('pri_usu_id',$usuId)
                 ->update(
                     ['pri_res_id' => $resId]
                 );

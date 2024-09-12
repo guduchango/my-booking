@@ -1,27 +1,15 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "../../Api/axiosClient";
 import { ReservationInterface } from "../../Models/Reservation/ReservationInterface";
+import { HttpBaseService } from "../HttpBaseService";
 
-export class ReservationHttpService {
+export class ReservationHttpService extends HttpBaseService {
 
     readonly url: string = 'reservation';
 
     public async getReservations (): Promise<ReservationInterface[]> { 
         const response: AxiosResponse<ReservationInterface[]> = 
-        await axiosClient.get<ReservationInterface[]>(this.url);
+        await this.getPrivate<ReservationInterface[]>(this.url);
         return response.data.data as ReservationInterface[];
-    }
-
-    public async storeReservation (reservation: ReservationInterface): Promise<ReservationInterface> { 
-        const response: AxiosResponse<ReservationInterface> = 
-        await axiosClient.post<ReservationInterface>(this.url,reservation);
-        return response.data;
-    }
-
-    public async updateReservation (reservation: ReservationInterface, res_id: number): Promise<ReservationInterface> { 
-        const updateUrl = this.url + "/" + res_id
-        const response: AxiosResponse<ReservationInterface> = 
-        await axiosClient.put<ReservationInterface>(updateUrl,reservation);
-        return response.data;
     }
 }

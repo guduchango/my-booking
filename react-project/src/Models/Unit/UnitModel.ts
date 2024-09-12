@@ -118,7 +118,7 @@ export class UnitModel extends BaseModel implements UnitInterface {
     }
 
     public async store(): Promise<UnitInterface | AxiosError>{
-        return await axiosClient.post(`/unit/`, this.toPlainObject())
+        return await this.postPrivate(`/unit/`, this.toPlainObject())
         .then(response => {
             const responseData: UnitInterface | AxiosError =  response.data.data as UnitInterface
             if(!(responseData instanceof AxiosError)){
@@ -141,7 +141,7 @@ export class UnitModel extends BaseModel implements UnitInterface {
     }
 
     public async update(id: number): Promise<UnitInterface | AxiosError>{
-        return await axiosClient.put(`/unit/${id}`, this.toPlainObject())
+        return await this.putPrivate(`/unit/${id}`, this.toPlainObject())
         .then(response => {
             const responseData: UnitInterface | AxiosError =  response.data.data as UnitInterface
             if(!(responseData instanceof AxiosError)){

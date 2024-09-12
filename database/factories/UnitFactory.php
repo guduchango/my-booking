@@ -22,6 +22,7 @@ class UnitFactory extends Factory
             'uni_double_bed' => fake()->numberBetween(0, 3),
             'uni_max_people' => fake()->numberBetween(1, 10),
             'uni_rooms' => fake()->numberBetween(0, 3),
+            'uni_usu_id' => fake()->numberBetween(1, 5),
         ];
     }
 }

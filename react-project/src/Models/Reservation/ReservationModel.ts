@@ -1,4 +1,4 @@
-import {  ReservationInterface } from "./ReservationInterface";
+import { ReservationInterface } from "./ReservationInterface";
 import { UnitInterface } from "../Unit/UnitInterface";
 import { GuestInterface } from "../Guest/GuestInterface";
 import { PromotionInterface } from "../Promotion/PromotionInterface";
@@ -7,7 +7,7 @@ import { AxiosError } from "axios";
 import axiosClient from "../../Api/axiosClient";
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { z } from 'zod';
-import { newDate } from "../../Utils/GeneralFunctions";
+import { newDate, newObj, validateDateRange } from "../../Utils/GeneralFunctions";
 
 export class ReservationModel extends BaseModel implements ReservationInterface {
 
@@ -248,8 +248,8 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
         this._res_pro_id = value;
     }
 
-     // Method to convert instance to plain object for serialization
-     public toPlainObject(): ReservationInterface {
+    // Method to convert instance to plain object for serialization
+    public toPlainObject(): ReservationInterface {
         return {
             res_id: this.res_id,
             res_start_date: this.res_start_date,
@@ -262,7 +262,7 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
             res_price_dolar: this.res_price,
             res_price_final: this.res_price_final,
             res_advance_payment: this.res_advance_payment,
-            res_status:  this.res_status,
+            res_status: this.res_status,
             res_channel: this.res_channel,
             res_comments: this.res_comments,
             res_created_at: this.res_created_at,
@@ -278,57 +278,61 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
     }
 
 
-    public async store(): Promise<ReservationInterface | AxiosError>{
-        console.log("before post create reservation",this.toPlainObject())
-        return await axiosClient.post(`/reservation/`, this.toPlainObject())
-        .then(response => {
-            const responseData: ReservationInterface | AxiosError =  response.data.data as ReservationInterface
-            console.log('responseData',responseData)
-            if(!(responseData instanceof AxiosError)){
-                new ReservationStorageService().create(responseData)
-            }
+    public async store(): Promise<ReservationInterface | AxiosError> {
+        console.log("before post create reservation", this.toPlainObject())
+        return await this.postPrivate(`/reservation/`, this.toPlainObject())
+            .then(response => {
+                const responseData: ReservationInterface | AxiosError = response.data.data as ReservationInterface
+                console.log('responseData', responseData)
+                if (!(responseData instanceof AxiosError)) {
+                    new ReservationStorageService().create(responseData)
+                }
 
-            return responseData;
-        })
-        .catch((error: AxiosError) => {
-            const items = error.response?.data?.errors;
-            if (items && items.length > 0){
-                for (let i = 0; i < items.length; i++) {
-                    this.addMessage(items[i])
-                  }
-            }else{
-                this.addMessage(error.message)
-            }
-          return error
-        });
+                return responseData;
+            })
+            .catch((error: AxiosError) => {
+                const items = error.response?.data?.errors;
+                if (items && items.length > 0) {
+                    for (let i = 0; i < items.length; i++) {
+                        this.addMessage(items[i])
+                    }
+                } else {
+                    this.addMessage(error.message)
+                }
+                return error
+            });
     }
 
-    public async update(id: number): Promise<ReservationInterface | AxiosError>{
-        return await axiosClient.put(`/reservation/${id}`, this.toPlainObject())
-        .then(response => {
-            const responseData: ReservationInterface | AxiosError =  response.data.data as ReservationInterface
-            if(!(responseData instanceof AxiosError)){
-                new ReservationStorageService().update(id,responseData)
-            }
-
-            return responseData;
-        })
-        .catch((error: AxiosError) => {
-            const items = error.response?.data?.errors;
-            if (items && items.length > 0){
-                for (let i = 0; i < items.length; i++) {
-                    this.addMessage(items[i])
-                  }
-            }else{
-                this.addMessage(error.message)
-            }
+    public async update(id: number): Promise<ReservationInterface | AxiosError> {
+        return await this.putPrivate(`/reservation/${id}`, this.toPlainObject())
+            .then(response => {
+                console.log("responseChango1",response)
+                    const reservationData: ReservationInterface = response?.data?.data as ReservationInterface
+                    const reservationStorage = new ReservationStorageService();
+                    const reservationModel = new ReservationModel(reservationData)
+                    console.log("resModel in update async",reservationModel)
+                    if (!(response instanceof AxiosError)) {
+                        reservationStorage.update(id, reservationModel)
+                    }
+                    return reservationData
+            })
+            .catch((error) => {
+                const items = error.response?.data?.errors;
+                console.log('items',items)
+                if (items && items.length > 0) {
+                    for (let i = 0; i < items.length; i++) {
+                        this.addMessage(items[i])
+                    }
+                } else {
+                    this.addMessage(error.message)
+                }
             
-          return error
-        });
+                return error;
+            });
     }
 
-    public async saveOrUpdate(id: number): Promise<ReservationInterface | AxiosError>{
-        if(id === 0){
+    public async saveOrUpdate(id: number): Promise<ReservationInterface | AxiosError> {
+        if (id === 0) {
             return await this.store()
         }
         return await this.update(id)
@@ -336,10 +340,8 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
 
 
     public validate(): boolean {
-
-        this.cleanMessages()
         const channels = ["direct", "booking", "airbnb"] as const;
-        
+
         const FormSchema = z.object({
             res_start_date: z.string().date().min(6),
             res_end_date: z.string().date().min(6),
@@ -349,26 +351,32 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
             res_channel: z.enum(channels),
             res_advance_payment: z.number().min(1),
             //gue_email: z.string().email(),
-          });
-          
-          type FormData = z.infer<typeof FormSchema>;
-          
-          // Validation
-          try {
+        });
+
+        type FormData = z.infer<typeof FormSchema>;
+
+        // Validation
+        try {
             const data: FormData = FormSchema.parse(this.toPlainObject());
-            console.log("data",data);
+            console.log("data", data);
         } catch (error) {
             if (error instanceof z.ZodError) {
-                
-              for (const issue of error.issues) {
-                const messageTxt = issue.path[0]+":"+issue.message;
-                this.addMessage(messageTxt.toLowerCase())
-              }
+
+                for (const issue of error.issues) {
+                    const messageTxt = issue.path[0] + ":" + issue.message;
+                    this.addMessage(messageTxt.toLowerCase())
+                }
             } else {
                 this.addMessage(`Unexpected error: ${error}`)
             }
-          }
-         
+        }
+
+        const validRage = validateDateRange(this.res_start_date, this.res_end_date);
+
+        if (validRage.valid == false) {
+            this.addMessage(validRage.message);
+        }
+
         if (this.showMessages().length > 0) {
             return false;
         } else {
@@ -378,5 +386,5 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
     }
 
 
-    
+
 }

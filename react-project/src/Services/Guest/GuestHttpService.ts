@@ -10,29 +10,8 @@ export class GuestHttpService extends HttpBaseService {
 
     public async getGuests(): Promise<GuestModel[]> {
         const response: AxiosResponse<GuestInterface[]> =
-            await this.get<GuestInterface[]>(this.url);
+            await this.getPrivate<GuestInterface[]>(this.url);
 
         return response.data?.data.map(guestData => new GuestModel(guestData));
-    }
-
-    public async storeGuest(guest: GuestModel): Promise<GuestModel> {
-
-        try {
-            const response: AxiosResponse<GuestModel> =
-                await this.post<GuestInterface, GuestModel>(this.url, guest.toPlainObject());
-            return new GuestModel(response.data)
-        } catch (error) {
-            console.log("error chang create", error);
-            throw error;
-        }
-    }
-
-    public async updateGuest(guest: GuestModel, gue_id: number):Promise <ApiResponseInterface<GuestInterface>> {
-
-        const updateUrl = this.url + "/" + gue_id
-        const response: ApiResponseInterface<GuestInterface> =
-            await this.put(updateUrl, guest.toPlainObject());
-
-        return response;
     }
 }

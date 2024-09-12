@@ -6,12 +6,15 @@ use App\Http\Resources\CustomResource;
 use App\Http\Resources\PromotionResource;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PromotionController extends Controller {
     public function index(Request $request) {
         try {
             return PromotionResource::collection(
-                Promotion::orderBy('pro_created_at', 'desc')
+                Promotion::where('pro_usu_id',Auth::user()->id)
+                ->orderBy('pro_created_at', 'desc')
+
                     ->get()
             );
         } catch (\Throwable $th) {

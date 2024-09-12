@@ -56,8 +56,9 @@ class ReservationRule {
         }
 
         if($this->getTotalPeople() > $this->getUnitModel()->uni_max_people){
-            return false;
             $this->setErrorMessage("Esta reserva supero la cantidad de huespedes en la unidad.");
+            return false;
+
         }
 
         return true;

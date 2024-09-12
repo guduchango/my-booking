@@ -73,7 +73,7 @@ export class PriceStorageService extends StorageService {
         const total = await this.prices
             .where('pri_uni_id')
             .equals(uni_id)
-            .and(record => record.pri_date >= check_in && record.pri_date <= check_out)
+            .and(record => record.pri_date >= check_in && record.pri_date < check_out)
             .toArray()
             .then(records => records.reduce((sum, record) => sum + record.pri_price, 0));
 
@@ -86,6 +86,17 @@ export class PriceStorageService extends StorageService {
             .where('pri_uni_id')
             .equals(uni_id)
             .toArray()
+    }
+
+    async getDatesPriceArray(uni_id: number, check_in: string, check_out: string){
+
+        const total = await this.prices
+            .where('pri_uni_id')
+            .equals(uni_id)
+            .and(record => record.pri_date >= check_in && record.pri_date < check_out)
+            .toArray();
+
+        return total;
     }
 
     async getPriceUnitEvent(uni_id: number){

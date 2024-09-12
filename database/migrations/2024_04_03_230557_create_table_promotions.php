@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('pro_id');
             $table->string('pro_name');
             $table->float('pro_value');
+            $table->integer('pro_usu_id');
             $table->timestamp('pro_created_at')->nullable();
             $table->timestamp('pro_updated_at')->nullable();
         });

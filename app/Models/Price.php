@@ -19,7 +19,8 @@ class Price extends Model {
         'pri_price',
         'pri_price_dolar',
         'pri_uni_id',
-        'pri_res_id'
+        'pri_res_id',
+        'pri_usu_id'
     ];
 
     protected function casts(): array {
@@ -30,6 +31,7 @@ class Price extends Model {
             'pri_price_dolar' => 'float',
             'pri_uni_id' => 'integer',
             'pri_res_id' => 'integer',
+            'pri_usu_id' => 'integer',
         ];
     }
 

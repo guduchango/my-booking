@@ -32,8 +32,6 @@ export const UnitAvailableForm = () => {
             throw new Error(unitAvailableModel.showMessages().toString());
         }
 
-        console.log("unitAvailableResques",unitAvailableRequest)
-
         navigate("/reservation/available-units");
         setIsReservationSeted(false)
         setUnitAvailableRequest(unitAvailableRequest)

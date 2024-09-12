@@ -1,4 +1,3 @@
-import { ApiResponse } from "../Models/Guest/GuestInterface";
 import { UserStorageService } from "./User/UserStorageService ";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
@@ -50,9 +49,9 @@ export class HttpBaseService {
 
     // Generic GET request method using the Axios instance with Bearer token
     public async getPrivate<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        console.log(this.getUserToken)
-        const axiosInstance = this.getAxiosBearer(await this.getUserToken());
-        return axiosInstance.get<T>(url, config);
+        console.log(await this.getUserToken())
+        const axiosInstance = await this.getAxiosBearer(await this.getUserToken());
+        return await axiosInstance.get<T>(url, config);
     }
 
     // Generic POST request method using the basic Axios instance
@@ -68,7 +67,7 @@ export class HttpBaseService {
     }
 
     // Generic POST request method using the basic Axios instance
-    public async put<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<ApiResponse<R>> {
+    public async put<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
         const axiosInstance = this.getAxios();
         return axiosInstance.put<R>(url, data, config);
     }

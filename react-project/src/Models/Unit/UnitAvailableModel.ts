@@ -4,7 +4,7 @@ import { BaseModel } from "../BaseModel";
 import { UnitAvailableInterface } from "./UnitAvailableInterface";
 import { UnitInterface } from "./UnitInterface";
 import { z } from 'zod';
-import { validateReservationDates } from "../../Utils/GeneralFunctions";
+import { validateDateRange, validateReservationDates } from "../../Utils/GeneralFunctions";
 
 export class UnitAvailableModel extends BaseModel implements UnitAvailableInterface {
     private _check_in: string;
@@ -59,7 +59,7 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
     }
 
     public async checkAvailable(): Promise<UnitInterface[] | AxiosError> {
-        return await axiosClient.post(`/unit/units-available/`, this.toPlainObject())
+        return await this.postPrivate(`/unit/units-available/`, this.toPlainObject())
             .then(response => {
                 return response.data.data as UnitInterface[]
             })
@@ -84,6 +84,10 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
         try {
             if(!validateReservationDates(this.check_in, this.check_out)){
                 this.addMessage('Error range days')
+            }
+            const validRage = validateDateRange(this.check_in,this.check_out);
+            if(validRage.valid == false){
+                this.addMessage(validRage.message);
             }
 
         } catch (error) {
@@ -113,6 +117,9 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
                 this.addMessage(`${error}`)
             }
         }
+
+
+        
 
         if (this.showMessages().length > 0) {
             return false;

@@ -20,8 +20,10 @@ class DatabaseSeeder extends Seeder
         DB::table('prices')->truncate();
         DB::table('expenses')->truncate();
         DB::table('reservations')->truncate();
+        DB::table('users')->truncate();
 
         $this->call([
+            UserSeeder::class,
             ConfigurationSeeder::class,
             PromotionSeeder::class,
             CurrencySeeder::class,

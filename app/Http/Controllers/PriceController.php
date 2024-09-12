@@ -9,6 +9,7 @@ use App\Models\Price;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class PriceController extends Controller {
 
@@ -16,7 +17,8 @@ class PriceController extends Controller {
 
         try {
             return PriceResource::collection(
-                Price::orderBy('pri_id', 'asc')
+                Price::where('pri_usu_id',Auth::user()->id)
+                    ->orderBy('pri_id', 'asc')
                     ->get()
             );
         } catch (\Throwable $th) {
@@ -48,13 +50,15 @@ class PriceController extends Controller {
 
                 $prices = DB::table('prices')
                     ->where('pri_date', '=', $date)
-                    ->where('pri_uni_id', '=', $pri_uni_id);
+                    ->where('pri_uni_id', '=', $pri_uni_id)
+                    ->where('pri_usu_id',Auth::user()->id);
 
                 if ($prices->count() == 0) {
                     $price = new Price();
                     $price->pri_date = $date;
                     $price->pri_price = $request->pri_value;
                     $price->pri_uni_id = $request->pri_uni_id;
+                    $price->pri_usu_id = Auth::user()->id;
                     $price->save();
                 } else {
                     $priceOld = $prices->first();
@@ -63,12 +67,13 @@ class PriceController extends Controller {
                         $price->pri_date = $date;
                         $price->pri_price = $request->pri_value;
                         $price->pri_uni_id = $request->pri_uni_id;
+                        $price->pri_usu_id = Auth::user()->id;
                         $price->save();
                     }
                 }
             }
 
-            return PriceResource::collection(Price::all());
+            return PriceResource::collection(Price::where('pri_usu_id',Auth::user()->id)->get());
         } catch (\Throwable $th) {
             $response = new CustomResource(response(), 500, $th);
             return $response->show();

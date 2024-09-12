@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Guest;
 use App\Models\Price;
+use App\Models\Promotion;
 use App\Models\Reservation;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use DateTime;
@@ -19,188 +21,120 @@ class ReservationSeeder extends Seeder {
      */
     public function run(): void {
 
-/*        $prices = [
-            [
-                'start' => '01-08-2024',
-                'end' => '30-10-2024',
-                'unit' => '1'
-            ],
-            [
-                'start' => '01-08-2024',
-                'end' => '30-10-2024',
-                'unit' => '2'
-            ],
-            [
-                'start' => '01-08-2024',
-                'end' => '30-10-2024',
-                'unit' => '3'
-            ],
-            [
-                'start' => '01-08-2024',
-                'end' => '30-10-2024',
-                'unit' => '4'
-            ],
-            [
-            'start' => '01-08-2024',
-            'end' => '30-10-2024',
-            'unit' => '5'
-        ]
-        ];*/
 
-/*        foreach ($prices as $item) {
-            $startDate = Carbon::createFromFormat('d-m-Y', $item['start'])->format('Y-m-d');
-            $endDate = Carbon::createFromFormat('d-m-Y', $item['end'])->format('Y-m-d');
-            $unit = $item['unit'];
-            $dates = getDaysBetweenDates($startDate,$endDate);
-            foreach ($dates as $date) {
-                $price = new Price();
-                $price->pri_date = $date;
-                $price->pri_price = 15;
-                $price->pri_uni_id = $unit;
-                $price->save();
-            }
-        }*/
-
-        $reservatios = [
-            [
-                'unit' => 1,
-                'start' => '01-09-2024',
-                'end' => '07-09-2024',
-            ],
-            [
-
-                'unit' => 1,
-                'start' => '13-09-2024',
-                'end' => '20-09-2024',
-            ],
-            [
-                'unit' => 1,
-                'start' => '21-09-2024',
-                'end' => '30-09-2024',
-            ],
-            [
-                'unit' => 1,
-                'start' => '05-10-2024',
-                'end' => '10-10-2024',
-            ],
-            [
-                'unit' => 1,
-                'start' => '15-10-2024',
-                'end' => '20-10-2024',
-            ],
-            [
-                'unit' => 1,
-                'start' => '26-10-2024',
-                'end' => '30-10-2024',
-            ],
-            //unit 2
-            [
-                'unit' => 2,
-                'start' => '05-09-2024',
-                'end' => '15-09-2024',
-            ],
-            [
-                'unit' => 2,
-                'start' => '18-09-2024',
-                'end' => '25-09-2024',
-            ],
-            [
-                'unit' => 2,
-                'start' => '27-09-2024',
-                'end' => '30-09-2024',
-            ],
-            [
-                'unit' => 2,
-                'start' => '05-10-2024',
-                'end' => '09-06-2024',
-            ],
-            [
-                'unit' => 2,
-                'start' => '14-10-2024',
-                'end' => '18-10-2024',
-            ],
-            [
-                'unit' => 2,
-                'start' => '25-10-2024',
-                'end' => '30-10-2024',
-            ],
-
-        ];
-
-        //$units = Unit::select('uni_id')->get('uni_id')->pluck('uni_id');
-
-        foreach ($reservatios as $item) {
+        $users = User::all();
+        $reservations = $this->validRangeDates();
 
 
-            //$startDate = CarbonImmutable::createFromFormat('d-m-Y', $item['start'])->format('Y-m-d');
-            //$endDate = CarbonImmutable::createFromFormat('d-m-Y', $item['end'])->subDay()->format('Y-m-d');
 
-            $dateString = $item['start'];  // Ejemplo de fecha en formato dd-mm-yyyy
-            $date = DateTime::createFromFormat('d-m-Y', $dateString);
-            $startDate = $date->format('Y-m-d');
+        foreach ($users as $user) {
+            $units = Unit::where('uni_usu_id', $user->id)->get();
+            foreach ($units as $unit) {
+                foreach ($reservations as $item) {
 
-            $dateString = $item['end'];  // Ejemplo de fecha en formato dd-mm-yyyy
-            $date = DateTime::createFromFormat('d-m-Y', $dateString);
-            $endDate = $date->format('Y-m-d');
+                    $proId = Promotion::where('pro_usu_id', $user->id)->select('pro_id')->get('pro_id')->random(1)->pluck('pro_id')->first();
+                    $promotion = Promotion::find($proId);
+                    $price = $item['dias_reserva'] * fake()->numberBetween(10, 30);
+                    $finalPrice = $price -($promotion->pro_value * 0.01 * $price);
+                    $advance = $finalPrice - (fake()->randomElement([20,30,40,50]) * 0.01 * $finalPrice);
 
-            //$this->command->alert($startDate."-".$endDate);
-            $unit = $item['unit'];
+                    //price - (proValue * 0.01 * price)
 
-            //$reservationDays = fake()->numberBetween(2, 7);
-            //$initialDay = fake()->dateTimeBetween('+1 day', '+90 day')->format('Y-m-d');
-            //$currentStart =  Carbon::createFromFormat('Y-m-d',$initialDay);
-            //$currentEnd = Carbon::createFromFormat('Y-m-d',$initialDay);
-            //$currentEnd =  $currentEnd->addDays($reservationDays);
-            $gueId = Guest::select('gue_id')->get('gue_id')->random(1)->pluck('gue_id')->first();
-            $reservation = new Reservation();
-            $reservation->res_start_date = $startDate;
-            $reservation->res_end_date = $endDate;
-            $reservation->res_adults = fake()->numberBetween(1, 5);
-            $reservation->res_children = fake()->numberBetween(0, 5);
-            $reservation->res_beds = fake()->numberBetween(1, 5);
-            $reservation->res_nights = fake()->numberBetween(1, 5);
-            $reservation->res_price = fake()->numberBetween(50000, 200000);
-            $reservation->res_price_dolar = fake()->numberBetween(20, 200);
-            $reservation->res_price_final = fake()->numberBetween(50000, 200000);
-            $reservation->res_advance_payment = fake()->numberBetween(10000, 80000);
-            $reservation->res_status = 'approved'; //fake()->randomElement(['pending', 'approved', 'canceled']);
-            $reservation->res_channel = fake()->randomElement(['direct', 'booking']);
-            $reservation->res_comments = fake()->text(100);
-            $reservation->res_pro_id = fake()->numberBetween(1, 5);
-            $reservation->res_gue_id = $gueId;
-            $reservation->res_uni_id = $unit;
-            $reservation->save();
+                    $gueId = Guest::where('gue_usu_id', $user->id)->select('gue_id')->get('gue_id')->random(1)->pluck('gue_id')->first();
 
-            $dates = getDaysBetweenDates($startDate,$endDate);
-            foreach ($dates as $date) {
+                    $reservation = new Reservation();
+                    $reservation->res_start_date = $item['check_in'];
+                    $reservation->res_end_date = $item['check_out'];
+                    $reservation->res_adults = fake()->numberBetween(1, 5);
+                    $reservation->res_children = fake()->numberBetween(0, 5);
+                    $reservation->res_beds = fake()->numberBetween(1, 5);
+                    $reservation->res_nights = $item['dias_reserva'];
+                    $reservation->res_price = $price;
+                    $reservation->res_price_dolar = 0;
+                    $reservation->res_price_final = $finalPrice;
+                    $reservation->res_advance_payment = $advance;
+                    $reservation->res_status = 'approved'; //fake()->randomElement(['pending', 'approved', 'canceled']);
+                    $reservation->res_channel = fake()->randomElement(['direct', 'booking', 'airbnb']);
+                    $reservation->res_comments = fake()->text(100);
+                    $reservation->res_pro_id = $proId;
+                    $reservation->res_gue_id = $gueId;
+                    $reservation->res_uni_id = $unit->uni_id;
+                    $reservation->res_usu_id = $user->id;
+                    $reservation->save();
+                    $dates = getDaysBetweenDates($item['check_in'],  $item['check_out']);
+                    foreach ($dates as $date) {
+                        $price = $reservation->res_price / $reservation->res_nights;
 
-                $price = $reservation->res_price / $reservation->res_nights;
-                $newPrice = new Price();
-                $newPrice->pri_date = $date;
-                $newPrice->pri_price = $price;
-                $newPrice->pri_uni_id = $unit;
-                $newPrice->pri_res_id = $reservation->res_id;
-                $newPrice->save();
 
-/*                $price = DB::table('prices')
-                    ->where('pri_date', '=', $date)
-                    ->where('pri_uni_id', '=', $unit);
+                        $countPrice = Price::where("pri_usu_id", $user->id)
+                            ->where("pri_date", $date)
+                            ->where('pri_uni_id', $unit->uni_id)
+                            ->count();
 
-                if($price->count() == 0){
-                    $price = new Price();
-                    $price->pri_uni_id = $unit;
-                    $price->pri_res_id = $reservation->res_id;
-                    $price->save();
-                }else {
-                    $priceOld = $price->first();
-                    $price = Price::find($priceOld->pri_id);
-                    $price->pri_uni_id = $unit;
-                    $price->pri_res_id = $reservation->res_id;
-                    $price->save();
-                }*/
+                        if ($countPrice > 0) {
+                            $newPrice = Price::where("pri_usu_id", $user->id)
+                                ->where("pri_date", $date)
+                                ->where('pri_uni_id', $unit->uni_id)
+                                ->first();
+                        } else {
+                            $newPrice = new Price();
+                        }
+
+                        $newPrice->pri_date = $date;
+                        $newPrice->pri_price = $price;
+                        $newPrice->pri_uni_id = $unit->uni_id;
+                        $newPrice->pri_res_id = $reservation->res_id;
+                        $newPrice->pri_usu_id = $user->id;
+                        $newPrice->save();
+
+                    }
+
+                }
             }
 
         }
-
     }
+
+
+    public function validRangeDates() {
+        // Fecha actual
+        $fechaActual = new \DateTime();
+
+        // Intervalo de tiempo (3 meses hacia adelante)
+        $fechaLimite = (clone $fechaActual)->modify('+3 months');
+
+        // Arreglo para almacenar los rangos de check-in y check-out
+        $rangosReservas = [];
+
+        // Iteramos desde la fecha actual hasta la fecha límite
+        while ($fechaActual <= $fechaLimite) {
+            // Clonamos la fecha actual para generar la fecha de check-in
+            $checkIn = clone $fechaActual;
+
+            // Generamos una duración aleatoria de 2, 3, 4 o 5 días para las reservaciones
+            $dias = rand(2, 5);  // Elegir una duración aleatoria
+
+            // Generamos la fecha de check-out
+            $checkOut = (clone $checkIn)->modify("+$dias days");
+
+            // Si el check-out no excede la fecha límite
+            if ($checkOut <= $fechaLimite) {
+                $rangosReservas[] = [
+                    'check_in' => $checkIn->format('Y-m-d'),
+                    'check_out' => $checkOut->format('Y-m-d'),
+                    'dias_reserva' => $dias
+                ];
+
+                // Actualizamos la fecha actual al día siguiente del check-out
+                $fechaActual = (clone $checkOut)->modify('+1 day');
+            } else {
+                // Si el check-out excede la fecha límite, rompemos el bucle
+                break;
+            }
+        }
+
+        return $rangosReservas;
+    }
+
+
 }

@@ -32,14 +32,13 @@ class Test extends Command {
      */
     public function handle() {
 
-       $reservation = new Reservation();
-       $reservation = $reservation->find(1);
-       $reservation->updateByStatus();
+        $min = 100; // Valor original
+        $max = 120; // Valor final
 
+        $diferencia = $max - $min; // Calculamos la diferencia
+        $porcentaje = ($diferencia / $max) * 100; // Calculamos el porcentaje
 
-
-
+        echo "La diferencia es del " . $porcentaje . "%";
     }
-
 
 }

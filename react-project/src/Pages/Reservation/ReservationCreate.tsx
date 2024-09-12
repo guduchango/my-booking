@@ -74,7 +74,7 @@ export const ReservationCreate = () => {
         }
 
         setReservation(reservation);
-        setIsReservationSeted(true)
+        //setIsReservationSeted(true)
     }
 
     const calculatePrice = () => {

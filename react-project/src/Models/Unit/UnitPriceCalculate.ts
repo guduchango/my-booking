@@ -34,7 +34,7 @@ export class UnitPriceCalculate {
         return unitPrice;
     }
 
-    private calculatePrice() {
+    public calculatePrice() {
         const priceStorageService = new PriceStorageService()
         return priceStorageService.calculateTotal(this.unit.uni_id,this.checkIn,this.checkOut)
     }

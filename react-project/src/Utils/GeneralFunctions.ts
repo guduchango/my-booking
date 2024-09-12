@@ -1,3 +1,4 @@
+import { da } from "date-fns/locale";
 
 export function upperCaseFirst(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -70,12 +71,41 @@ export function daysBetween(date1: string, date2: string): number {
 export function getPercentajeByValue(maxValue: number, minValue: number) {
 
     try {
-        const result = ((maxValue - minValue) * 100) / maxValue;
+        const result = (minValue / maxValue) * 100; //((maxValue - minValue) * 100) / maxValue;
         return parseFloat(result.toFixed(2)) ?? 0
     } catch (e) {
         return 0;
     }
 
+}
+
+export function getPercentajeOther(maxValue: number, minValue: number){
+    try {
+        const result =  (((maxValue - minValue) * 100) / maxValue);
+        return parseFloat(result.toFixed(2)) ?? 0
+    } catch (e) {
+        return 0;
+    }
+}
+
+export function diffFloatNumber(max: number, min: number){
+    try {
+        const result = max - min
+        return parseFloat(result.toFixed(2)) ?? 0
+    } catch (e) {
+        return 0;
+    }
+}
+
+export function getPercentaje(value: number, percentaje: number){
+
+    try{
+        const result = (value * (percentaje * 0.01))
+        return parseFloat(result.toFixed(2)) ?? 0 
+    }catch(e){
+        return 0;
+    }
+    
 }
 
 export function toFix(value: number) {
@@ -180,6 +210,40 @@ export function newDate(date: string){
     }
 
 }
+export function validateDateRange(checkIn: string, checkOut: string): { valid: boolean, message: string } {
+    const maxDays = 20;
+
+    // Convertir las fechas de check-in y check-out a objetos Date
+    const fechaCheckIn: Date = new Date(checkIn);
+    const fechaCheckOut: Date = new Date(checkOut);
+
+    // Verificar que la fecha de check-out sea posterior a la de check-in
+    if (fechaCheckOut <= fechaCheckIn) {
+        return {
+            valid: false,
+            message: 'La fecha de check-out debe ser posterior a la de check-in.'
+        };
+    }
+
+    // Calcular la diferencia en milisegundos entre las dos fechas
+    const diferenciaTiempo: number = fechaCheckOut.getTime() - fechaCheckIn.getTime();
+
+    // Convertir la diferencia de tiempo de milisegundos a días
+    const diferenciaDias: number = Math.ceil(diferenciaTiempo / (1000 * 60 * 60 * 24));
+
+    // Validar si la diferencia es mayor que el número máximo de días permitidos
+    if (diferenciaDias > maxDays) {
+        return {
+            valid: false,
+            message: `El rango de fechas no puede ser mayor a ${maxDays} días.`
+        };
+    }
+
+    return {
+        valid: true,
+        message: 'El rango de fechas es válido.'
+    };
+}
 
 export function statusColor(status: string){
     switch (status) {
@@ -192,3 +256,13 @@ export function statusColor(status: string){
     }
 }
 
+
+export function getOnlyDay(date: string){
+    console.log("onlyDay",date)
+    try{
+        const dateParts = date.split('-'); // Dividimos la cadena por los guiones
+        return dateParts[2]; 
+    }catch(e){
+        return "";
+    }
+}

@@ -5,6 +5,7 @@ import axiosClient from "../../Api/axiosClient";
 import { PriceStorageService } from "../../Services/Price/PriceStorageService";
 import { PriceInterface } from "./PriceInterface";
 import { z } from 'zod';
+import { validateDateRange } from "../../Utils/GeneralFunctions";
 
 export class PriceRangeModel extends BaseModel implements PriceRageInterface {
     private _pri_from: string;
@@ -70,7 +71,7 @@ export class PriceRangeModel extends BaseModel implements PriceRageInterface {
     }
 
     public async storeRangePrice(): Promise<PriceInterface[] | AxiosError>{
-        return await axiosClient.post(`price/range-price/`, this.toPlainObject())
+        return await this.postPrivate(`price/range-price/`, this.toPlainObject())
         .then(response => {
             const responseData: PriceInterface[] | AxiosError =  response.data.data as PriceInterface[]
             if(!(responseData instanceof AxiosError)){
@@ -120,6 +121,12 @@ export class PriceRangeModel extends BaseModel implements PriceRageInterface {
                 this.addMessage(`Unexpected error: ${error}`)
             }
           }
+
+        const validRage = validateDateRange(this.pri_from,this.pri_to);
+
+        if(validRage.valid == false){
+            this.addMessage(validRage.message);
+        }
          
         if (this.showMessages().length > 0) {
             return false;

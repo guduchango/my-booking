@@ -14,14 +14,16 @@ class Promotion extends Model
     protected $primaryKey = 'pro_id';
     protected $fillable = [
         'pro_name',
-        'pro_value'
+        'pro_value',
+        'pro_usu_id'
     ];
 
     protected function casts(): array {
 
         return [
             'pro_name' => 'string',
-            'pro_value' => 'float'
+            'pro_value' => 'float',
+            'pro_usu_id' => 'integer'
         ];
     }
 }

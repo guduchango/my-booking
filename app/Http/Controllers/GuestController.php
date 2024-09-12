@@ -7,13 +7,15 @@ use App\Http\Resources\GuestResource;
 use App\Models\Guest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class GuestController extends Controller {
     public function index(Request $request) {
         try {
             return GuestResource::collection(
-                Guest::orderBy('gue_created_at', 'desc')
+                Guest::where('gue_usu_id',Auth::user()->id)
+                    ->orderBy('gue_created_at', 'desc')
                     ->get()
             );
 
@@ -25,7 +27,9 @@ class GuestController extends Controller {
 
     public function show(Request $request, int $id) {
         try {
-            return new GuestResource(Guest::findOrFail($id));
+            $guest = Guest::where('gue_usu_id',Auth::user()->id)
+            ->where('gue_id',$id)->first();
+            return new GuestResource($guest);
 
         } catch (\Throwable $th) {
             $response = new CustomResource(response(), 500, $th);
@@ -46,10 +50,13 @@ class GuestController extends Controller {
 
             $guest = new Guest();
             $guest->fill($request->all());
+            $guest->gue_usu_id = Auth::user()->id;
 /*            $guest->gue_birthday = Carbon::createFromFormat('Y-m-d', $guest->gue_birthday)
                 ->format('Y/m/d');*/
             $guest->save();
-            return new GuestResource(Guest::findOrFail($guest->gue_id));
+            $guest = Guest::where('gue_usu_id',Auth::user()->id)
+                ->where('gue_id',$guest->gue_id)->first();
+            return new GuestResource($guest);
         } catch (\Throwable $th) {
             $response = new CustomResource(response(), 500, $th);
             return $response->show();
@@ -68,10 +75,13 @@ class GuestController extends Controller {
             }
             $guest = Guest::findOrFail($id);
             $guest->fill($request->all());
+            $guest->gue_usu_id = Auth::id();
 /*            $guest->gue_birthday = Carbon::createFromFormat('Y-m-d', $guest->gue_birthday)
                 ->format('Y/m/d');*/
             $guest->save();
-            return new GuestResource(Guest::findOrFail($guest->gue_id));
+            $guest = Guest::where('gue_usu_id',Auth::user()->id)
+                ->where('gue_id',$guest->gue_id)->first();
+            return new GuestResource($guest);
         } catch (\Throwable $th) {
             $response = new CustomResource(response(), 500, $th);
             return $response->show();
