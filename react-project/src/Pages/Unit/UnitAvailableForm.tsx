@@ -6,10 +6,11 @@ import { useState } from "react";
 import { useGlobalContext } from "../../Context/Context";
 import { AxiosError } from "axios";
 import { UnitAvailableModel } from "../../Models/Unit/UnitAvailableModel";
+import { useTranslation } from "react-i18next";
 
 
 export const UnitAvailableForm = () => {
-
+    const { t } = useTranslation();    
     const { setAvailableUnits, unitAvailableRequest, setUnitAvailableRequest, setIsReservationSeted } = useGlobalContext()
     const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -23,20 +24,19 @@ export const UnitAvailableForm = () => {
             setIsVisible(true)
             setShowMessages(unitAvailableModel.showMessages())
             throw new Error(unitAvailableModel.showMessages().toString());
-        } 
-
-        const unitAvailableResponse = await unitAvailableModel.checkAvailable();
-        if(unitAvailableResponse instanceof AxiosError){
-            setIsVisible(true)
-            setShowMessages(unitAvailableModel.showMessages())
-            throw new Error(unitAvailableModel.showMessages().toString());
-        }
-
-        navigate("/reservation/available-units");
-        setIsReservationSeted(false)
-        setUnitAvailableRequest(unitAvailableRequest)
-        setAvailableUnits(unitAvailableResponse)
-        setIsVisible(false)
+        }else{
+            const unitAvailableResponse = await unitAvailableModel.checkAvailable();
+            if(unitAvailableModel.showHttpMsj().length > 0){
+                setShowMessages(unitAvailableModel.showHttpMsj())
+                throw new Error(unitAvailableModel.showHttpMsj().toString());
+            }else{
+                setIsReservationSeted(false)
+                setUnitAvailableRequest(unitAvailableRequest)
+                setAvailableUnits(unitAvailableResponse)
+                setIsVisible(false)
+                navigate("/reservation/available-units");
+            }    
+        }    
     };
 
     return (
@@ -44,7 +44,7 @@ export const UnitAvailableForm = () => {
             <div>
                 <div className="page-back">
                     <div className="pageback-wrapper">
-                        <h1>Reservation dates</h1>
+                        <h1>{t('Reservation dates')}</h1>
                         <NavLink
                             to='/reservation/check'
                         />
@@ -52,7 +52,7 @@ export const UnitAvailableForm = () => {
                 </div>
                 <div className="save-form">
                     <div className="field-group">
-                        <label>Check in</label>
+                        <label>{t('Check-In')}</label>
                         <input
                             type="date"
                             id="check-in"
@@ -64,7 +64,7 @@ export const UnitAvailableForm = () => {
                         />
                     </div>
                     <div className="field-group">
-                        <label>Check out</label>
+                        <label>{t('Check-Out')}</label>
                         <input
                             type="date"
                             id="check-out"
@@ -77,7 +77,7 @@ export const UnitAvailableForm = () => {
                     </div>
                     
                     <div className="field-group">
-                        <label>Max People</label>
+                        <label>{t('Max People')}</label>
                         <select
                             name="uni_max_people"
                             value={unitAvailableRequest.people || 0}

@@ -58,21 +58,21 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
         };
     }
 
-    public async checkAvailable(): Promise<UnitInterface[] | AxiosError> {
+    public async checkAvailable(): Promise<UnitInterface[]> {
         return await this.postPrivate(`/unit/units-available/`, this.toPlainObject())
             .then(response => {
-                return response.data.data as UnitInterface[]
+                return response.data?.data as UnitInterface[]
             })
-            .catch((error: AxiosError) => {
+            .catch((error) => {
                 const items = error.response?.data?.errors;
                 if (items && items.length > 0) {
                     for (let i = 0; i < items.length; i++) {
-                        this.addMessage(items[i])
+                        this.addHttpMsj(items[i])
                     }
                 } else {
-                    this.addMessage(error.message)
+                    this.addHttpMsj(error.message)
                 }
-                this.addMessage(error.message)
+                this.addHttpMsj(error.message)
                 return error
             });
     }
@@ -95,17 +95,14 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
         }
 
         const FormSchema = z.object({
-            people: z.number().positive()
+            people: z.number().min(1)
         });
 
         type FormData = z.infer<typeof FormSchema>;
 
         // Validation
-        try {
-            console.log("toPlainObject", this.toPlainObject());
-            
+        try {    
             const data: FormData = FormSchema.parse(this.toPlainObject());
-            console.log("data", data);
         } catch (error) {
             if (error instanceof z.ZodError) {
 
@@ -117,10 +114,6 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
                 this.addMessage(`${error}`)
             }
         }
-
-
-        
-
         if (this.showMessages().length > 0) {
             return false;
         } else {

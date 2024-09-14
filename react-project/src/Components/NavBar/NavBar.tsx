@@ -1,8 +1,10 @@
 import { NavLink } from "react-router-dom"
 import './navBar.css'
+import { useTranslation } from "react-i18next";
+
 
 const NavBar = () => {
-
+    const { t } = useTranslation();  
     return (
         <div className="nav-wrapper">
             <nav>
@@ -12,7 +14,7 @@ const NavBar = () => {
                             className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/'>
                             <i className="icon-home"></i>
-                            <span>Home</span>
+                            <span>{t('Home')}</span>
                         </NavLink>
                     </li>
                     <li>
@@ -20,7 +22,7 @@ const NavBar = () => {
                             className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/unit'>
                             <i className="icon-office"></i>
-                            <span>Units</span>
+                            <span>{t('Units')}</span>
                         </NavLink>
                     </li>
                     <li>
@@ -28,7 +30,7 @@ const NavBar = () => {
                             className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/guest'>
                             <i className="icon-users"></i>
-                            <span>Guests</span>
+                            <span>{t('Guests')}</span>
                         </NavLink>
                     </li>
                     <li>
@@ -36,7 +38,7 @@ const NavBar = () => {
                             className={({ isActive }) => (isActive ? 'nav-isActive' : '')}
                             to='/reservation'>
                              <i className="icon-address-book"></i>
-                            <span>Reservatios</span>
+                            <span>{t('Reservations')}</span>
                         </NavLink>
                     </li>
                 </ol>

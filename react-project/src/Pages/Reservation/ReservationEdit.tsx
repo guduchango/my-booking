@@ -16,9 +16,10 @@ import { PromotionInterface } from "../../Models/Promotion/PromotionInterface";
 import { ReservationModel } from "../../Models/Reservation/ReservationModel";
 import { PriceStorageService } from "../../Services/Price/PriceStorageService";
 import { PriceInterface } from "../../Models/Price/PriceInterface";
+import { useTranslation } from "react-i18next";
 
 export const ReservationEdit = () => {
-
+  const { t } = useTranslation();
   const location = useLocation()
   const { state } = location
   const resId = state?.res_id
@@ -28,6 +29,7 @@ export const ReservationEdit = () => {
   const [guests, setGuests] = useState<GuestInterface[]>([]);
   const [promotions, setPromotions] = useState<PromotionInterface[]>([]);
   const [proValue, setProValue] = useState<number>(0);
+  const [proId, setProId] = useState<number>(0);
   const [resAdvancePayment, setResAdvancePayment] = useState<number>(0)
   const [resPrice, setResPrice] = useState<number>(0)
   const [resFinalPrice, setResFinalPrice] = useState<number>(0)
@@ -78,7 +80,10 @@ export const ReservationEdit = () => {
   }
 
   const handlePromotionChange = (value: number): void => {
-    const promotionItem = promotions.find(promotion => promotion.pro_value === value);
+    setProId(value)
+    console.log("promotion_value",value);
+    const promotionItem = promotions.find(promotion => promotion.pro_id === value);
+    console.log("promotion_item",promotionItem)
     const promotionValue = promotionItem?.pro_value ?? 0
     const finalPrice = resPrice - (promotionValue * 0.01) * resPrice
     const finalPricePercentaje = getPercentajeOther(resPrice, finalPrice);
@@ -125,7 +130,6 @@ export const ReservationEdit = () => {
     setAdvance(0)
   };
 
-
   const handleUnitChange = async(value: number): Promise<void> => {
     const priceStorageService = new PriceStorageService()
     const price = await priceStorageService.calculateTotal(value,resStartDate,resEndDate)
@@ -138,7 +142,6 @@ export const ReservationEdit = () => {
     setAdvance(0)
     setUnitId(value)
   };
-
 
   const guestItems = guests.map(item => ({
     value: item.gue_id,
@@ -156,21 +159,26 @@ export const ReservationEdit = () => {
     reservation.res_advance_payment = resAdvancePayment
     reservation.res_nights = daysBetween(reservation.res_start_date, reservation.res_end_date)
     reservation.res_start_date = resStartDate;
-
+    reservation.res_end_date = resEndDate;
+    reservation.res_advance_payment = resAdvancePayment;
+    reservation.res_pro_id = proValue;
+    
     const reservationModel = new ReservationModel(reservation)
     if (reservationModel.validate() === false) {
       setIsVisible(true)
       setShowMessages(reservationModel.showMessages())
       throw new Error(reservationModel.showMessages().toString());
+    }else{
+      await reservationModel.update(resId);
+      if(reservationModel.showHttpMsj().length > 0){
+        setIsVisible(true)
+        setShowMessages(reservationModel.showHttpMsj())
+        throw new Error(reservationModel.showHttpMsj().toString());
+      }else{
+        setIsVisible(false)
+        navigate("/reservation")
+      }
     }
-    await reservationModel.update(resId);
-    if (reservationModel.showMessages().length > 0) {
-      console.log("entrea reservationModel.showMessages().length > 0")
-      setIsVisible(true)
-      setShowMessages(reservationModel.showMessages())
-      throw new Error(reservationModel.showMessages().toString());
-    }
-    navigate("/reservation");
   };
 
   useEffect(() => {
@@ -190,7 +198,6 @@ export const ReservationEdit = () => {
 useEffect(() => {
   const fetchPrices = async () => {
     if (reservation) { 
-      console.log("v1",reservation)
       const priceStorageService = new PriceStorageService();
       const pricesArray = await priceStorageService.getDatesPriceArray(
         reservation.res_uni_id,
@@ -209,7 +216,7 @@ useEffect(() => {
     <Layout>
       <div className="page-back">
         <div className="pageback-wrapper">
-          <h1>Editar reservación</h1>
+          <h1>{t('Edit reservation')}</h1>
           <NavLink
             to={resId !== 0 ? '/reservation/details' : '/reservation/'}
             state={{ res_id: resId }}
@@ -223,11 +230,11 @@ useEffect(() => {
 
       <div className="save-form">
         <div className="saveForm-fielset">
-          <p>Detalle de la reserva:</p>
+          <p>{t('Reservation detail')}</p>
         </div>
         <div className="saveForm-wrapper">
           <div className="field-group">
-            <label>Huesped</label>
+            <label>{t('Guest')}</label>
             <div className="field-group">
 
               <Select
@@ -240,7 +247,7 @@ useEffect(() => {
             </div>
           </div>
           <div className="field-group">
-            <label>Alojamiento</label>
+            <label>{t('Unity')}</label>
             <Select
               options={unitsItems}
               onChange={(event) => handleUnitChange(Number(event?.value))}
@@ -250,7 +257,7 @@ useEffect(() => {
             />
           </div>
           <div className="field-group">
-            <label>Check-In</label>
+            <label>{t('Check-In')}</label>
             <input
               name="res_start_date"
               value={resStartDate}
@@ -260,7 +267,7 @@ useEffect(() => {
             />
           </div>
           <div className="field-group">
-            <label>Check-Out</label>
+            <label>{t('Check-Out')} </label>
             <input
               name="res_end_date"
               value={resEndDate}
@@ -271,7 +278,7 @@ useEffect(() => {
           </div>
 
           <div className="field-group">
-            <label>Adultos</label>
+            <label>{t('Adults')} </label>
             <select
               name="res_adults"
               value={reservation.res_adults}
@@ -285,7 +292,7 @@ useEffect(() => {
             </select>
           </div>
           <div className="field-group">
-            <label>Chicos</label>
+            <label> {t('Children')}</label>
             <select
               name="res_children"
               value={reservation.res_children}
@@ -299,7 +306,7 @@ useEffect(() => {
             </select>
           </div>
           <div className="field-group">
-            <label>Camas</label>
+            <label>{t('Beds')}</label>
             <select
               name="res_beds"
               value={reservation.res_beds}
@@ -314,7 +321,7 @@ useEffect(() => {
 
           </div>
           <div className="field-group">
-            <label>Estado reserva</label>
+            <label>{t('Reservation status')}</label>
             <select
               name="res_status"
               value={reservation.res_status}
@@ -329,7 +336,7 @@ useEffect(() => {
 
           </div>
           <div className="field-group">
-            <label>Medio de reserva</label>
+            <label>{t('Channel')}</label>
             <select
               name="res_channel"
               value={reservation.res_channel}
@@ -337,7 +344,7 @@ useEffect(() => {
             >
               {res_channels.map((type, index) => (
                 <option value={type} key={index} >
-                  {upperCaseFirst(type)}
+                  {upperCaseFirst(t(type))}
                 </option>
               ))}
             </select>
@@ -345,13 +352,13 @@ useEffect(() => {
 
         </div>
         <div className="saveForm-fielset">
-          <p>Detalle pago:</p>
+          <p>{t('Payment detail')}</p>
         </div>
         <div className="saveForm-wrapper">
           <div className="field-group">
             <div className="field-readOnly">
-              <label>Total (sin descuento)</label>
-              <p>{`${reservation.res_nights} noches =  $${resPrice}`}</p>
+              <label>{t('Total (without discount)')}</label>
+              <p>{`${reservation.res_nights} ${t('nights')} =  $${resPrice}`}</p>
             </div>
           </div>
 
@@ -367,14 +374,14 @@ useEffect(() => {
           </div>
 
           <div className="field-group">
-            <label>Descuento</label>
+            <label>{t('Discount')}</label>
             <select
               //name="res_pro_id"
-              value={proValue}
+              value={proId}
               onChange={(event) => handlePromotionChange(Number(event.target.value))}
             >
               {promotions.map((obj, index) => (
-                <option value={obj.pro_value} key={index} >
+                <option value={obj.pro_id} key={index} >
                   {`${obj.pro_name}`}
                 </option>
               ))}
@@ -382,7 +389,7 @@ useEffect(() => {
           </div>
 
           <div className="field-group">
-            <label>Precio final {`con (${resFinalPricePercentaje}%) de descuento`}</label>
+            <label>{t('Final price')} {`${t('with')} (${resFinalPricePercentaje}%) ${t('of discount')}`}</label>
             <input
               //name="res_price_final"
               value={resFinalPrice}
@@ -391,7 +398,7 @@ useEffect(() => {
             />
           </div>
           <div className="field-group">
-            <label>Porcentaje de seña / adelanto</label>
+            <label>{t('Percentaje of payment / advance')}</label>
             <select
               //name="res_pro_id"
               value={advance}
@@ -406,15 +413,15 @@ useEffect(() => {
           </div>
           <div className="field-group">
             <div className="field-readOnly">
-              <p>$ {(`${resAdvancePayment}`)} (seña / adelanto) </p>
-              <p>$ {(`${diffFloatNumber(resFinalPrice, resAdvancePayment)}`)} (paga al llegar)</p>
+              <p>$ {(`${resAdvancePayment}`)} ({t('payment / advance')}) </p>
+              <p>$ {(`${diffFloatNumber(resFinalPrice, resAdvancePayment)}`)} ({t('pay on arrival')})</p>
             </div>
           </div>
 
         </div>
 
         <div className="field-group">
-          <label>Comentarios</label>
+          <label>{t('Comments')}</label>
           <textarea
             rows={6}
             name="res_comments"
@@ -435,7 +442,7 @@ useEffect(() => {
           </div>
         )}
         <div className="field-group">
-          <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
+          <button className="fieldGroup-button-save" onClick={onClickSave} >{t('Save')}</button>
         </div>
       </div>
     </Layout>

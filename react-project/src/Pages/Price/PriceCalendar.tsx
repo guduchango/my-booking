@@ -3,20 +3,33 @@ import Layout from "../../Components/Layout/Layout"
 import { useEffect, useState } from "react";
 import { CalendarEvent, PriceInterface, PriceRageInterface } from "../../Models/Price/PriceInterface";
 import { newObj } from "../../Utils/GeneralFunctions";
-import { PriceHttpService } from "../../Services/Price/PriceHttpService";
 import { PriceStorageService } from "../../Services/Price/PriceStorageService";
-import { Calendar, momentLocalizer,Views } from 'react-big-calendar';
-import moment from 'moment';
+import { Calendar,Views } from 'react-big-calendar';
 import './price-calendar.css'
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { PriceRangeModel } from "../../Models/Price/PriceRangeModel";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
+import { dateFnsLocalizer } from 'react-big-calendar';
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import enUS from 'date-fns/locale/en-US';
+import es from 'date-fns/locale/es';
 
-// Set up the localizer by providing the moment Object to the correct localizer.
-const localizer = momentLocalizer(moment);
+const locales = {
+    'en-US': enUS,
+    'es': es,
+  };
+  
+  const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
+    getDay,
+    locales,
+  });
 
 export const PriceCalendar = () => {
-
+    const { t } = useTranslation();  
     const [priRange, setPriRange] = useState<PriceRageInterface>(newObj<PriceRageInterface>);
     const [dayPrices, setDayPrices] = useState<CalendarEvent[]>();    
     const location = useLocation()
@@ -51,23 +64,24 @@ export const PriceCalendar = () => {
             setIsVisible(true)
             setShowMessages(priceRangeModel.showMessages())
             throw new Error(priceRangeModel.showMessages().toString());
+        }else{
+            await priceRangeModel.storeRangePrice();
+            if(priceRangeModel.showHttpMsj().length > 0){
+                setIsVisible(true)
+                setShowMessages(priceRangeModel.showHttpMsj())
+                throw new Error(priceRangeModel.showHttpMsj().toString());
+            }else{
+                setIsVisible(false)
+                startEvents()
+            }
         }
-        const priceRangeResponse = await priceRangeModel.storeRangePrice();
-        if(priceRangeResponse instanceof AxiosError){
-            setIsVisible(true)
-            setShowMessages(priceRangeModel.showMessages())
-            throw new Error(priceRangeModel.showMessages().toString());
-        }
-        setIsVisible(false)
-        startEvents()
-    
     };
 
     return (
         <Layout>
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Unit Prices</h1>
+                    <h1>{t('Change prices')}</h1>
                     <NavLink
                         to='/unit/save'
                         state={{ uni_id: uniId }}
@@ -84,12 +98,21 @@ export const PriceCalendar = () => {
                     endAccessor="end"
                     defaultView={Views.MONTH}
                     style={{ height: 500 }}
+                    culture="es" 
+                    messages={{
+                        next: ">>",
+                        previous: "<<",
+                        today: "Hoy",
+                        month: "Mes",
+                        week: "Semana",
+                        day: "Día"
+                      }}
                 />
             </div>
         
             <div className="save-form">
                 <div className="field-group">
-                    <label>Price</label>
+                    <label>{t('Price')}</label>
                     <input
                         type="string"
                         value={priRange.pri_value}
@@ -97,7 +120,7 @@ export const PriceCalendar = () => {
                     />
                 </div>
                 <div className="field-group">
-                    <label>From</label>
+                    <label>{t('From')}</label>
                     <input
                         type="date"
                         value={priRange.pri_from}
@@ -105,7 +128,7 @@ export const PriceCalendar = () => {
                     />
                 </div>
                 <div className="field-group">
-                    <label>To</label>
+                    <label>{t('To')}</label>
                     <input
                         type="date"
                         value={priRange.pri_to}
@@ -125,7 +148,7 @@ export const PriceCalendar = () => {
                 )}
 
                 <div className="field-group">
-                    <button className="fieldGroup-button-save" onClick={onClickSave}>Save</button>
+                    <button className="fieldGroup-button-save" onClick={onClickSave}>{t('Save')}</button>
                 </div>
             </div>
 

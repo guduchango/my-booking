@@ -3,9 +3,10 @@ import Layout from "../../Components/Layout/Layout"
 import { GuestStorageService } from "../../Services/Guest/GuestStorageService";
 import { NavLink } from "react-router-dom";
 import { GuestModel } from "../../Models/Guest/GuestModel";
+import { useTranslation } from "react-i18next";
 
 export const GuestList = () => {
-
+    const { t } = useTranslation();  
     const [guests, setGuests] = useState<GuestModel[]>([]);
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -53,7 +54,7 @@ export const GuestList = () => {
         <Layout>
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Guests</h1>
+                    <h1>{t('Guests')}</h1>
                     <NavLink 
                     to='/guest/save'
                     state={{ gue_id: 0, fromPlace: "guest" }}
@@ -80,7 +81,7 @@ export const GuestList = () => {
                         <div className="showBox">
                             <input 
                             type="text"
-                            placeholder="Search...."
+                            placeholder={t('Search...')}
                             onChange={handleInputChange}
                             value={searchTerm}
                             />
@@ -97,9 +98,9 @@ export const GuestList = () => {
                             >
                              <div className="tableRow-wrapper">
                             <p className="tableRow-title">{guest.gue_full_name}</p>
-                            <p>phone: {guest.gue_phone_number}</p>
-                            <p>email: {guest.gue_email}</p>
-                            <p>age: {guest.gue_age}</p>
+                            <p>{t('phone')}: {guest.gue_phone_number}</p>
+                            <p>{t('email')}: {guest.gue_email}</p>
+                            <p>{t('age')}: {guest.gue_age}</p>
                         </div>
                         </NavLink>
                     </div>

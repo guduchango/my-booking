@@ -3,7 +3,7 @@ import Layout from "../../Components/Layout/Layout"
 import { UnitInterface, UnitPriceInterface } from "../../Models/Unit/UnitInterface";
 import { Channel, Status } from "../../Models/Reservation/ReservationInterface";
 import { useEffect, useMemo, useState } from "react";
-import { daysBetween, getFriendlyDate, toFix, upperCaseFirst } from "../../Utils/GeneralFunctions";
+import { daysBetween, shortDate, toFix, upperCaseFirst } from "../../Utils/GeneralFunctions";
 import Select from "react-select";
 import { res_adults, res_advances, res_beds, res_channels, res_children } from "../../Utils/StaticData";
 import { GuestInterface } from "../../Models/Guest/GuestInterface";
@@ -13,9 +13,10 @@ import { PromotionStorageService } from "../../Services/Promotion/PromotionStora
 import { PromotionInterface } from "../../Models/Promotion/PromotionInterface";
 import { ReservationModel } from "../../Models/Reservation/ReservationModel";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 export const ReservationCreate = () => {
-
+    const { t } = useTranslation();    
     const location = useLocation()
     const { state } = location
     const unitPrice = state?.unitPrice as UnitPriceInterface;
@@ -95,14 +96,17 @@ export const ReservationCreate = () => {
             setIsVisible(true)
             setShowMessages(reservationModel.showMessages())
             throw new Error(reservationModel.showMessages().toString());
+        }else{
+            await reservationModel.store();
+            if(reservationModel.showHttpMsj().length > 0){
+                setIsVisible(true)
+                setShowMessages(reservationModel.showHttpMsj())
+                throw new Error(reservationModel.showHttpMsj().toString());
+            }else{
+                setIsVisible(false)
+                navigate("/reservation");
+            }
         }
-        const reservationResponse = await reservationModel.store();
-        if(reservationResponse instanceof AxiosError){
-            setIsVisible(true)
-            setShowMessages(reservationModel.showMessages())
-            throw new Error(reservationModel.showMessages().toString());
-        }
-        navigate("/reservation");
     };
 
     useMemo(() => {
@@ -119,7 +123,7 @@ export const ReservationCreate = () => {
         <Layout>
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Reservation create</h1>
+                    <h1>{t('Reservation create')}</h1>
                     <NavLink
                         to={'/reservation/available-units'}
                     >
@@ -131,28 +135,28 @@ export const ReservationCreate = () => {
                 <div className="field-group">
                     <div className="tableRow-header">
                         <h1>{reservation.unit.uni_name.toLocaleUpperCase()}</h1>
-                        <h1 className="headerTitle-status">{reservation.res_status.toLocaleUpperCase()}</h1>
+                        <h1 className="headerTitle-status">{t(reservation.res_status)}</h1>
 
                     </div>
                     <div className="tableRow-header">
-                        <p><i className="icon-enter" /> {getFriendlyDate(reservation.res_start_date)}</p>
-                        <p><i className="icon-exit" /> {getFriendlyDate(reservation.res_end_date)}</p>
+                        <p><i className="icon-enter" /> {shortDate(reservation.res_start_date)}</p>
+                        <p><i className="icon-exit" /> {shortDate(reservation.res_end_date)}</p>
                         <p><i className="icon-users" /> {reservation.res_adults}</p>
                     </div>
                 </div>
 
                 <div className="reservationPriceDetail-wrapper">
                     <div className="reservationPriceDetail">
-                        <p>Price: <span className="priceBold">{`$${toFix(reservation.res_price)}`}</span></p>
+                        <p>{t('Price')}: <span className="priceBold">{`$${toFix(reservation.res_price)}`}</span></p>
                         <p className="headerTitle-price">Total ({`-${proValue}%`}): <span className="priceBold">{`$${toFix(reservation.res_price_final)}`}</span></p>
                     </div>
                     <div className="reservationAdvanceDetail">
-                        <p> <i className="icon-checkmark"></i> Advance: <span className="priceBold">${toFix(reservation.res_advance_payment)}</span></p>
+                        <p> <i className="icon-checkmark"></i> {t('Advance')}: <span className="priceBold">${toFix(reservation.res_advance_payment)}</span></p>
                     </div>
                 </div>
 
                 <div className="field-group">
-                    <label>Promotion</label>
+                    <label>{t('Discount')}</label>
                     <select
                         //name="res_pro_id"
                         value={proValue || ""}
@@ -160,14 +164,14 @@ export const ReservationCreate = () => {
                     >
                         {promotions.map((obj, index) => (
                             <option value={obj.pro_value} key={index} >
-                                {`${obj.pro_name} (${obj.pro_value}%)`}
+                                {`${obj.pro_name}`}
                             </option>
                         ))}
                     </select>
                 </div>
 
                 <div className="field-group">
-                    <label>Advance</label>
+                    <label>{t('Percentaje of payment / advance')}</label>
                     <select
                         //name="advance"
                         value={advance || ""}
@@ -182,7 +186,7 @@ export const ReservationCreate = () => {
                 </div>
 
                 <div className="field-group">
-                    <label>Guest</label>
+                    <label>{t('Guest')} </label>
                     <div className="fieldGroup-selectButton">
                         <div className="fieldGroupSelectButton-select">
                             <Select
@@ -205,7 +209,7 @@ export const ReservationCreate = () => {
 
 
                 <div className="field-group">
-                    <label>Adults</label>
+                    <label>{t('Adults')} </label>
                     <select
                         name="res_adults"
                         value={reservation.res_adults || ""}
@@ -219,7 +223,7 @@ export const ReservationCreate = () => {
                     </select>
                 </div>
                 <div className="field-group">
-                    <label>Children</label>
+                    <label>{t('Children')}</label>
                     <select
                         name="res_children"
                         value={reservation.res_children || ""}
@@ -233,7 +237,7 @@ export const ReservationCreate = () => {
                     </select>
                 </div>
                 <div className="field-group">
-                    <label>Beds</label>
+                    <label>{t('Beds')}</label>
                     <select
                         name="res_beds"
                         value={reservation.res_beds || ""}
@@ -248,7 +252,7 @@ export const ReservationCreate = () => {
 
                 </div>
                 <div className="field-group">
-                    <label>Channel</label>
+                    <label>{t('Channel')}</label>
                     <select
                         name="res_channel"
                         value={reservation.res_channel || ""}
@@ -256,13 +260,13 @@ export const ReservationCreate = () => {
                     >
                         {res_channels.map((type, index) => (
                             <option value={type} key={index} >
-                                {upperCaseFirst(type)}
+                                {t(type)}
                             </option>
                         ))}
                     </select>
                 </div>
                 <div className="field-group">
-                    <label>Comments</label>
+                    <label>{t('Comments')}</label>
                     <textarea
                         rows={6}
                         name="res_comments"

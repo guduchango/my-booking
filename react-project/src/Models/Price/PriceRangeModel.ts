@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { BaseModel } from "../BaseModel";
 import { PriceRageInterface } from "./PriceRangeInterface";
-import axiosClient from "../../Api/axiosClient";
 import { PriceStorageService } from "../../Services/Price/PriceStorageService";
 import { PriceInterface } from "./PriceInterface";
 import { z } from 'zod';
@@ -82,14 +81,14 @@ export class PriceRangeModel extends BaseModel implements PriceRageInterface {
 
             return responseData;
         })
-        .catch((error: AxiosError) => {
+        .catch((error) => {
             const items = error.response?.data?.errors;
             if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
-                    this.addMessage(items[i])
+                    this.addHttpMsj(items[i])
                   }
             }else{
-                this.addMessage(error.message)
+                this.addHttpMsj(error.message)
             }
           return error
         });

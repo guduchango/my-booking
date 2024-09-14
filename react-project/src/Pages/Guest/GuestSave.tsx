@@ -6,8 +6,10 @@ import { useEffect, useState } from "react";
 import { useGlobalContext } from "../../Context/Context";
 import { GuestModel } from "../../Models/Guest/GuestModel";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 export const GuestSave = () => {
+    const { t } = useTranslation();
     const { setGuest, guest } = useGlobalContext()
     const location = useLocation()
     const { state } = location
@@ -71,7 +73,7 @@ export const GuestSave = () => {
 
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Guest save</h1>
+                    <h1>{t('Guest save')}</h1>
                     <NavLink
                         to={backUrl()}
                         state={{ gue_id: gueId }}
@@ -83,42 +85,42 @@ export const GuestSave = () => {
 
             <div className="save-form">
                 <div className="field-group">
-                    <label>Name</label>
+                    <label>{t('Name')}</label>
                     <input
                         value={guest.gue_name || ""}
                         onChange={(event) => setGuest({ ...guest, gue_name: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
-                    <label>Last name</label>
+                    <label>{t('Last name')}</label>
                     <input
                         value={guest.gue_last_name || ""}
                         onChange={(event) => setGuest({ ...guest, gue_last_name: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
-                    <label>Phone number</label>
+                    <label>{t('Phone')}</label>
                     <input
                         value={guest.gue_phone_number || ""}
                         onChange={(event) => setGuest({ ...guest, gue_phone_number: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
-                    <label>Identity document</label>
+                    <label>{t('Identity document')}</label>
                     <input
                         value={guest.gue_identity_document || ""}
                         onChange={(event) => setGuest({ ...guest, gue_identity_document: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
-                    <label>Email</label>
+                    <label>{t('Email')}</label>
                     <input
                         value={guest.gue_email || ""}
                         onChange={(event) => setGuest({ ...guest, gue_email: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
-                    <label>Date of birth</label>
+                    <label>{t('Date of birth')}</label>
                     <input type="date"
                         value={guest.gue_birthday || ""}
                         onChange={(event) => setGuest({ ...guest, gue_birthday: event.target.value })}
@@ -136,7 +138,7 @@ export const GuestSave = () => {
                     </div>
                 )}
                 <div className="field-group">
-                    <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
+                    <button className="fieldGroup-button-save" onClick={onClickSave} >{t('Save')}</button>
                 </div>
             </div>
 

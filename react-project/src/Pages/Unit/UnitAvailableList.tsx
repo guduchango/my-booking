@@ -2,12 +2,13 @@ import { NavLink } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
 import { useGlobalContext } from "../../Context/Context"
 import { useEffect, useState } from "react";
-import { daysBetween, getFriendlyDate } from "../../Utils/GeneralFunctions";
+import { daysBetween, shortDate } from "../../Utils/GeneralFunctions";
 import { UnitPriceInterface } from "../../Models/Unit/UnitPriceInterface";
 import { UnitPriceCalculate } from "../../Models/Unit/UnitPriceCalculate";
+import { useTranslation } from "react-i18next";
 
 export const UnitAvailableList = () => {
-
+    const { t } = useTranslation();    
     const { availableUnits, unitAvailableRequest } = useGlobalContext()
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [unitPriceList, setUnitPriceList] = useState<UnitPriceInterface[]>([]);
@@ -73,16 +74,16 @@ export const UnitAvailableList = () => {
                             <div className="tableRow-wrapper">
                                 <p className="tableRow-title">{unit.upri_name}</p>
                                 <div className="tableRow-header">
-                                    <p><i className="icon-enter" /> {getFriendlyDate(unit.upri_check_in)}</p>
-                                    <p><i className="icon-exit" /> {getFriendlyDate(unit.upri_check_out)}</p>
+                                    <p><i className="icon-enter" /> {shortDate(unit.upri_check_in)}</p>
+                                    <p><i className="icon-exit" /> {shortDate(unit.upri_check_out)}</p>
                                     <p><i className="icon-users" /> {unit.upri_people}</p>
                                     <p><i className="icon-sun" /> {daysBetween(unit.upri_check_in,unit.upri_check_out)}</p>
                                 </div>
                                 <div className="tableRow-body">
-                                    <p>{unit.upri_max_people} max people</p>
-                                    <p>{unit.upri_rooms} rooms</p>
-                                    <p>{unit.upri_single_bed} single bed</p>
-                                    <p>{unit.upri_double_bed} double bed</p>
+                                    <p>{unit.upri_max_people} {t('max people')}</p>
+                                    <p>{unit.upri_rooms} {t('rooms')}</p>
+                                    <p>{unit.upri_single_bed} {t('single bed')}</p>
+                                    <p>{unit.upri_double_bed} {t('double bed')}</p>
                                 </div>
                                 <div className="tableRow-footer">
                                     <p>{unit.upri_price} USD</p>

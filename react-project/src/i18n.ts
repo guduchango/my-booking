@@ -9,11 +9,8 @@ i18n.use(initReactI18next).init({
         en: { translation: en },
         es: { translation: es }
     },
-    lng: 'en', // Idioma por defecto
-    fallbackLng: 'en', // Idioma de respaldo
-    interpolation: {
-        escapeValue: false // React ya maneja el escape de XSS
-    }
+    lng: 'en',
+    fallbackLng: 'en',
 });
 
 export default i18n;

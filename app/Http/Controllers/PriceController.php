@@ -73,7 +73,14 @@ class PriceController extends Controller {
                 }
             }
 
-            return PriceResource::collection(Price::where('pri_usu_id',Auth::user()->id)->get());
+            $priceList = DB::table('prices')
+                ->where('pri_uni_id', '=', $pri_uni_id)
+                ->where('pri_usu_id',Auth::user()->id)
+                ->where('pri_date', '>=', $pri_from)
+                ->where('pri_date', '<=', $pri_to)
+                ->get();
+
+            return PriceResource::collection($priceList);
         } catch (\Throwable $th) {
             $response = new CustomResource(response(), 500, $th);
             return $response->show();

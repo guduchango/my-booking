@@ -7,9 +7,21 @@ export class BaseModel {
     }
 
     private  messages: string[] = [];
+    private  httpMsj: string[] = [];
+
+    public addHttpMsj(message: string): void {
+        this.httpMsj.push(message)
+    }
+
+    public showHttpMsj(): string[] {
+        return this.httpMsj;
+    }
+
+    public cleanHttpMsj() {
+        this.httpMsj = [];
+    }
 
     public addMessage(message: string): void {
-        console.log('addMessage',message)
         this.messages.push(message);
     }
 
@@ -17,7 +29,7 @@ export class BaseModel {
         return this.messages;
     }
 
-    public  cleanMessages() {
+    public cleanMessages() {
         this.messages = [];
     }
 
@@ -99,9 +111,7 @@ export class BaseModel {
     public async putPrivate<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R> | AxiosError> {
         try {
             const axiosInstance = this.getAxiosBearer(await this.getUserToken());
-            // Intentar la solicitud PUT
             const response = await axiosInstance.put<R>(url, data, config);
-            console.log("BaseModel1")
             return response;
         } catch (error) {
             console.log("BaseModel2", error)

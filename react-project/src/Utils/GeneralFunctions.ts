@@ -25,6 +25,11 @@ export function getCurrentDate(): string {
     return `${year}-${month}-${day}`;
 }
 
+export const shortDate = (dateString: string): string => {
+    const [year, month, day] = dateString.split('-');
+    return `${day}-${month}`;
+  };
+
 export function getFriendlyDate(dateString: string): string {
 
     let friendlyDate = "";
@@ -257,7 +262,6 @@ export function statusColor(status: string){
 }
 
 export function getOnlyDay(date: string){
-    console.log("onlyDay",date)
     try{
         const dateParts = date.split('-'); // Dividimos la cadena por los guiones
         return dateParts[2]; 
@@ -266,6 +270,3 @@ export function getOnlyDay(date: string){
     }
 }
 
-export function transStatus(status: string){
-    
-}

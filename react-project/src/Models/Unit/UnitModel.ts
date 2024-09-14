@@ -127,14 +127,14 @@ export class UnitModel extends BaseModel implements UnitInterface {
 
             return responseData;
         })
-        .catch((error: AxiosError) => {
+        .catch((error) => {
             const items = error.response?.data?.errors;
             if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
-                    this.addMessage(items[i])
+                    this.addHttpMsj(items[i])
                   }
             }else{
-                this.addMessage(error.message)
+                this.addHttpMsj(error.message)
             }
           return error
         });
@@ -150,14 +150,14 @@ export class UnitModel extends BaseModel implements UnitInterface {
 
             return responseData;
         })
-        .catch((error: AxiosError) => {
+        .catch((error) => {
             const items = error.response?.data?.errors;
             if (items && items.length > 0){
                 for (let i = 0; i < items.length; i++) {
-                    this.addMessage(items[i])
+                    this.addHttpMsj(items[i])
                   }
             }else{
-                this.addMessage(error.message)
+                this.addHttpMsj(error.message)
             }
             
           return error
@@ -174,6 +174,8 @@ export class UnitModel extends BaseModel implements UnitInterface {
 
     public validate(): boolean {
 
+        this.cleanMessages()
+
         const FormSchema = z.object({
             uni_name: z.string().min(5),
             uni_rooms: z.number().positive(),
@@ -187,7 +189,6 @@ export class UnitModel extends BaseModel implements UnitInterface {
           // Validation
           try {
             const data: FormData = FormSchema.parse(this.toPlainObject());
-            console.log("data",data);
         } catch (error) {
             if (error instanceof z.ZodError) {
                 

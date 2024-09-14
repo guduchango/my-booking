@@ -7,9 +7,10 @@ import { newObj } from "../../Utils/GeneralFunctions";
 import {uni_doubleBed, uni_maxPeople, uni_rooms, uni_sigleBed } from "../../Utils/StaticData";
 import { UnitModel } from "../../Models/Unit/UnitModel";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 export const UnitSave = () => {
-
+    const { t } = useTranslation();  
     const [unit, setUnit] = useState<UnitInterface>(newObj<UnitInterface>);
     const location = useLocation()
     const { state } = location
@@ -17,6 +18,7 @@ export const UnitSave = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [showMessages, setShowMessages] = useState<string[]>([]);
     const navigate = useNavigate();
+    
 
     const onClickSave = async () => {
 
@@ -25,15 +27,17 @@ export const UnitSave = () => {
             setIsVisible(true)
             setShowMessages(unitModel.showMessages())
             throw new Error(unitModel.showMessages().toString());
+        }else{
+            await unitModel.saveOrUpdate(unitId);
+            if(unitModel.showHttpMsj().length > 0){
+                setIsVisible(true)
+                setShowMessages(unitModel.showHttpMsj())
+                throw new Error(unitModel.showHttpMsj().toString());
+            }else{
+                setIsVisible(false)
+                navigate("/unit");
+            }
         }
-        const unitResponse = await unitModel.saveOrUpdate(unitId);
-        if(unitResponse instanceof AxiosError){
-            setIsVisible(true)
-            setShowMessages(unitModel.showMessages())
-            throw new Error(unitModel.showMessages().toString());
-        }
-
-        navigate("/unit");
     };
 
     const setUnitFromCreate = async () => {
@@ -53,7 +57,7 @@ export const UnitSave = () => {
 
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Unit save</h1>
+                    <h1>{t('Unit save')}</h1>
                     <NavLink
                         to='/unit'
                     >
@@ -72,14 +76,14 @@ export const UnitSave = () => {
             </div>
             <div className="save-form">
                 <div className="field-group">
-                    <label>Name</label>
+                    <label>{t('Name')}</label>
                     <input
                         value={unit.uni_name || ""}
                         onChange={(event) => setUnit({ ...unit, uni_name: event.target.value })}
                     />
                 </div>
                 <div className="field-group">
-                    <label>Rooms</label>
+                    <label>{t('Rooms')}</label>
                     <select
                         name="uni_rooms"
                         value={unit.uni_rooms || ""}
@@ -93,7 +97,7 @@ export const UnitSave = () => {
                     </select>
                 </div>
                 <div className="field-group">
-                    <label>Max People</label>
+                    <label>{t('Max People')}</label>
                     <select
                         name="uni_max_people"
                         value={unit.uni_max_people || ""}
@@ -107,7 +111,7 @@ export const UnitSave = () => {
                     </select>
                 </div>
                 <div className="field-group">
-                    <label>Single Beds</label>
+                    <label>{t('Single Beds')}</label>
                     <select
                         name="uni_single_bed"
                         value={unit.uni_single_bed || ""}
@@ -121,7 +125,7 @@ export const UnitSave = () => {
                     </select>
                 </div>
                 <div className="field-group">
-                    <label>Doble Beds</label>
+                    <label>{t('Doble Beds')}</label>
                     <select
                         name="uni_double_bed"
                         value={unit.uni_double_bed || ""}
@@ -146,7 +150,7 @@ export const UnitSave = () => {
                     </div>
                 )}
                 <div className="field-group">
-                    <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
+                    <button className="fieldGroup-button-save" onClick={onClickSave} >{t('Save')}</button>
                 </div>
             </div>
 

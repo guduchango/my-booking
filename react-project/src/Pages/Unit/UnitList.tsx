@@ -3,9 +3,10 @@ import Layout from "../../Components/Layout/Layout"
 import { UnitInterface } from "../../Models/Unit/UnitInterface";
 import { UnitStorageService } from "../../Services/Unit/UnitStorageService";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const UnitList = () => {
-
+    const { t } = useTranslation();  
     const [units, setUnits] = useState<UnitInterface[]>([]);
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -49,7 +50,7 @@ export const UnitList = () => {
         <Layout>
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Units</h1>
+                    <h1>{t('Units')} </h1>
                     <NavLink
                         to='/unit/save'
                         state={{ uni_id: 0 }}
@@ -76,7 +77,7 @@ export const UnitList = () => {
                         <div className="showBox">
                             <input
                                 type="text"
-                                placeholder="Search...."
+                                placeholder={t('Search...')}
                                 onChange={handleInputChange}
                                 value={searchTerm}
                             >
@@ -95,10 +96,10 @@ export const UnitList = () => {
                         >
                             <div className="tableRow-wrapper">
                                 <p className="tableRow-title">{unit.uni_name}</p>
-                                <p>Max People: {unit.uni_max_people}</p>
-                                <p>Rooms: {unit.uni_rooms}</p>
-                                <p>Single Bed: {unit.uni_rooms}</p>
-                                <p>Double Bed: {unit.uni_rooms}</p>
+                                <p>{t('max people')}: {unit.uni_max_people}</p>
+                                <p>{t('rooms')}: {unit.uni_rooms}</p>
+                                <p>{t('single bed')}: {unit.uni_rooms}</p>
+                                <p>{t('double bed')}: {unit.uni_rooms}</p>
                             </div>
                         </NavLink>
                     </div>

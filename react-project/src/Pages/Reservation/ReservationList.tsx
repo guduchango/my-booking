@@ -5,11 +5,12 @@ import { NavLink } from "react-router-dom";
 import { ReservationStorageService } from '../../Services/Reservation/ReservationStorageService';
 import { ReservationInterface } from '../../Models/Reservation/ReservationInterface';
 import { useGlobalContext } from '../../Context/Context';
+import { useTranslation } from 'react-i18next';
 
 
 
 export const ReservationList: React.FC = () => {
-
+    const { t } = useTranslation();
     const [reservations, setReservations] = useState<ReservationInterface[]>([]);
     const { setIsReservationSeted } = useGlobalContext()
     const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -73,7 +74,7 @@ export const ReservationList: React.FC = () => {
         <Layout>
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Reservations</h1>
+                    <h1>{t('Reservations')}</h1>
                     <NavLink
                         to='/reservation/check'
                         state={{ res_id: 0 }}
@@ -106,7 +107,7 @@ export const ReservationList: React.FC = () => {
                             <div className='showBox-input'>
                                 <input
                                     type="text"
-                                    placeholder="Buscar...."
+                                    placeholder={t('Search...')}
                                     onChange={handleInputChange}
                                     value={searchTerm}
                                 ></input>
@@ -116,11 +117,11 @@ export const ReservationList: React.FC = () => {
                                     onChange={handleSelectChange}
                                     value={selectTerm}
                                 >
-                                    <option value="">view all</option>
-                                    <option value="approved">approved</option>
-                                    <option value="pending">pending</option>
-                                    <option value="finished">finished</option>
-                                    <option value="canceled">canceled</option>
+                                    <option value="">{t('All')}</option>
+                                    <option value="approved">{t('approved')}</option>
+                                    <option value="pending">{t('pending')}</option>
+                                    <option value="finished">{t('finished')}</option>
+                                    <option value="canceled">{t('canceled')}</option>
                                 </select>
                             </div>
                         </div>
@@ -141,13 +142,13 @@ export const ReservationList: React.FC = () => {
                                             {reservation.guest.gue_name + " " + reservation.guest.gue_last_name}
                                         </p>
                                         <p>{reservation.res_beauty_dates}</p>
-                                        <p>{reservation.res_nights} nights</p>
-                                        <p>{reservation.res_adults} adults, {reservation.res_children} children</p>
+                                        <p>{reservation.res_nights} {t('nights')}</p>
+                                        <p>{reservation.res_adults} {t('adults')}, {reservation.res_children} {t('children')}</p>
                                         <p>{reservation.unit.uni_name}</p>
                                     </div>
                                     <div className='tableRowReservartion-right'>
                                         <div className={`status-${reservation.res_status}`}>
-                                            <p>{reservation.res_status}</p>
+                                            <p>{t(reservation.res_status)}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -156,7 +157,7 @@ export const ReservationList: React.FC = () => {
                     ))
                 ) : (
                     <div key="1" className="tableRow-NotResult">
-                        <p>Not result found</p>
+                        <p>{t('Not result found')}</p>
                     </div>
                 )}
             </div>

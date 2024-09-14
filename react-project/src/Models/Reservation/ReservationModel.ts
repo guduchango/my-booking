@@ -283,21 +283,20 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
         return await this.postPrivate(`/reservation/`, this.toPlainObject())
             .then(response => {
                 const responseData: ReservationInterface | AxiosError = response.data.data as ReservationInterface
-                console.log('responseData', responseData)
                 if (!(responseData instanceof AxiosError)) {
                     new ReservationStorageService().create(responseData)
                 }
 
                 return responseData;
             })
-            .catch((error: AxiosError) => {
+            .catch((error) => {
                 const items = error.response?.data?.errors;
                 if (items && items.length > 0) {
                     for (let i = 0; i < items.length; i++) {
-                        this.addMessage(items[i])
+                        this.addHttpMsj(items[i])
                     }
                 } else {
-                    this.addMessage(error.message)
+                    this.addHttpMsj(error.message)
                 }
                 return error
             });
@@ -308,23 +307,21 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
             .then(response => {
                 console.log("responseChango1",response)
                     const reservationData: ReservationInterface = response?.data?.data as ReservationInterface
+                
                     const reservationStorage = new ReservationStorageService();
-                    const reservationModel = new ReservationModel(reservationData)
-                    console.log("resModel in update async",reservationModel)
                     if (!(response instanceof AxiosError)) {
-                        reservationStorage.update(id, reservationModel)
+                        reservationStorage.update(id, reservationData)
                     }
                     return reservationData
             })
             .catch((error) => {
                 const items = error.response?.data?.errors;
-                console.log('items',items)
                 if (items && items.length > 0) {
                     for (let i = 0; i < items.length; i++) {
-                        this.addMessage(items[i])
+                        this.addHttpMsj(items[i])
                     }
                 } else {
-                    this.addMessage(error.message)
+                    this.addHttpMsj(error.message)
                 }
             
                 return error;
@@ -340,6 +337,7 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
 
 
     public validate(): boolean {
+        this.cleanMessages();
         const channels = ["direct", "booking", "airbnb"] as const;
 
         const FormSchema = z.object({
@@ -349,7 +347,7 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
             res_uni_id: z.number().min(1),
             res_adults: z.number().min(1),
             res_channel: z.enum(channels),
-            res_advance_payment: z.number().min(1),
+            res_advance_payment: z.number(),
             //gue_email: z.string().email(),
         });
 
@@ -377,9 +375,13 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
             this.addMessage(validRage.message);
         }
 
+        
         if (this.showMessages().length > 0) {
+            console.log("showMessage > 0",this.showMessages())
             return false;
+            
         } else {
+            console.log("showMessage <= 0",this.showMessages())
             return true;
         }
 
