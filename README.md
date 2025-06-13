@@ -1,28 +1,28 @@
 # My Booking
 
-Aplicación fullstack compuesta por un backend en **Laravel** y un frontend en **React + TypeScript**, usando **Vite** como bundler. Ideal para proyectos de reservas o agendas.
+Fullstack application with a **Laravel** backend and a **React + TypeScript** frontend, using **Vite** as the bundler. Ideal for booking or scheduling projects.
 
 ---
 
-## 📁 Estructura del proyecto
+## 📁 Project Structure
 
 ```
 my-booking/
-├── app/                 # Backend Laravel
+├── app/                 # Laravel Backend
 ├── database/
 ├── public/
-├── react-js/            # Frontend en React + TypeScript
+├── react-js/            # React + TypeScript Frontend
 │   ├── public/
 │   ├── src/
-│   │   ├── Api/                         # Lógica de conexión con APIs
+│   │   ├── Api/                         # API connection logic
 │   │   │   ├── Auth.ts
 │   │   │   └── axiosClient.ts
-│   │   ├── Components/                 # Componentes reutilizables
+│   │   ├── Components/                 # Reusable components
 │   │   │   ├── DynamicSearchSelect/
 │   │   │   ├── Layout/
 │   │   │   └── NavBar/
-│   │   ├── Context/                    # Manejo de contexto global (React Context)
-│   │   ├── Models/                     # Interfaces y modelos de datos
+│   │   ├── Context/                    # Global state management (React Context)
+│   │   ├── Models/                     # Interfaces and data models
 │   │   │   ├── Currency/
 │   │   │   │   └── CurrencyInterface.ts
 │   │   │   ├── Expense/
@@ -41,17 +41,17 @@ my-booking/
 
 ---
 
-## ⚙️ Requisitos
+## ⚙️ Requirements
 
 - PHP >= 8.1  
 - Composer  
 - Node.js >= 18  
-- npm o yarn  
-- MySQL o equivalente
+- npm or yarn  
+- MySQL or compatible
 
 ---
 
-## 🚀 Instalación y ejecución
+## 🚀 Installation and Execution
 
 ### 1. Backend (Laravel)
 
@@ -81,47 +81,47 @@ npm install
 npm run dev
 ```
 
-Esto levantará el frontend en `http://localhost:5173/`.
+This will launch the frontend at `http://localhost:5173/`.
 
 ---
 
-## 📦 Build de producción
+## 📦 Production Build
 
 ```bash
 npm run build
 ```
 
-Los archivos generados estarán en `react-js/dist/`  
-Podés servirlos con un servidor estático o integrarlos al `public/` de Laravel.
+The compiled files will be located in `react-js/dist/`  
+You can serve them with a static server or integrate them into Laravel's `public/` folder.
 
 ---
 
-## 🧪 Herramientas y librerías destacadas
+## 🧪 Main Tools and Libraries
 
 - **React 18 + TypeScript**
 - **Vite**
 - **React Router v6**
-- **i18next** (multiidioma)
-- **Zod** (validación de esquemas)
+- **i18next** (internationalization)
+- **Zod** (schema validation)
 - **Dexie** (IndexedDB)
 - **React Toastify**, **React Select**
-- **ESLint** con configuración estricta
+- **ESLint** with strict rules
 
 ---
 
-## 📌 Notas
+## 📌 Notes
 
-- Frontend y backend funcionan como servicios separados y se comunican vía API REST.
-- Puede integrarse el build del frontend al `public/` de Laravel para unificar el despliegue.
+- Frontend and backend run as separate services and communicate via a REST API.
+- You can integrate the frontend build into Laravel’s `public/` directory for unified deployment.
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
 Edgardo Chango — [GitHub](https://github.com/guduchango)
 
 ---
 
-## 📜 Licencia
+## 📜 License
 
 MIT
