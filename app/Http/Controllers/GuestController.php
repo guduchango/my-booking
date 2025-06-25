@@ -14,7 +14,7 @@ class GuestController extends Controller {
     public function index(Request $request) {
         try {
             return GuestResource::collection(
-                Guest::where('gue_usu_id',1)
+                Guest::where('gue_usu_id',Auth::user()->id)
                     ->orderBy('gue_created_at', 'desc')
                     ->get()
             );
@@ -27,7 +27,7 @@ class GuestController extends Controller {
 
     public function show(Request $request, int $id) {
         try {
-            $guest = Guest::where('gue_usu_id',1)
+            $guest = Guest::where('gue_usu_id',Auth::user()->id)
             ->where('gue_id',$id)->first();
             return new GuestResource($guest);
 
@@ -54,7 +54,7 @@ class GuestController extends Controller {
 /*            $guest->gue_birthday = Carbon::createFromFormat('Y-m-d', $guest->gue_birthday)
                 ->format('Y/m/d');*/
             $guest->save();
-            $guest = Guest::where('gue_usu_id',1)
+            $guest = Guest::where('gue_usu_id',Auth::user()->id)
                 ->where('gue_id',$guest->gue_id)->first();
             return new GuestResource($guest);
         } catch (\Throwable $th) {
@@ -79,7 +79,7 @@ class GuestController extends Controller {
 /*            $guest->gue_birthday = Carbon::createFromFormat('Y-m-d', $guest->gue_birthday)
                 ->format('Y/m/d');*/
             $guest->save();
-            $guest = Guest::where('gue_usu_id',1)
+            $guest = Guest::where('gue_usu_id',Auth::user()->id)
                 ->where('gue_id',$guest->gue_id)->first();
             return new GuestResource($guest);
         } catch (\Throwable $th) {

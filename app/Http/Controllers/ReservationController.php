@@ -15,7 +15,7 @@ class ReservationController extends Controller {
     public function index(Request $request) {
         try {
             return ReservationResource::collection(
-                Reservation::where('res_usu_id',1)
+                Reservation::where('res_usu_id',Auth::user()->id)
                     ->orderBy('res_created_at', 'desc')
                     ->get()
             );
@@ -51,7 +51,7 @@ class ReservationController extends Controller {
             }
             $reservation = new Reservation();
             $reservation->fill($request->all());
-            $reservation->res_usu_id = 1;
+            $reservation->res_usu_id = Auth::user()->id;
             $reservation->save();
             $reservation->updateByStatus();
             return new ReservationResource(Reservation::findOrFail($reservation->res_id));
@@ -97,7 +97,7 @@ class ReservationController extends Controller {
 
             $reservation = Reservation::findOrFail($id);
             $reservation->fill($request->all());
-            $reservation->res_usu_id = 1;
+            $reservation->res_usu_id = Auth::user()->id;
             $reservation->save();
             $reservation->updateByStatus();
             return new ReservationResource(Reservation::findOrFail($reservation->res_id));

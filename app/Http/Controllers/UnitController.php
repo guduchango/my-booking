@@ -16,7 +16,7 @@ class UnitController extends Controller {
     public function index(Request $request) {
         try {
             return UnitResource::collection(
-                Unit::where('uni_usu_id',1)
+                Unit::where('uni_usu_id',Auth::user()->id)
                     ->orderBy('uni_created_at', 'desc')
                     ->get()
             );
@@ -40,7 +40,7 @@ class UnitController extends Controller {
 
             $unit = new Unit();
             $unit->fill($request->all());
-            $unit->uni_usu_id = 1;
+            $unit->uni_usu_id = Auth::user()->id;
             $unit->save();
             return new UnitResource(Unit::findOrFail($unit->uni_id));
         } catch (\Throwable $th) {
@@ -53,7 +53,7 @@ class UnitController extends Controller {
         try {
             $unit = Unit::findOrFail($id);
             $unit->fill($request->all());
-            $unit->uni_usu_id = 1;
+            $unit->uni_usu_id = Auth::user()->id;
             $unit->save();
             return new UnitResource(Unit::findOrFail($unit->uni_id));
         } catch (\Throwable $th) {
@@ -76,7 +76,7 @@ class UnitController extends Controller {
             $checkIn = $request->check_in;
             $checkOut = $request->check_out;
             $people = $request->people;
-            $units = Unit::where('uni_usu_id',1)->get();
+            $units = Unit::where('uni_usu_id',Auth::user()->id)->get();
             $availableUnits = [];
 
             foreach ($units as $unit) {
