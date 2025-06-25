@@ -15,14 +15,16 @@ export const Register = () => {
 
     const onClickSave = async () => {
         const userModel = new UserModel(user);
-        if(userModel.registerValidate() === false){
+        if(userModel.registerValidateZ() === false){
             setIsVisible(true)
             setShowMessages(userModel.showMessages())
             throw new Error(userModel.showMessages().toString());
+        }else{
+            let userResponse = await new UserHttpService().storeUser(userModel)
+            const userStorageService = new UserStorageService();
+            userResponse = await userStorageService.create(userResponse)
         }
-        let userResponse = await new UserHttpService().storeUser(userModel)
-        const userStorageService = new UserStorageService();
-        userResponse = await userStorageService.create(userResponse)
+        
         setIsVisible(false)
         setUser(userResponse)
         navigate("/")
@@ -82,7 +84,7 @@ export const Register = () => {
                         <div className="form-error">
                             <div className="formError-wrapper">
                             {showMessages.map((msj,key) => (
-                                <ul>
+                                <ul key={key+1}>
                                     <li key={key}>{msj}</li>
                                 </ul>
                             ))}

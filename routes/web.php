@@ -7,7 +7,7 @@ Route::get('/', function () {
 });
 
 Route::apiResource('api/reservation', \App\Http\Controllers\ReservationController::class)
-    ->middleware('auth:sanctum');
+->middleware('auth:sanctum');
 Route::apiResource('api/guest', \App\Http\Controllers\GuestController::class)
     ->middleware('auth:sanctum');
 Route::apiResource('api/unit', \App\Http\Controllers\UnitController::class)

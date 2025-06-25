@@ -12,7 +12,7 @@ class PromotionController extends Controller {
     public function index(Request $request) {
         try {
             return PromotionResource::collection(
-                Promotion::where('pro_usu_id',Auth::user()->id)
+                Promotion::where('pro_usu_id',1)
                 ->orderBy('pro_created_at', 'desc')
 
                     ->get()

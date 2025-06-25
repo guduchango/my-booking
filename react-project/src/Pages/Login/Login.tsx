@@ -5,28 +5,45 @@ import { UserHttpService } from "../../Services/User/UserHttpService";
 import { UserStorageService } from "../../Services/User/UserStorageService ";
 import { useNavigate } from "react-router-dom";
 import { LayoutHome } from "../../Components/Layout/LayoutHome";
+import { useTranslation } from "react-i18next";
 
 export const Login = () => {
-    
-    const { setUser, user } = useGlobalContext()
+    const { t } = useTranslation();
+    const { setUser, user,setIsAuthenticated } = useGlobalContext()
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [showMessages, setShowMessages] = useState<string[]>([]);
     const navigate = useNavigate();
 
     const onClickSave = async () => {
         const userModel = new UserModel(user);
-        if(userModel.loginValidate() === false){
+        if(userModel.loginValidateZ() === false){
             setIsVisible(true)
             setShowMessages(userModel.showMessages())
             throw new Error(userModel.showMessages().toString());
-        }
-        const userResponse = 
-        await new UserHttpService().loginUser(userModel);
-        await new UserStorageService().create(new UserModel(userResponse))
+        }else{
 
-        setIsVisible(false)
-        setUser(userResponse)
-        navigate("/")
+            const httpService = new UserHttpService();
+            const userResponse = 
+            await httpService.loginUser(userModel);
+            if(httpService.showHttpMsj().length > 0){
+                setIsVisible(true)
+                console.log("<showHttpsMjs></showHttpsMjs>",httpService.showHttpMsj)
+                setShowMessages(httpService.showHttpMsj())
+                throw new Error(httpService.showHttpMsj().toString());
+            }else{
+                console.log("userResponse", userResponse);
+                const data = userResponse.data.data;
+                const user = new UserModel();
+                user.id = data.id;
+                user.name = data.name;
+                user.email = data.email;
+                user.token = data.token;
+                await new UserStorageService().create(user) 
+                setUser(user)
+                navigate("/")
+            }
+            
+        }
 
     };
 
@@ -44,13 +61,13 @@ export const Login = () => {
 
             <div className="page-back">
                 <div className="pageback-wrapper">
-                    <h1>Login</h1>
+                    <h1>{t('Login')}</h1>
                 </div>
             </div>
 
             <div className="save-form">
                 <div className="field-group">
-                    <label>Email</label>
+                    <label>{t('Email')}</label>
                     <input
                         type="email"
                         value={user.email || ""}
@@ -58,7 +75,7 @@ export const Login = () => {
                     />
                 </div>
                 <div className="field-group">
-                    <label>Password</label>
+                    <label>{t('Password')}</label>
                     <input
                         type="password"
                         value={user.password || ""}
@@ -77,7 +94,7 @@ export const Login = () => {
                         </div>
                     )}
                 <div className="field-group">
-                <button className="fieldGroup-button-save" onClick={onClickSave} >Login</button>
+                <button className="fieldGroup-button-save" onClick={onClickSave} >{t('Auth')}</button>
                 </div>
             </div>
 

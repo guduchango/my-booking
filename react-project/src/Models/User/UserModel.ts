@@ -1,6 +1,7 @@
 import { validateEmail } from "../../Utils/GeneralFunctions";
 import { BaseModel } from "../BaseModel";
 import { UserInterface } from "./UserInterface";
+import { z } from 'zod';
 
 export class UserModel extends BaseModel implements UserInterface {
 
@@ -118,54 +119,67 @@ export class UserModel extends BaseModel implements UserInterface {
         };
     }
 
-    public registerValidate(): boolean {
 
-        if (!this.name || this.name.trim() === '') {
-            this.addMessage('User name is required')
-        }
-        if (!this.email || this.email.trim() === '' || validateEmail(this.email) === false) {
-            this.addMessage('Email is invalid')
-        }
-        if (!this.password || this.password.trim() === '') {
-            this.addMessage('Password is required')
-        }
-        if (!this.password_confirmation || this.password_confirmation.trim() === '') {
-            this.addMessage('Password confirmation name is required')
-        }
+    public registerValidateZ(): boolean {
 
-        if (this.password.length < 6) {
-            this.addMessage('Password must be at least 6 characters long')
-        }
-
-        if (this.password !== this.password_confirmation) {
-            this.addMessage('Password confirmation password do not match.')
-        }
-
+        const FormSchema = z.object({
+            name: z.string().min(5),
+            email: z.string().email(),
+            password: z.string().min(5),
+            password_confirmation: z.string().min(5),
+          })
+          .refine((data) => data.password === data.password_confirmation, {
+            message: "Las claves no coinciden",
+            path: ["confirm"], // path of error
+          });
+          
+          try {
+            FormSchema.parse(this.toPlainObject());
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+              for (const issue of error.issues) {
+                const messageTxt = issue.path[0]+":"+issue.message;
+                this.addMessage(messageTxt.toLowerCase())
+              }
+            } else {
+                this.addMessage(`Unexpected error: ${error}`)
+            }
+          }
+         
         if (this.showMessages().length > 0) {
             return false;
         } else {
             return true;
         }
+
     }
 
-    public loginValidate(): boolean {
+    public loginValidateZ(): boolean {
 
-        
-        if (!this.email || this.email.trim() === '' || validateEmail(this.email) === false) {
-            this.addMessage('Email is invalid')
-        }
-        if (!this.password || this.password.trim() === '') {
-            this.addMessage('Password is required')
-        }
-        if (this.password.length < 6) {
-            this.addMessage('Password must be at least 6 characters long')
-        }
-
+        const FormSchema = z.object({
+            email: z.string().email(),
+            password: z.string().min(6),
+          });
+          
+          try {
+            FormSchema.parse(this.toPlainObject());
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+              for (const issue of error.issues) {
+                const messageTxt = issue.path[0]+":"+issue.message;
+                this.addMessage(messageTxt.toLowerCase())
+              }
+            } else {
+                this.addMessage(`Unexpected error: ${error}`)
+            }
+          }
+         
         if (this.showMessages().length > 0) {
             return false;
         } else {
             return true;
         }
+
     }
     
 }

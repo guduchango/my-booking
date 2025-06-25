@@ -1,6 +1,5 @@
 import './layout.css'
 import 'react-toastify/dist/ReactToastify.css';
-
 interface LayoutProps{
     children: React.ReactNode
 }

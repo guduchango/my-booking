@@ -17,7 +17,7 @@ class PriceController extends Controller {
 
         try {
             return PriceResource::collection(
-                Price::where('pri_usu_id',Auth::user()->id)
+                Price::where('pri_usu_id',1)
                     ->orderBy('pri_id', 'asc')
                     ->get()
             );
@@ -51,14 +51,14 @@ class PriceController extends Controller {
                 $prices = DB::table('prices')
                     ->where('pri_date', '=', $date)
                     ->where('pri_uni_id', '=', $pri_uni_id)
-                    ->where('pri_usu_id',Auth::user()->id);
+                    ->where('pri_usu_id',1);
 
                 if ($prices->count() == 0) {
                     $price = new Price();
                     $price->pri_date = $date;
                     $price->pri_price = $request->pri_value;
                     $price->pri_uni_id = $request->pri_uni_id;
-                    $price->pri_usu_id = Auth::user()->id;
+                    $price->pri_usu_id = 1;
                     $price->save();
                 } else {
                     $priceOld = $prices->first();
@@ -67,7 +67,7 @@ class PriceController extends Controller {
                         $price->pri_date = $date;
                         $price->pri_price = $request->pri_value;
                         $price->pri_uni_id = $request->pri_uni_id;
-                        $price->pri_usu_id = Auth::user()->id;
+                        $price->pri_usu_id = 1;
                         $price->save();
                     }
                 }
@@ -75,7 +75,7 @@ class PriceController extends Controller {
 
             $priceList = DB::table('prices')
                 ->where('pri_uni_id', '=', $pri_uni_id)
-                ->where('pri_usu_id',Auth::user()->id)
+                ->where('pri_usu_id',1)
                 ->where('pri_date', '>=', $pri_from)
                 ->where('pri_date', '<=', $pri_to)
                 ->get();

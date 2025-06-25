@@ -14,7 +14,7 @@ class GuestController extends Controller {
     public function index(Request $request) {
         try {
             return GuestResource::collection(
-                Guest::where('gue_usu_id',Auth::user()->id)
+                Guest::where('gue_usu_id',1)
                     ->orderBy('gue_created_at', 'desc')
                     ->get()
             );
@@ -27,7 +27,7 @@ class GuestController extends Controller {
 
     public function show(Request $request, int $id) {
         try {
-            $guest = Guest::where('gue_usu_id',Auth::user()->id)
+            $guest = Guest::where('gue_usu_id',1)
             ->where('gue_id',$id)->first();
             return new GuestResource($guest);
 
@@ -50,11 +50,11 @@ class GuestController extends Controller {
 
             $guest = new Guest();
             $guest->fill($request->all());
-            $guest->gue_usu_id = Auth::user()->id;
+            $guest->gue_usu_id = 1;
 /*            $guest->gue_birthday = Carbon::createFromFormat('Y-m-d', $guest->gue_birthday)
                 ->format('Y/m/d');*/
             $guest->save();
-            $guest = Guest::where('gue_usu_id',Auth::user()->id)
+            $guest = Guest::where('gue_usu_id',1)
                 ->where('gue_id',$guest->gue_id)->first();
             return new GuestResource($guest);
         } catch (\Throwable $th) {
@@ -79,7 +79,7 @@ class GuestController extends Controller {
 /*            $guest->gue_birthday = Carbon::createFromFormat('Y-m-d', $guest->gue_birthday)
                 ->format('Y/m/d');*/
             $guest->save();
-            $guest = Guest::where('gue_usu_id',Auth::user()->id)
+            $guest = Guest::where('gue_usu_id',1)
                 ->where('gue_id',$guest->gue_id)->first();
             return new GuestResource($guest);
         } catch (\Throwable $th) {
@@ -88,7 +88,7 @@ class GuestController extends Controller {
         }
     }
 
-    private function getValidationRules(int $id = 0): array {
+    private function getValidationRules(): array {
         return  [
             'gue_name' => 'required|min:3|max:50',
             'gue_last_name' => 'required|min:3|max:50',
