@@ -88,7 +88,7 @@ class GuestController extends Controller {
         }
     }
 
-    private function getValidationRules(int $id = 0): array {
+    private function getValidationRules(): array {
         return  [
             'gue_name' => 'required|min:3|max:50',
             'gue_last_name' => 'required|min:3|max:50',

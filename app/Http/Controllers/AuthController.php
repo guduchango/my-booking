@@ -46,11 +46,11 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        try {
+
             $validateUser = Validator::make($request->all(),
                 [
                     'email' => 'required|email',
-                    'password' => 'required'
+                    'password' => 'required '
                 ]);
 
             if($validateUser->fails()){
@@ -68,9 +68,6 @@ class AuthController extends Controller
 
             return new UserResource($user);
 
-        } catch (\Throwable $th) {
-            $response = new CustomResource(response(),500,$th);
-            return $response->show();
-        }
+
     }
 }

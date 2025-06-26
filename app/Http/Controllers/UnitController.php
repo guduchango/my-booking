@@ -11,6 +11,7 @@ use App\Rules\ReservationRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class UnitController extends Controller {
     public function index(Request $request) {
@@ -77,21 +78,32 @@ class UnitController extends Controller {
             $checkOut = $request->check_out;
             $people = $request->people;
             $units = Unit::where('uni_usu_id',Auth::user()->id)->get();
-            $availableUnits = [];
+
+            Log::info('Available Units', [
+                'check_in' => $checkIn,
+                'check_out' => $checkOut,
+                'people' => $people,
+                'units' => $units->toArray()
+            ]);
+
+
+            $availableUnitsIds = [];
 
             foreach ($units as $unit) {
                 $unitId = $unit->uni_id;
-                $reservationRule = new ReservationRule($checkIn,$checkOut,$people,$unitId,0);
+                $reservationRule = new ReservationRule($checkIn,$checkOut,$people,$unitId,0,Auth::user()->id);
                 if ($reservationRule->validate()) {
-                        $availableUnits[] = $unit->uni_id;
+                        $availableUnitsIds[] = $unit->uni_id;
                 }
             }
 
-            if ($availableUnits !== []) {
-                $units = Unit::whereIn('uni_id', $availableUnits)->get();
-                $response = UnitResource::collection($units);
+            
+
+            if ($availableUnitsIds !== []) {
+                $availableUnits = UnitResource::collection($units->whereIn('uni_id',$availableUnitsIds));
+                $response = UnitResource::collection($availableUnits);
             } else {
-                $response = new CustomResource(response(), 500, "No unit available check prices/reservations");
+                $response = new CustomResource(response(), 500, $reservationRule->getErrorMessage());
                 return $response->show();
             }
 

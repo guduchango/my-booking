@@ -5,12 +5,30 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export class HttpBaseService {
 
+    private  httpMsj: string[] = [];
+
+    public addHttpMsj(message: string): void {
+        this.httpMsj.push(message)
+    }
+
+    public showHttpMsj(): string[] {
+        return this.httpMsj;
+    }
+
+    public cleanHttpMsj() {
+        this.httpMsj = [];
+    }
+
 
     // Method to create a basic Axios instance
     public getAxios(): AxiosInstance {
         const axiosClient = axios.create({
             baseURL: `${import.meta.env.VITE_API_BASE_URL}/`,
-            validateStatus: () => true
+            validateStatus: function (status) {
+                console.log("status", status)
+                // Considerar cualquier código de estado fuera de 2xx como un error
+                return status >= 200 && status < 300;
+            }
         });
 
         axiosClient.defaults.withCredentials = true;
@@ -56,8 +74,15 @@ export class HttpBaseService {
 
     // Generic POST request method using the basic Axios instance
     public async post<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
+        try{
             const axiosInstance = this.getAxios();
+            console.log("axiosInstance", axiosInstance)
             return axiosInstance.post<R>(url, data, config);
+        } catch (error) {
+            console.log("postHttpBaseService", error)
+            throw  error;
+        }
+
     }
 
     // Generic POST request method using the Axios instance with Bearer token

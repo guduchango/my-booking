@@ -73,5 +73,14 @@
    "From":"Desde",
    "To":"Hasta",
    "Home":"Inicio",
-   "Units":"Unidades"
+   "Units":"Unidades",
+   "Login":"Ingresar",
+   "Password":"Clave",
+   "Auth":"Validar",
+   "":"",
+   "":"",
+   "":"",
+   "":"",
+   "":"",
+   "":""
 }

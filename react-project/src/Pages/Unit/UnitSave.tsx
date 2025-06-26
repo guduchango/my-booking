@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { newObj } from "../../Utils/GeneralFunctions";
 import {uni_doubleBed, uni_maxPeople, uni_rooms, uni_sigleBed } from "../../Utils/StaticData";
 import { UnitModel } from "../../Models/Unit/UnitModel";
-import { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 
 export const UnitSave = () => {

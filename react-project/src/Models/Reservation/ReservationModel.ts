@@ -3,11 +3,10 @@ import { UnitInterface } from "../Unit/UnitInterface";
 import { GuestInterface } from "../Guest/GuestInterface";
 import { PromotionInterface } from "../Promotion/PromotionInterface";
 import { BaseModel } from "../BaseModel";
-import { AxiosError } from "axios";
-import axiosClient from "../../Api/axiosClient";
+import axios, { AxiosError } from "axios";
 import { ReservationStorageService } from "../../Services/Reservation/ReservationStorageService";
 import { z } from 'zod';
-import { newDate, newObj, validateDateRange } from "../../Utils/GeneralFunctions";
+import { validateDateRange } from "../../Utils/GeneralFunctions";
 
 export class ReservationModel extends BaseModel implements ReservationInterface {
 
@@ -277,56 +276,75 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
         };
     }
 
-
     public async store(): Promise<ReservationInterface | AxiosError> {
-        console.log("before post create reservation", this.toPlainObject())
-        return await this.postPrivate(`/reservation/`, this.toPlainObject())
-            .then(response => {
-                const responseData: ReservationInterface | AxiosError = response.data.data as ReservationInterface
-                if (!(responseData instanceof AxiosError)) {
-                    new ReservationStorageService().create(responseData)
-                }
+        try {
+            console.log("before post create reservation", this.toPlainObject())
 
-                return responseData;
-            })
-            .catch((error) => {
-                const items = error.response?.data?.errors;
-                if (items && items.length > 0) {
-                    for (let i = 0; i < items.length; i++) {
-                        this.addHttpMsj(items[i])
+            const response = await this.postPrivate<ReservationInterface, { data: ReservationInterface }>(
+                `/reservation/`,
+                this.toPlainObject()
+            )
+
+            const responseData = response.data.data
+
+            new ReservationStorageService().create(responseData)
+
+            return responseData
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                const items = (error.response?.data as any)?.errors
+
+                if (Array.isArray(items)) {
+                    for (const msg of items) {
+                        this.addHttpMsj(msg)
                     }
                 } else {
                     this.addHttpMsj(error.message)
                 }
+
                 return error
-            });
+            }
+
+            this.addHttpMsj("Error inesperado")
+            return new AxiosError("Unknown error")
+        }
     }
+
 
     public async update(id: number): Promise<ReservationInterface | AxiosError> {
-        return await this.putPrivate(`/reservation/${id}`, this.toPlainObject())
-            .then(response => {
-                console.log("responseChango1",response)
-                    const reservationData: ReservationInterface = response?.data?.data as ReservationInterface
-                
-                    const reservationStorage = new ReservationStorageService();
-                    if (!(response instanceof AxiosError)) {
-                        reservationStorage.update(id, reservationData)
-                    }
-                    return reservationData
-            })
-            .catch((error) => {
-                const items = error.response?.data?.errors;
-                if (items && items.length > 0) {
-                    for (let i = 0; i < items.length; i++) {
-                        this.addHttpMsj(items[i])
+        try {
+            const response = await this.putPrivate<ReservationInterface, { data: ReservationInterface }>(
+                `/reservation/${id}`,
+                this.toPlainObject()
+            )
+
+            console.log("responseChango1", response)
+
+            const reservationData = response.data.data
+            const reservationStorage = new ReservationStorageService()
+            reservationStorage.update(id, reservationData)
+
+            return reservationData
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                const items = (error.response?.data as any)?.errors
+
+                if (Array.isArray(items)) {
+                    for (const msg of items) {
+                        this.addHttpMsj(msg)
                     }
                 } else {
                     this.addHttpMsj(error.message)
                 }
-            
-                return error;
-            });
+
+                return error
+            }
+
+            this.addHttpMsj("Error inesperado")
+            return new AxiosError("Unknown error")
+        }
     }
+
 
     public async saveOrUpdate(id: number): Promise<ReservationInterface | AxiosError> {
         if (id === 0) {
@@ -375,13 +393,13 @@ export class ReservationModel extends BaseModel implements ReservationInterface 
             this.addMessage(validRage.message);
         }
 
-        
+
         if (this.showMessages().length > 0) {
-            console.log("showMessage > 0",this.showMessages())
+            console.log("showMessage > 0", this.showMessages())
             return false;
-            
+
         } else {
-            console.log("showMessage <= 0",this.showMessages())
+            console.log("showMessage <= 0", this.showMessages())
             return true;
         }
 

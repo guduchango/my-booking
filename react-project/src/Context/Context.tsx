@@ -37,6 +37,8 @@ interface GlobalContextProps {
   setUser: (item: UserInterface) => void;
   promotion: PromotionInterface,
   setPromotion: (item: PromotionInterface) => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (auth: boolean) => void;
 }
 
 type Props = {
@@ -59,6 +61,7 @@ export const GlobalContextProvider = ({ children }: Props) => {
   const [isReservationSeted, setIsReservationSeted] = useState<boolean>(false)
   const [user, setUser] = useState<UserInterface>(newObj<UserInterface>);
   const [promotion, setPromotion] = useState<PromotionInterface>(newObj<PromotionInterface>);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const getData = async () => {
     const syncService = new SyncService();
@@ -90,7 +93,9 @@ export const GlobalContextProvider = ({ children }: Props) => {
     user,
     setUser,
     promotion,
-    setPromotion
+    setPromotion,
+    isAuthenticated,
+    setIsAuthenticated,
   };
 
   return (
@@ -105,7 +110,7 @@ export function useGlobalContext() {
   const context = useContext(GlobalContext);
   if (!context) {
     throw new Error(
-      "useShoppingCart must be used within a ShoppingCartProvider"
+      "useGlobalContext must be used within a useGlobalProvider"
     );
   }
   return context;

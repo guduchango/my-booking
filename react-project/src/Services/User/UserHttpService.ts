@@ -10,19 +10,24 @@ export class UserHttpService extends HttpBaseService {
     readonly login: string = 'user/login';
 
     public async storeUser(guest: UserModel): Promise<UserModel> { 
-        const response: AxiosResponse<UserModel,Error> = 
-        await this.post<UserInterface,UserModel>(this.register,guest.toPlainObject()).catch((error) => {
+        const response: AxiosResponse<{data: UserModel},Error> = 
+        await this.post<UserInterface,UserModel>(this.register,guest.toPlainObject())
+        .catch((error) => {
+            this.addHttpMsj(error)
             return error
         })
-        console.log("response",response)
         return new UserModel(response.data.data)
     }
 
-    public async loginUser(guest: UserModel): Promise<UserModel> { 
-            const response: AxiosResponse<UserModel> = 
-            await this.post<UserInterface,UserModel>(this.login,guest.toPlainObject())
-            //if(response.status > 2)
-            return new UserModel(response.data.data)
+    public async loginUser(guest: UserModel):  Promise<AxiosResponse> { 
+            console.log("loginUSer",guest)
+            return await this.post<UserInterface,UserModel>(this.login,guest.toPlainObject())
+            .catch((error) => {
+                console.log("loginUserErro",guest)
+                this.addHttpMsj(error)
+                throw error
+            })
+           
     }
 
 }

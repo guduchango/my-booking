@@ -70,7 +70,7 @@ export class PriceRangeModel extends BaseModel implements PriceRageInterface {
     }
 
     public async storeRangePrice(): Promise<PriceInterface[] | AxiosError>{
-        return await this.postPrivate(`price/range-price/`, this.toPlainObject())
+        return await this.postPrivate<any, { data: PriceInterface[] }>(`price/range-price/`, this.toPlainObject())
         .then(response => {
             const responseData: PriceInterface[] | AxiosError =  response.data.data as PriceInterface[]
             if(!(responseData instanceof AxiosError)){
