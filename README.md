@@ -1,36 +1,28 @@
-# 🏨 MyBooking Backend
+# MyBooking Backend - Laravel API
 
-Backend API for the **MyBooking** accommodation management application, developed with Laravel 10, MySQL, and Sanctum for authentication.
+This is the **backend** for the MyBooking project, a booking management system for hospitality businesses, built with **Laravel**, **MySQL**, and **Sanctum** for authentication.
 
-🔗 Backend repository: https://github.com/guduchango/mybooking-backend-laravel  
-🔗 Frontend repository: https://github.com/guduchango/mybooking-frontend-react  
-🔗 Online demo: https://mybooking.edgardoponce.com  
-🌐 My website: https://edgardoponce.com
-
----
-
-## 📦 What does this project include?
-
-- REST API built with Laravel 10
-- Authentication using Laravel Sanctum
-- Models, controllers, factories, seeders for a complete CRUD system
-- Support for multi-user reservations
-- Price calendar per unit per day
-- Validation for overlapping reservations
+🔗 **Frontend repo:** [mybooking-frontend-react](https://github.com/guduchango/mybooking-frontend-react)  
+🌐 **Live demo:** [mybooking.edgardoponce.com](https://mybooking.edgardoponce.com/)  
+👤 **Website:** [edgardoponce.com](https://edgardoponce.com/)
 
 ---
 
-## 🚀 How to start the project
+## 📦 Features
 
-### Requirements
+✅ RESTful API built with Laravel  
+✅ Token-based authentication with Laravel Sanctum  
+✅ CRUD endpoints for guests, units, reservations, unit prices  
+✅ Price management with calendar-based pricing per unit/day  
+✅ Multi-user support  
+✅ Offline support via IndexedDB (frontend)  
+✅ Seeders and factories for testing data  
+✅ Clean object-oriented architecture
 
-- PHP >= 8.1
-- Composer
-- MySQL or compatible database
+---
 
-### Installation steps
-
-Clone the repository:
+## 🛠️ How to run the project
+The backend is a Laravel API. Clone the repository:
 
 ```
 git clone https://github.com/guduchango/mybooking-backend-laravel.git
@@ -43,36 +35,25 @@ Install PHP dependencies:
 composer install
 ```
 
-Copy the environment file and configure your database and credentials:
+Copy the environment file and configure the database:
 
 ```
 cp .env.example .env
 ```
 
-Edit `.env` and update the following lines:
-
-```
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=your_database
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-```
-
-Generate the application key:
+Edit `.env` with your credentials and generate the application key:
 
 ```
 php artisan key:generate
 ```
 
-Run database migrations and seeders:
+Run migrations and seeders:
 
 ```
 php artisan migrate --seed
 ```
 
-Start the Laravel development server:
+Start the server:
 
 ```
 php artisan serve
@@ -80,58 +61,93 @@ php artisan serve
 
 The API will be available at: http://127.0.0.1:8000
 
----
+### 📂 Laravel folder structure
 
-## 🗂 Laravel folder structure
-
-```
-app/
-├── Http/
-│   └── Controllers/       HTTP controllers
-├── Models/                Eloquent models
-database/
-├── factories/             Test data factories
-├── seeders/               Database seeders
-routes/
-├── api.php                API routes
-├── web.php                Web routes
-storage/                   Files and logs
-```
+- app/Http/Controllers       HTTP controllers
+- app/Models                 Eloquent models
+- database/factories         Test data factories
+- database/seeders           Database seeders
+- routes/                    Route definitions
+- storage/                   Files and logs
 
 ---
 
-## 🛠 How to seed data
+## 📸 Project Screenshots
 
-You can use the included factories and seeders to generate example data:
-
-```
-php artisan migrate:fresh --seed
-```
-
-This will reset the database and populate it with demo data.
+Below you can find screenshots showcasing the main views and functionalities of the MyBooking app.
 
 ---
 
-## 🖼 Screenshots
+### 🔑 Authentication
 
-You can add screenshots of your API responses or Postman collections here.
-
-Example:
-
-```
-![API example response](docs/api-response.png)
-```
-
-Place images in a `docs/` folder inside the repository.
+<p align="center">
+  <img src="docs/login.png" alt="Login" width="200"/>
+</p>
 
 ---
 
-## 🔗 Frontend
+### 🏠 Dashboard
 
-The frontend for this API can be found at:  
-https://github.com/guduchango/mybooking-frontend-react
+<p align="center">
+  <img src="docs/dash.png" alt="Dashboard" width="200"/>
+</p>
 
 ---
+
+### 👥 Guest Management
+
+<p align="center">
+  <img src="docs/guest_list.png" alt="Guest list" width="200"/>
+</p>
+
+<p align="center">
+  <img src="docs/guest_create_form.png" alt="Guest form" width="200"/>
+</p>
+
+---
+
+### 🏘️ Unit Management
+
+<p align="center">
+  <img src="docs/unit_list.png" alt="Unit list" width="200"/>
+</p>
+
+<p align="center">
+  <img src="docs/unit_create_form.png" alt="Unit form" width="200"/>
+</p>
+
+<p align="center">
+  <img src="docs/unit_price_calendar.png" alt="Unit price calendar" width="200"/>
+</p>
+
+---
+
+### 📅 Reservation Management
+
+<p align="center">
+  <img src="docs/reservation_list.png" alt="Reservation list" width="200"/>
+</p>
+
+<p align="center">
+  <img src="docs/reservation_check_availability.png" alt="Reservation check" width="200"/>
+</p>
+
+<p align="center">
+  <img src="docs/reservation_show_availability.png" alt="Reservation show" width="200"/>
+</p>
+
+<p align="center">
+  <img src="docs/reservation_create_form.png" alt="Reservation create form" width="200"/>
+</p>
+
+<p align="center">
+  <img src="docs/reservation_detail.png" alt="Reservation detail" width="200"/>
+</p>
+
+
+---
+
+
 
 ## 🎯 How to contribute
 
