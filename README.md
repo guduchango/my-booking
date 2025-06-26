@@ -1,127 +1,163 @@
-# My Booking
+# 🏨 MyBooking Backend
 
-Fullstack application with a **Laravel** backend and a **React + TypeScript** frontend, using **Vite** as the bundler. Ideal for booking or scheduling projects.
+Backend API for the **MyBooking** accommodation management application, developed with Laravel 10, MySQL, and Sanctum for authentication.
+
+🔗 Backend repository: https://github.com/guduchango/mybooking-backend-laravel  
+🔗 Frontend repository: https://github.com/guduchango/mybooking-frontend-react  
+🔗 Online demo: https://mybooking.edgardoponce.com  
+🌐 My website: https://edgardoponce.com
 
 ---
 
-## 📁 Project Structure
+## 📦 What does this project include?
+
+- REST API built with Laravel 10
+- Authentication using Laravel Sanctum
+- Models, controllers, factories, seeders for a complete CRUD system
+- Support for multi-user reservations
+- Price calendar per unit per day
+- Validation for overlapping reservations
+
+---
+
+## 🚀 How to start the project
+
+### Requirements
+
+- PHP >= 8.1
+- Composer
+- MySQL or compatible database
+
+### Installation steps
+
+Clone the repository:
 
 ```
-my-booking/
-├── app/                 # Laravel Backend
-├── database/
-├── public/
-├── react-js/            # React + TypeScript Frontend
-│   ├── public/
-│   ├── src/
-│   │   ├── Api/                         # API connection logic
-│   │   │   ├── Auth.ts
-│   │   │   └── axiosClient.ts
-│   │   ├── Components/                 # Reusable components
-│   │   │   ├── DynamicSearchSelect/
-│   │   │   ├── Layout/
-│   │   │   └── NavBar/
-│   │   ├── Context/                    # Global state management (React Context)
-│   │   ├── Models/                     # Interfaces and data models
-│   │   │   ├── Currency/
-│   │   │   │   └── CurrencyInterface.ts
-│   │   │   ├── Expense/
-│   │   │   ├── Generic/
-│   │   │   ├── Guest/
-│   │   │   ├── Price/
-│   │   │   └── Promotion/
-│   │   └── ...
-│   ├── index.html
-│   └── package.json
-├── routes/
-├── artisan
-├── composer.json
-└── ...
+git clone https://github.com/guduchango/mybooking-backend-laravel.git
+cd mybooking-backend-laravel
 ```
 
----
+Install PHP dependencies:
 
-## ⚙️ Requirements
-
-- PHP >= 8.1  
-- Composer  
-- Node.js >= 18  
-- npm or yarn  
-- MySQL or compatible
-
----
-
-## 🚀 Installation and Execution
-
-### 1. Backend (Laravel)
-
-```bash
-git clone https://github.com/guduchango/my-booking.git
-cd my-booking
-
+```
 composer install
+```
 
+Copy the environment file and configure your database and credentials:
+
+```
 cp .env.example .env
+```
+
+Edit `.env` and update the following lines:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+Generate the application key:
+
+```
 php artisan key:generate
+```
 
-php artisan migrate
+Run database migrations and seeders:
 
+```
+php artisan migrate --seed
+```
+
+Start the Laravel development server:
+
+```
 php artisan serve
 ```
 
+The API will be available at: http://127.0.0.1:8000
+
 ---
 
-### 2. Frontend (React + Vite)
+## 🗂 Laravel folder structure
 
-```bash
-cd react-js
-
-npm install
-
-npm run dev
+```
+app/
+├── Http/
+│   └── Controllers/       HTTP controllers
+├── Models/                Eloquent models
+database/
+├── factories/             Test data factories
+├── seeders/               Database seeders
+routes/
+├── api.php                API routes
+├── web.php                Web routes
+storage/                   Files and logs
 ```
 
-This will launch the frontend at `http://localhost:5173/`.
-
 ---
 
-## 📦 Production Build
+## 🛠 How to seed data
 
-```bash
-npm run build
+You can use the included factories and seeders to generate example data:
+
+```
+php artisan migrate:fresh --seed
 ```
 
-The compiled files will be located in `react-js/dist/`  
-You can serve them with a static server or integrate them into Laravel's `public/` folder.
+This will reset the database and populate it with demo data.
 
 ---
 
-## 🧪 Main Tools and Libraries
+## 🖼 Screenshots
 
-- **React 18 + TypeScript**
-- **Vite**
-- **React Router v6**
-- **i18next** (internationalization)
-- **Zod** (schema validation)
-- **Dexie** (IndexedDB)
-- **React Toastify**, **React Select**
-- **ESLint** with strict rules
+You can add screenshots of your API responses or Postman collections here.
 
----
+Example:
 
-## 📌 Notes
+```
+![API example response](docs/api-response.png)
+```
 
-- Frontend and backend run as separate services and communicate via a REST API.
-- You can integrate the frontend build into Laravel’s `public/` directory for unified deployment.
+Place images in a `docs/` folder inside the repository.
 
 ---
 
-## 👨‍💻 Author
+## 🔗 Frontend
 
-Edgardo Chango — [GitHub](https://github.com/guduchango)
+The frontend for this API can be found at:  
+https://github.com/guduchango/mybooking-frontend-react
 
 ---
 
-## 📜 License
+## 🎯 How to contribute
 
-MIT
+If you’d like to collaborate:
+
+1. Fork the repository
+2. Create a new branch with your improvement or fix
+3. Submit a pull request describing your changes
+
+Direct contact: you can write to me through my website https://edgardoponce.com or open an issue on the repository.
+
+---
+
+## 🗒 Task board (Kanban / Tickets)
+
+Currently, there is no public task board.  
+I’m considering using GitHub Projects to manage tasks collaboratively.
+
+---
+
+## 📄 License
+
+This project is available under the MIT license.
+
+---
+
+## 🙏 Acknowledgments
+
+Thanks to all the open source technologies and libraries that make this project possible.
