@@ -32,7 +32,7 @@ const locales = {
     locales,
   });
 
-export const ReservationCalendar = (props) => {
+export const ReservationCalendar = () => {
     const { t } = useTranslation();    
     const [reservationEvents, setReservationEvents] = useState<CalendarEvent[]>([]);
     const [units, setUnits] = useState<UnitInterface[]>([]);

@@ -3,136 +3,130 @@
 namespace App\Rules;
 
 use App\Models\Reservation;
+use Illuminate\Support\Facades\Log;
 
-class DayValidateItems {
-
-    //pri_price
+class DayValidateItems
+{
     private float $price;
-    //pri_res_id
-    private int $item_reservation_id;
-    //res_id
-    private int $update_reservation_id;
-    //pri_unit_id
-    private int $unit_id;
-    //pri_date
+    private int $itemReservationId;
+    private int $updateReservationId;
+    private int $unitId;
     private string $day;
-    //item reservation model
+
     private Reservation $itemReservationModel;
-    //update reservation model
     private Reservation $updateReservationModel;
 
     private array $errorMessages = [];
 
-    public function __construct($day, $price, $unit_id, $item_reservation_id, $update_reservation_id) {
-        $this->setDay($day);
-        $this->setPrice($price);
-        $this->setUnitId($unit_id);
-        $this->setItemReservationId($item_reservation_id);
-        $this->setUpdateReservationId($update_reservation_id);
-        $this->itemReservationModel = $this->getItemReservationModel();
-        $this->updateReservationModel = $this->getUpdateReservationModel();
+    public function __construct(
+        string $day,
+        float $price,
+        int $unitId,
+        int $itemReservationId,
+        int $updateReservationId
+    ) {
+        $this->day = $day;
+        $this->price = $price;
+        $this->unitId = $unitId;
+        $this->itemReservationId = $itemReservationId;
+        $this->updateReservationId = $updateReservationId;
+
+        $this->itemReservationModel = $this->loadItemReservation();
+        $this->updateReservationModel = $this->loadUpdateReservation();
     }
 
-    public function validate() {
+    public function validate(): bool
+    {
+        $isValid = true;
 
-        $hasPrice = false;
-        if ($this->getPrice() != 0) {
-            $hasPrice = true;
-        } else {
-            $hasPrice = false;
-            $this->addErrorMessage($this->getDay() . ":No tiene precio.");
+        Log::info("Validando día: {$this->day}, Precio: {$this->price}, Unidad: {$this->unitId}, Reserva Ítem: {$this->itemReservationId}, Actualizar Reserva: {$this->updateReservationId}");
+
+        if ($this->price <= 0) {
+            $this->addErrorMessage("{$this->day}: No tiene precio.");
+            $isValid = false;
         }
 
-        $hasValidReservationId = false;
-        if ($this->getUpdateReservationId() > 0) {
-                if ($this->getItemReservationId() == 0) {
-                    $hasValidReservationId = true;
-                } else {
-                    if ($this->getItemReservationId() == $this->getUpdateReservationId()) {
-                        $hasValidReservationId = true;
-                    } else {
-                        $this->addErrorMessage($this->getDay() . ":La reserva del item es distinta a la reserva a actualizar");
-                        $hasValidReservationId = false;
-                    }
-                }
+        if ($this->updateReservationId > 0) {
+            // Se está actualizando una reserva
+            if (
+                $this->itemReservationId !== 0 &&
+                $this->itemReservationId !== $this->updateReservationId
+            ) {
+                $this->addErrorMessage("{$this->day}: La reserva del ítem es distinta a la reserva a actualizar.");
+                $isValid = false;
+            }
         } else {
-            if ($this->getItemReservationId() == 0) {
-                $hasValidReservationId = true;
-            } else {
-                $this->addErrorMessage($this->getDay() . ":Ya tiene reserva seteada");
-                $hasValidReservationId = false;
+            // Es una nueva reserva
+            if ($this->itemReservationId !== 0) {
+                $this->addErrorMessage("{$this->day}: Ya tiene reserva seteada.");
+                $isValid = false;
             }
         }
 
-        if ($hasPrice === true && $hasValidReservationId === true) {
-            return true;
+        if (!$isValid) {
+            $this->addErrorMessage("{$this->day}: Error en algún lugar.");
         }
 
-        $this->addErrorMessage($this->getDay() . ":Error en algun lugar");
-        return false;
+        return $isValid;
     }
 
-    public function getItemReservationModel(): Reservation {
-        if ($this->getItemReservationId() > 0) {
-            return Reservation::find($this->getItemReservationId());
-        }
-        return new Reservation();
+    private function loadItemReservation(): Reservation
+    {
+        return $this->itemReservationId > 0
+            ? Reservation::find($this->itemReservationId)
+            : new Reservation();
     }
 
-    public function getUpdateReservationModel(): Reservation {
-        if ($this->getUpdateReservationId() > 0) {
-            return Reservation::find($this->getUpdateReservationId());
-        }
-        return new Reservation();
+    private function loadUpdateReservation(): Reservation
+    {
+        return $this->updateReservationId > 0
+            ? Reservation::find($this->updateReservationId)
+            : new Reservation();
     }
 
-    public function getPrice(): float {
-        return $this->price;
+    public function getItemReservationModel(): Reservation
+    {
+        return $this->itemReservationModel;
     }
 
-    public function setPrice(float $price): void {
-        $this->price = $price;
+    public function getUpdateReservationModel(): Reservation
+    {
+        return $this->updateReservationModel;
     }
 
-    public function getItemReservationId(): int {
-        return $this->item_reservation_id;
-    }
-
-    public function setItemReservationId(int $item_reservation_id): void {
-        $this->item_reservation_id = $item_reservation_id;
-    }
-
-    public function getUpdateReservationId(): int {
-        return $this->update_reservation_id;
-    }
-
-    public function setUpdateReservationId(int $update_reservation_id): void {
-        $this->update_reservation_id = $update_reservation_id;
-    }
-
-    public function getUnitId(): int {
-        return $this->unit_id;
-    }
-
-    public function setUnitId(int $unit_id): void {
-        $this->unit_id = $unit_id;
-    }
-
-    public function getDay(): string {
-        return $this->day;
-    }
-
-    public function setDay(string $day): void {
-        $this->day = $day;
-    }
-
-    public function addErrorMessage(string $errorMessage): void {
-        $this->errorMessages[] = $errorMessage;
-    }
-
-    public function getErrorMessages(): array {
+    public function getErrorMessages(): array
+    {
         return $this->errorMessages;
     }
 
+    private function addErrorMessage(string $message): void
+    {
+        $this->errorMessages[] = $message;
+    }
 
+    // Getters (por si los necesitás en otro lado)
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+    public function getItemReservationId(): int
+    {
+        return $this->itemReservationId;
+    }
+
+    public function getUpdateReservationId(): int
+    {
+        return $this->updateReservationId;
+    }
+
+    public function getUnitId(): int
+    {
+        return $this->unitId;
+    }
+
+    public function getDay(): string
+    {
+        return $this->day;
+    }
 }

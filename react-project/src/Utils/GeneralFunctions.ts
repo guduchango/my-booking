@@ -1,5 +1,3 @@
-import { da } from "date-fns/locale";
-
 export function upperCaseFirst(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -26,7 +24,7 @@ export function getCurrentDate(): string {
 }
 
 export const shortDate = (dateString: string): string => {
-    const [year, month, day] = dateString.split('-');
+    const [month, day] = dateString.split('-');
     return `${day}-${month}`;
   };
 

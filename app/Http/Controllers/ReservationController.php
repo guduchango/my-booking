@@ -43,7 +43,7 @@ class ReservationController extends Controller {
                 return $response->show();
             }
 
-            $validateRule = new ReservationRule($checkIn,$checkOut,$totalPeople,$unitId,$resId);
+            $validateRule = new ReservationRule($checkIn,$checkOut,$totalPeople,$unitId,$resId,Auth::user()->id);
             if($validateRule->validate() === false){
                 $error = json_encode($validateRule->getErrorMessage());
                 $response = new CustomResource(response(), 401, $error);
@@ -88,7 +88,7 @@ class ReservationController extends Controller {
                 return $response->show();
             }
 
-            $validateRule = new ReservationRule($checkIn,$checkOut,$maxPeople,$unitId,$resId);
+            $validateRule = new ReservationRule($checkIn,$checkOut,$maxPeople,$unitId,$resId,Auth::user()->id);
             if($validateRule->validate() === false){
                 $error = $validateRule->getErrorMessage();
                 $response = new CustomResource(response(), 401, $error);

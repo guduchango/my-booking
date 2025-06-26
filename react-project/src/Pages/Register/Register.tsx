@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { LayoutHome } from "../../Components/Layout/LayoutHome";
 
 export const Register = () => {
-    
+
     const { setUser, user } = useGlobalContext()
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [showMessages, setShowMessages] = useState<string[]>([]);
@@ -15,19 +15,26 @@ export const Register = () => {
 
     const onClickSave = async () => {
         const userModel = new UserModel(user);
-        if(userModel.registerValidateZ() === false){
-            setIsVisible(true)
-            setShowMessages(userModel.showMessages())
-            throw new Error(userModel.showMessages().toString());
-        }else{
-            let userResponse = await new UserHttpService().storeUser(userModel)
-            const userStorageService = new UserStorageService();
-            userResponse = await userStorageService.create(userResponse)
+
+        if (!userModel.registerValidateZ()) {
+            setIsVisible(true);
+            setShowMessages(userModel.showMessages());
+            return;
         }
-        
-        setIsVisible(false)
-        setUser(userResponse)
-        navigate("/")
+
+        try {
+            let userResponse = await new UserHttpService().storeUser(userModel);
+            const userStorageService = new UserStorageService();
+            userResponse = await userStorageService.create(userResponse);
+
+            setIsVisible(false);
+            setUser(userResponse);
+            navigate("/");
+        } catch (error) {
+            console.error("Error saving user:", error);
+            setShowMessages(["Ocurrió un error al registrar."]);
+            setIsVisible(true);
+        }
     };
 
     const setDefaultForm = async () => {
@@ -81,18 +88,18 @@ export const Register = () => {
                     />
                 </div>
                 {isVisible && (
-                        <div className="form-error">
-                            <div className="formError-wrapper">
-                            {showMessages.map((msj,key) => (
-                                <ul key={key+1}>
+                    <div className="form-error">
+                        <div className="formError-wrapper">
+                            {showMessages.map((msj, key) => (
+                                <ul key={key + 1}>
                                     <li key={key}>{msj}</li>
                                 </ul>
                             ))}
-                            </div>
                         </div>
-                    )}
+                    </div>
+                )}
                 <div className="field-group">
-                <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
+                    <button className="fieldGroup-button-save" onClick={onClickSave} >Save</button>
                 </div>
             </div>
 

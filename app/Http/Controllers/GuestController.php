@@ -50,7 +50,7 @@ class GuestController extends Controller {
 
             $guest = new Guest();
             $guest->fill($request->all());
-            $guest->gue_usu_id = 1;
+            $guest->gue_usu_id = Auth::user()->id;
 /*            $guest->gue_birthday = Carbon::createFromFormat('Y-m-d', $guest->gue_birthday)
                 ->format('Y/m/d');*/
             $guest->save();

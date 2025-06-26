@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 export const ReservationDetails = () => {
 
     const { t } = useTranslation();
-    const { reservation, setReservation, guest, setGuest, unit, setUnit, promotion, setPromotion } = useGlobalContext()
+    const { reservation, setReservation, guest, setGuest, unit, setUnit, setPromotion } = useGlobalContext()
     const location = useLocation();
     const resId = location.state.res_id;
     const advancePercentaje = getPercentajeByValue(reservation.res_price_final, reservation.res_advance_payment);

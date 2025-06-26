@@ -75,7 +75,7 @@ class PriceController extends Controller {
 
             $priceList = DB::table('prices')
                 ->where('pri_uni_id', '=', $pri_uni_id)
-                ->where('pri_usu_id',1)
+                ->where('pri_usu_id',Auth::user()->id)
                 ->where('pri_date', '>=', $pri_from)
                 ->where('pri_date', '<=', $pri_to)
                 ->get();

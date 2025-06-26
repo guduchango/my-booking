@@ -1,5 +1,4 @@
-import { AxiosError } from "axios";
-import axiosClient from "../../Api/axiosClient";
+import axios, { AxiosError } from "axios";
 import { BaseModel } from "../BaseModel";
 import { UnitInterface } from "./UnitInterface";
 import { z } from 'zod';
@@ -107,65 +106,82 @@ export class UnitModel extends BaseModel implements UnitInterface {
     public toPlainObject(): UnitInterface {
         return {
             uni_id: this.uni_id,
-            uni_name:this.uni_name,
-            uni_max_people:this.uni_max_people,
-            uni_single_bed:this.uni_single_bed,
-            uni_double_bed:this.uni_double_bed,
-            uni_rooms:this.uni_rooms,
-            uni_created_at:this.uni_created_at,
-            uni_updated_at:this.uni_updated_at,
+            uni_name: this.uni_name,
+            uni_max_people: this.uni_max_people,
+            uni_single_bed: this.uni_single_bed,
+            uni_double_bed: this.uni_double_bed,
+            uni_rooms: this.uni_rooms,
+            uni_created_at: this.uni_created_at,
+            uni_updated_at: this.uni_updated_at,
         };
     }
 
-    public async store(): Promise<UnitInterface | AxiosError>{
-        return await this.postPrivate(`/unit/`, this.toPlainObject())
-        .then(response => {
-            const responseData: UnitInterface | AxiosError =  response.data.data as UnitInterface
-            if(!(responseData instanceof AxiosError)){
-                new UnitStorageService().create(responseData)
+    public async store(): Promise<UnitInterface | AxiosError> {
+        try {
+            const response = await this.postPrivate<UnitInterface, { data: UnitInterface }>(
+                `/unit/`,
+                this.toPlainObject()
+            )
+
+            const responseData = response.data.data
+            new UnitStorageService().create(responseData)
+
+            return responseData
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                const items = (error.response?.data as any)?.errors
+
+                if (Array.isArray(items)) {
+                    for (const msg of items) {
+                        this.addHttpMsj(msg)
+                    }
+                } else {
+                    this.addHttpMsj(error.message)
+                }
+
+                return error
             }
 
-            return responseData;
-        })
-        .catch((error) => {
-            const items = error.response?.data?.errors;
-            if (items && items.length > 0){
-                for (let i = 0; i < items.length; i++) {
-                    this.addHttpMsj(items[i])
-                  }
-            }else{
-                this.addHttpMsj(error.message)
-            }
-          return error
-        });
+            this.addHttpMsj("Error inesperado")
+            return new AxiosError("Unknown error")
+        }
     }
 
-    public async update(id: number): Promise<UnitInterface | AxiosError>{
-        return await this.putPrivate(`/unit/${id}`, this.toPlainObject())
-        .then(response => {
-            const responseData: UnitInterface | AxiosError =  response.data.data as UnitInterface
-            if(!(responseData instanceof AxiosError)){
-                new UnitStorageService().update(id,responseData)
+
+    public async update(id: number): Promise<UnitInterface | AxiosError> {
+        try {
+            const response = await this.putPrivate<UnitInterface, { data: UnitInterface }>(
+                `/unit/${id}`,
+                this.toPlainObject()
+            )
+
+            const responseData = response.data.data
+            new UnitStorageService().update(id, responseData)
+
+            return responseData
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                const items = (error.response?.data as any)?.errors
+
+                if (Array.isArray(items)) {
+                    for (const msg of items) {
+                        this.addHttpMsj(msg)
+                    }
+                } else {
+                    this.addHttpMsj(error.message)
+                }
+
+                return error
             }
 
-            return responseData;
-        })
-        .catch((error) => {
-            const items = error.response?.data?.errors;
-            if (items && items.length > 0){
-                for (let i = 0; i < items.length; i++) {
-                    this.addHttpMsj(items[i])
-                  }
-            }else{
-                this.addHttpMsj(error.message)
-            }
-            
-          return error
-        });
+            this.addHttpMsj("Error inesperado")
+            return new AxiosError("Unknown error")
+        }
     }
 
-    public async saveOrUpdate(id: number): Promise<UnitInterface | AxiosError>{
-        if(id === 0){
+
+    public async saveOrUpdate(id: number): Promise<UnitInterface | AxiosError> {
+        if (id === 0) {
             return await this.store()
         }
         return await this.update(id)
@@ -173,40 +189,27 @@ export class UnitModel extends BaseModel implements UnitInterface {
 
 
     public validate(): boolean {
-
         this.cleanMessages()
 
         const FormSchema = z.object({
             uni_name: z.string().min(5),
             uni_rooms: z.number().positive(),
-            uni_max_people:z.number().positive(),
-            uni_single_bed:z.number().positive(),
-            uni_double_bed:z.number().positive(),
-          });
-          
-          type FormData = z.infer<typeof FormSchema>;
-          
-          // Validation
-          try {
-            const data: FormData = FormSchema.parse(this.toPlainObject());
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                
-              for (const issue of error.issues) {
-                const messageTxt = issue.path[0]+":"+issue.message;
+            uni_max_people: z.number().positive(),
+            uni_single_bed: z.number().positive(),
+            uni_double_bed: z.number().positive(),
+        })
+
+        const result = FormSchema.safeParse(this.toPlainObject())
+
+        if (!result.success) {
+            for (const issue of result.error.issues) {
+                const path = issue.path[0]?.toString() ?? "field"
+                const messageTxt = `${path}: ${issue.message}`
                 this.addMessage(messageTxt.toLowerCase())
-              }
-            } else {
-                this.addMessage(`Unexpected error: ${error}`)
             }
-          }
-         
-        if (this.showMessages().length > 0) {
-            return false;
-        } else {
-            return true;
         }
 
+        return this.showMessages().length === 0
     }
 }
 

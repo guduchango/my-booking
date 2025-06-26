@@ -1,13 +1,13 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { UserStorageService } from "../Services/User/UserStorageService ";
 
 export class BaseModel {
 
-    constructor(){
+    constructor() {
     }
 
-    private  messages: string[] = [];
-    private  httpMsj: string[] = [];
+    private messages: string[] = [];
+    private httpMsj: string[] = [];
 
     public addHttpMsj(message: string): void {
         this.httpMsj.push(message)
@@ -25,7 +25,7 @@ export class BaseModel {
         this.messages.push(message);
     }
 
-    public showMessages(): string[] {    
+    public showMessages(): string[] {
         return this.messages;
     }
 
@@ -33,8 +33,8 @@ export class BaseModel {
         this.messages = [];
     }
 
-     // Method to create a basic Axios instance
-     public getAxios(): AxiosInstance {
+    // Method to create a basic Axios instance
+    public getAxios(): AxiosInstance {
         const axiosClient = axios.create({
             baseURL: `${import.meta.env.VITE_API_BASE_URL}/`,
             validateStatus: () => true
@@ -48,7 +48,7 @@ export class BaseModel {
 
     // Method to create an Axios instance with a Bearer token
     private getAxiosBearer(token: string): AxiosInstance {
-        const  axiosClient = axios.create({
+        const axiosClient = axios.create({
             baseURL: `${import.meta.env.VITE_API_BASE_URL}/`,
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -57,7 +57,8 @@ export class BaseModel {
                 console.log("status", status)
                 // Considerar cualquier código de estado fuera de 2xx como un error
                 return status >= 200 && status < 300;
-            }});
+            }
+        });
 
         axiosClient.defaults.withCredentials = true;
         axiosClient.defaults.withXSRFToken = true;
@@ -65,7 +66,7 @@ export class BaseModel {
         return axiosClient;
     }
 
-    private async getUserToken(){
+    private async getUserToken() {
         const userStorageService = new UserStorageService()
         const user = await userStorageService.getLastItem()
         return user.token;
@@ -86,14 +87,17 @@ export class BaseModel {
 
     // Generic POST request method using the basic Axios instance
     public async post<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
-            const axiosInstance = this.getAxios();
-            return axiosInstance.post<R>(url, data, config);
+        const axiosInstance = this.getAxios();
+        return axiosInstance.post<R>(url, data, config);
     }
 
-    // Generic POST request method using the Axios instance with Bearer token
-    public async postPrivate<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
-        const axiosInstance = this.getAxiosBearer(await this.getUserToken());
-        return axiosInstance.post<R>(url, data, config);
+   public async postPrivate<T, R>(
+        url: string,
+        data: T,
+        config?: AxiosRequestConfig
+    ): Promise<AxiosResponse<R>> {
+        const axiosInstance = this.getAxiosBearer(await this.getUserToken())
+        return axiosInstance.post<R>(url, data, config)
     }
 
     // Generic POST request method using the basic Axios instance
@@ -108,14 +112,12 @@ export class BaseModel {
     //     const axiosInstance = this.getAxiosBearer(await this.getUserToken());
     //     return axiosInstance.put<R>(url, data, config);
     // }
-    public async putPrivate<T, R>(url: string, data: T, config?: AxiosRequestConfig): Promise<AxiosResponse<R> | AxiosError> {
-        try {
-            const axiosInstance = this.getAxiosBearer(await this.getUserToken());
-            const response = await axiosInstance.put<R>(url, data, config);
-            return response;
-        } catch (error) {
-            console.log("BaseModel2", error)
-            throw  error;
-        }
+    public async putPrivate<T, R>(
+        url: string,
+        data: T,
+        config?: AxiosRequestConfig
+    ): Promise<AxiosResponse<R>> {
+        const axiosInstance = this.getAxiosBearer(await this.getUserToken())
+        return axiosInstance.put<R>(url, data, config)
     }
 }

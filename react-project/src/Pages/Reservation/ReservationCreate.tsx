@@ -1,9 +1,9 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout"
-import { UnitInterface, UnitPriceInterface } from "../../Models/Unit/UnitInterface";
+import { UnitInterface } from "../../Models/Unit/UnitInterface";
 import { Channel, Status } from "../../Models/Reservation/ReservationInterface";
 import { useEffect, useMemo, useState } from "react";
-import { daysBetween, shortDate, toFix, upperCaseFirst } from "../../Utils/GeneralFunctions";
+import { daysBetween, shortDate, toFix } from "../../Utils/GeneralFunctions";
 import Select from "react-select";
 import { res_adults, res_advances, res_beds, res_channels, res_children } from "../../Utils/StaticData";
 import { GuestInterface } from "../../Models/Guest/GuestInterface";
@@ -12,15 +12,15 @@ import { useGlobalContext } from "../../Context/Context";
 import { PromotionStorageService } from "../../Services/Promotion/PromotionStorageService";
 import { PromotionInterface } from "../../Models/Promotion/PromotionInterface";
 import { ReservationModel } from "../../Models/Reservation/ReservationModel";
-import { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
+import { UnitPriceInterface } from "../../Models/Unit/UnitPriceInterface";
 
 export const ReservationCreate = () => {
     const { t } = useTranslation();    
     const location = useLocation()
     const { state } = location
     const unitPrice = state?.unitPrice as UnitPriceInterface;
-    const { reservation, setReservation, isReservationSeted, setIsReservationSeted,guest } = useGlobalContext()
+    const { reservation, setReservation, isReservationSeted,guest } = useGlobalContext()
     const [guests, setGuests] = useState<GuestInterface[]>([]);
     const [promotions, setPromotions] = useState<PromotionInterface[]>([]);
     const [proValue, setProValue] = useState<number>(0);

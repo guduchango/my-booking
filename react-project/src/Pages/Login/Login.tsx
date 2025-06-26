@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 
 export const Login = () => {
     const { t } = useTranslation();
-    const { setUser, user,setIsAuthenticated } = useGlobalContext()
+    const { setUser, user } = useGlobalContext()
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [showMessages, setShowMessages] = useState<string[]>([]);
     const navigate = useNavigate();

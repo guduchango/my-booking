@@ -1,10 +1,9 @@
-import { AxiosError } from "axios";
-import axiosClient from "../../Api/axiosClient";
 import { BaseModel } from "../BaseModel";
 import { UnitAvailableInterface } from "./UnitAvailableInterface";
 import { UnitInterface } from "./UnitInterface";
 import { z } from 'zod';
 import { validateDateRange, validateReservationDates } from "../../Utils/GeneralFunctions";
+import axios, { AxiosError } from "axios";
 
 export class UnitAvailableModel extends BaseModel implements UnitAvailableInterface {
     private _check_in: string;
@@ -58,67 +57,64 @@ export class UnitAvailableModel extends BaseModel implements UnitAvailableInterf
         };
     }
 
-    public async checkAvailable(): Promise<UnitInterface[]> {
-        return await this.postPrivate(`/unit/units-available/`, this.toPlainObject())
-            .then(response => {
-                return response.data?.data as UnitInterface[]
-            })
-            .catch((error) => {
-                const items = error.response?.data?.errors;
-                if (items && items.length > 0) {
-                    for (let i = 0; i < items.length; i++) {
-                        this.addHttpMsj(items[i])
+    public async checkAvailable(): Promise<UnitInterface[] | AxiosError> {
+        try {
+            const response = await this.postPrivate<UnitAvailableInterface, { data: UnitInterface[] }>(
+                `/unit/units-available/`,
+                this.toPlainObject()
+            )
+
+            return response.data.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                const items = (error.response?.data as any)?.errors
+
+                if (Array.isArray(items)) {
+                    for (const msg of items) {
+                        this.addHttpMsj(msg)
                     }
                 } else {
                     this.addHttpMsj(error.message)
                 }
-                this.addHttpMsj(error.message)
+
                 return error
-            });
+            }
+
+            this.addHttpMsj("Error inesperado")
+            return new AxiosError("Unknown error")
+        }
     }
+
 
     public validate(): boolean {
-
         this.cleanMessages()
 
-        try {
-            if(!validateReservationDates(this.check_in, this.check_out)){
-                this.addMessage('Error range days')
-            }
-            const validRage = validateDateRange(this.check_in,this.check_out);
-            if(validRage.valid == false){
-                this.addMessage(validRage.message);
-            }
-
-        } catch (error) {
-            this.addMessage(`${error}`)
+        // Validaciones de fechas
+        if (!validateReservationDates(this.check_in, this.check_out)) {
+            this.addMessage("error range days")
         }
 
+        const validRange = validateDateRange(this.check_in, this.check_out)
+        if (!validRange.valid) {
+            this.addMessage(validRange.message)
+        }
+
+        // Validación de schema con Zod
         const FormSchema = z.object({
-            people: z.number().min(1)
-        });
+            people: z.number().min(1),
+        })
 
-        type FormData = z.infer<typeof FormSchema>;
+        const result = FormSchema.safeParse(this.toPlainObject())
 
-        // Validation
-        try {    
-            const data: FormData = FormSchema.parse(this.toPlainObject());
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-
-                for (const issue of error.issues) {
-                    const messageTxt = issue.path[0] + ":" + issue.message;
-                    this.addMessage(messageTxt.toLowerCase())
-                }
-            } else {
-                this.addMessage(`${error}`)
+        if (!result.success) {
+            for (const issue of result.error.issues) {
+                const messageTxt = `${issue.path[0]}: ${issue.message}`
+                this.addMessage(messageTxt.toLowerCase())
             }
         }
-        if (this.showMessages().length > 0) {
-            return false;
-        } else {
-            return true;
-        }
 
+        // Devolver si hay errores
+        return this.showMessages().length === 0
     }
+
 }

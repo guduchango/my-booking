@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { BaseModel } from "../BaseModel";
 import { GuestInterface } from "./GuestInterface";
 import { z } from 'zod';
@@ -142,59 +142,70 @@ export class GuestModel extends BaseModel implements GuestInterface {
     }
 
 
-    public async store(): Promise<GuestInterface | AxiosError>{
-        return await this.postPrivate(`/guest/`, this.toPlainObject())
-        .then(response => {
-            const responseData: GuestInterface | AxiosError =  response.data.data as GuestInterface
-            const guest = new GuestModel(responseData)
-            const guestService = new GuestStorageService();
-            if(!(responseData instanceof AxiosError)){
-                guestService.create(guest)
-            }
+    public async store(): Promise<GuestInterface | AxiosError> {
+        return await this.postPrivate<any, { data: GuestInterface }>(`/guest/`, this.toPlainObject())
+            .then(response => {
+                const responseData: GuestInterface | AxiosError = response.data?.data as GuestInterface
+                const guest = new GuestModel(responseData)
+                const guestService = new GuestStorageService();
+                if (!(responseData instanceof AxiosError)) {
+                    guestService.create(guest)
+                }
 
-            return responseData;
-        })
-        .catch((error: AxiosError) => {
-            const items = error.response?.data?.errors;
-            if (items && items.length > 0){
-                for (let i = 0; i < items.length; i++) {
-                    this.addHttpMsj(items[i])
-                  }
-            }else{
-                this.addHttpMsj(error.message)
-            }
-          return error
-        });
+                return responseData;
+            })
+            .catch((error) => {
+                const items = error.response?.data?.errors;
+                if (items && items.length > 0) {
+                    for (let i = 0; i < items.length; i++) {
+                        this.addHttpMsj(items[i])
+                    }
+                } else {
+                    this.addHttpMsj(error.message)
+                }
+                return error
+            });
     }
 
-    public async update(id: number): Promise<GuestInterface | AxiosError>{
-        return await this.putPrivate(`/guest/${id}`, this.toPlainObject())
-        .then(response => {
-            const responseData: GuestInterface | AxiosError =  response.data.data as GuestInterface
-            const guestService = new GuestStorageService();
+    public async update(id: number): Promise<GuestInterface | AxiosError> {
+        try {
+            const response = await this.putPrivate<GuestInterface, { data: GuestInterface }>(
+                `/guest/${id}`,
+                this.toPlainObject()
+            )
+
+
+            const responseData = response.data.data
+
+            const guestService = new GuestStorageService()
             const guest = new GuestModel(responseData)
-            if(!(responseData instanceof AxiosError)){
-                guestService.update(id,guest)
+            guestService.update(id, guest)
+
+            return responseData
+        } catch (error: unknown) {
+
+            if (axios.isAxiosError(error)) {
+                const items = (error.response?.data as any)?.errors
+
+                if (Array.isArray(items)) {
+                    for (const msg of items) {
+                        this.addHttpMsj(msg)
+                    }
+                } else {
+                    this.addHttpMsj(error.message)
+                }
+
+                return error
             }
 
-            return responseData;
-        })
-        .catch((error) => {
-            const items = error.response?.data?.errors;
-            if (items && items.length > 0){
-                for (let i = 0; i < items.length; i++) {
-                    this.addHttpMsj(items[i])
-                  }
-            }else{
-                this.addHttpMsj(error.message)
-            }
-            
-          return error
-        });
+            this.addHttpMsj("Error inesperado")
+            return new AxiosError("Unknown error")
+        }
     }
 
-    public async saveOrUpdate(id: number): Promise<GuestInterface | AxiosError>{
-        if(id === 0){
+
+    public async saveOrUpdate(id: number): Promise<GuestInterface | AxiosError> {
+        if (id === 0) {
             return this.store()
         }
         return this.update(id)
@@ -205,32 +216,32 @@ export class GuestModel extends BaseModel implements GuestInterface {
 
         const FormSchema = z.object({
             gue_name: z.string().min(3),
-            gue_last_name:  z.string().min(3),
+            gue_last_name: z.string().min(3),
             gue_identity_document: z.string().min(3),
             //gue_email: z.string().email(),
             gue_phone_number: z.string().min(3)
-          });
-          
-          type FormData = z.infer<typeof FormSchema>;
+        });
 
-          console.log("plain",this.toPlainObject())
-          
-          // Validation
-          try {
+        type FormData = z.infer<typeof FormSchema>;
+
+        console.log("plain", this.toPlainObject())
+
+        // Validation
+        try {
             const data: FormData = FormSchema.parse(this.toPlainObject());
-            console.log("data",data);
+            console.log("data", data);
         } catch (error) {
             if (error instanceof z.ZodError) {
-                
-              for (const issue of error.issues) {
-                const messageTxt = issue.path[0]+":"+issue.message;
-                this.addMessage(messageTxt.toLowerCase())
-              }
+
+                for (const issue of error.issues) {
+                    const messageTxt = issue.path[0] + ":" + issue.message;
+                    this.addMessage(messageTxt.toLowerCase())
+                }
             } else {
                 this.addMessage(`Unexpected error: ${error}`)
             }
-          }
-         
+        }
+
         if (this.showMessages().length > 0) {
             return false;
         } else {

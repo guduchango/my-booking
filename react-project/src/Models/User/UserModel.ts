@@ -1,4 +1,3 @@
-import { validateEmail } from "../../Utils/GeneralFunctions";
 import { BaseModel } from "../BaseModel";
 import { UserInterface } from "./UserInterface";
 import { z } from 'zod';
